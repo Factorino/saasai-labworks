@@ -1,0 +1,64 @@
+# --- Coverage configuration --------------------------------------------------
+#
+# Read by coverage.py and, through it, by pytest-cov. Keeping the settings here
+# rather than on the command line means every run agrees about what is
+# measured and what threshold applies.
+#
+# Caution: this is an ini file parsed by configparser — inline comments become
+# part of the value. Comments must occupy a whole line.
+#
+# Related files:
+#   - .pytest.toml             the test run itself
+#
+# Recipes: `just cov`.
+
+
+# --- Measurement -------------------------------------------------------------
+# source_pkgs names an importable package rather than a path: locally the code
+# is imported from src/, but inside the image it comes from the installed
+# wheel in site-packages. See [paths] below for how the two are reconciled.
+
+[run]
+source_pkgs = anamnesis
+branch = True
+relative_files = True
+
+
+# --- Path equivalence --------------------------------------------------------
+# Treats the same module under different roots as one file, so that reports
+# produced in a container can be combined with those produced on the host.
+
+[paths]
+source =
+    src/
+    */site-packages/
+
+
+# --- Reporting ---------------------------------------------------------------
+# fail_under is a starting threshold — raise it as the codebase grows.
+# exclude_also extends the default exclusions rather than replacing them, and
+# covers code that cannot meaningfully be executed by tests: type-checking
+# imports, abstract declarations, overloads and script entry points.
+
+[report]
+show_missing = True
+skip_covered = True
+precision = 2
+fail_under = 80
+exclude_also =
+    if TYPE_CHECKING:
+    raise NotImplementedError
+    @(abc\.)?abstractmethod
+    @(typing\.)?overload
+    class .*\(.*\bProtocol\b.*\):
+    if __name__ == ["']__main__["']:
+
+
+# --- Output formats ----------------------------------------------------------
+# Both directories are ignored by git; `just clean` removes them.
+
+[html]
+directory = htmlcov
+
+[xml]
+output = coverage.xml

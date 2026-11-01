@@ -1,0 +1,41 @@
+# --- Import Linter configuration ---------------------------------------------
+#
+# Enforces the dependency rule of the layered architecture. Ruff and mypy see
+# nothing wrong with a domain module importing a database driver; this is the
+# tool that does.
+#
+# Related files:
+#   - .ruff.toml               bans relative imports, which would hide violations
+#   - .pre-commit-config.yaml  runs `lint-imports` as a hook
+#
+# Recipes: `just lint`, `just check`, `just pre-commit`.
+#
+# root_package must be renamed together with the package itself.
+
+[importlinter]
+root_package = anamnesis
+
+
+# --- Layer contract ----------------------------------------------------------
+# Dependencies may only point downwards. Layers listed on the same line are
+# siblings: presentation and infrastructure may not import each other.
+#
+#   main            composition root, may import everything below
+#   presentation    inbound adapters (HTTP, CLI)
+#   infrastructure  outbound adapters (database, brokers, external APIs)
+#   application     use cases, orchestrates the domain through ports
+#   domain          entities and business rules, imports nothing of ours
+#
+# A contract passes trivially while the layers are empty. It only starts
+# protecting anything once real modules exist.
+
+[importlinter:contract:layers]
+name = Clean Architecture layers
+type = layers
+containers =
+    anamnesis
+layers =
+    main
+    presentation | infrastructure
+    application
+    domain

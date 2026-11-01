@@ -1,0 +1,89 @@
+# --- Project metadata and dependencies ---------------------------------------
+#
+# Deliberately minimal: every tool that can keep its configuration in a file of
+# its own does so (.ruff.toml, .mypy.ini, .importlinter). What remains here is
+# what the packaging standard requires plus the dependency groups.
+#
+# Recipes: `just sync`, `just lock`.
+
+
+# --- Build backend -----------------------------------------------------------
+# uv_build is the backend that ships with uv, so building requires no extra
+# dependency. The upper bound guards against a breaking change in a tool that
+# is also pinned in uv.lock.
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"
+
+
+# --- Core metadata -----------------------------------------------------------
+
+[project]
+name = "anamnesis"
+version = "0.1.0"
+description = "Primary screening and structuring of requests to a psychologist based on an ontology and language models"
+requires-python = ">=3.12"
+
+readme = "README.md"
+
+authors = [
+    { name = "Factorino", email = "masenkin73@gmail.com" }
+]
+maintainers = [
+    { name = "Factorino", email = "masenkin73@gmail.com" }
+]
+
+# Purely informational for package indexes.
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3 :: Only",
+    "Typing :: Typed",  # Backed by src/anamnesis/py.typed.
+]
+
+# Runtime dependencies. Everything the service needs, and nothing else —
+# development tooling belongs in the groups at the bottom of this file.
+dependencies = []
+
+
+# --- Dependency groups -------------------------------------------------------
+# Leaf groups come first, aggregators last; `dev` closes the list.
+
+[dependency-groups]
+
+# Type stubs for third-party packages. Needed because mypy runs with
+# ignore_missing_imports = False: a dependency without types must be handled
+# explicitly. Add stubs here as dependencies appear.
+types = [
+]
+
+lint = [
+    "import-linter>=2.15",
+    "mypy>=2.4.1",
+    "ruff>=0.17.3",
+    { include-group = "types" },
+]
+
+hooks = [
+    "pre-commit>=4.7.0",
+]
+
+test = [
+    "pytest>=9.2.0",
+    "pytest-asyncio>=1.4.1.post1",
+    "pytest-cov>=7.1.0",
+    "pytest-mock>=3.17.0",
+    "pytest-randomly>=5.0.0",
+    "pytest-timeout>=2.4.0",
+    "pytest-xdist>=3.8.0",
+]
+
+# Everything a developer needs locally; installed by `just sync`.
+dev = [
+    { include-group = "lint" },
+    { include-group = "test" },
+    { include-group = "hooks" },
+]

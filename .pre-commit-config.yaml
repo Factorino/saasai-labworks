@@ -1,0 +1,113 @@
+# --- Pre-commit hooks --------------------------------------------------------
+#
+# Linters are wired as `repo: local` running through `uv run`, not through
+# mirrors such as ruff-pre-commit. A mirror pins the tool version in its `rev:`
+# field, in parallel with uv.lock, and the two inevitably drift apart. This way
+# pre-commit and just provably use the same ruff and the same mypy.
+#
+# Related files:
+#   - .ruff.toml, .mypy.ini, .importlinter  configure the local hooks
+#
+# Recipes: `just hooks` to install, `just pre-commit` to run over everything.
+
+minimum_pre_commit_version: "4.0.0"
+
+
+# --- Installed stages --------------------------------------------------------
+# `just hooks` installs both. Cheap checks run on commit and the test suite on
+# push.
+default_install_hook_types:
+  - pre-commit
+  - pre-push
+
+# A hook that declares no stages of its own would otherwise run on every
+# installed stage, repeating all the linters.
+default_stages:
+  - pre-commit
+
+default_language_version:
+  python: python3.12
+
+
+repos:
+  # --- Generic file hygiene --------------------------------------------------
+  # Upstream hooks with no project-specific configuration.
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files  # Default limit is 500 KB; uv.lock fits.
+      - id: check-case-conflict  # Names that collide on case-insensitive filesystems.
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-json
+      - id: check-toml
+      - id: check-yaml
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=lf]  # Matches `* text=auto eol=lf` in .gitattributes.
+      - id: trailing-whitespace
+        # Two trailing spaces in Markdown are a hard line break, not noise.
+        # The same exception is declared in .editorconfig.
+        args: [--markdown-linebreak-ext=md]
+
+  # --- Project tooling -------------------------------------------------------
+  # `language: system` means the hook runs the tool from the project virtualenv
+  # instead of an isolated one, so versions come from uv.lock. This also avoids
+  # the classic mypy-in-pre-commit problem of not seeing project dependencies.
+
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check
+        entry: uv run ruff check --fix
+        language: system
+        types_or: [python, pyi]
+        require_serial: true
+
+      - id: ruff-format
+        name: ruff format
+        entry: uv run ruff format
+        language: system
+        types_or: [python, pyi]
+        require_serial: true
+
+      # mypy and import-linter analyse the project as a whole; feeding them
+      # only the changed files would give wrong answers, hence
+      # pass_filenames: false. The directory list must match `just lint`.
+      - id: mypy
+        name: mypy
+        entry: uv run mypy src tests
+        language: system
+        types_or: [python, pyi]
+        pass_filenames: false
+        require_serial: true
+
+      - id: lint-imports
+        name: import-linter
+        entry: uv run lint-imports
+        language: system
+        types_or: [python, pyi]
+        pass_filenames: false
+        require_serial: true
+
+      # uv.lock must stay in step with pyproject.toml, otherwise
+      # `uv sync --locked` fails for everyone else.
+      - id: uv-lock
+        name: uv lock
+        entry: uv lock
+        language: system
+        files: ^(pyproject\.toml|uv\.lock)$
+        pass_filenames: false
+
+      # Running the suite on every commit is too slow; on push it is worth it,
+      # catching a break before it reaches the remote.
+      - id: pytest
+        name: pytest
+        entry: uv run pytest
+        language: system
+        types_or: [python, pyi]
+        pass_filenames: false
+        stages: [pre-push]
