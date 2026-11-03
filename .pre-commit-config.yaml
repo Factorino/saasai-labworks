@@ -45,13 +45,17 @@ repos:
       - id: check-toml
       - id: check-yaml
       - id: detect-private-key
+      # Protégé writes ontologies with trailing spaces and a blank last line;
+      # fixing them would only be undone by the next save from the editor.
       - id: end-of-file-fixer
+        exclude: \.owl$
       - id: mixed-line-ending
         args: [--fix=lf]  # Matches `* text=auto eol=lf` in .gitattributes.
       - id: trailing-whitespace
         # Two trailing spaces in Markdown are a hard line break, not noise.
         # The same exception is declared in .editorconfig.
         args: [--markdown-linebreak-ext=md]
+        exclude: \.owl$
 
   # --- Project tooling -------------------------------------------------------
   # `language: system` means the hook runs the tool from the project virtualenv

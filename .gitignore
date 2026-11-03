@@ -249,3 +249,6 @@ __marimo__/
 
 # Dev data
 /.dev/
+
+# Working documents for the lab reports; they never reach the repository
+/_docs/
