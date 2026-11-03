@@ -1,0 +1,1999 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#"
+     xml:base="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hasDescription -->
+
+    <owl:AnnotationProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hasDescription"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#affectsDomain -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#affectsDomain">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LifeDomain"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hasManifestation -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hasManifestation">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hasUrgencyLevel -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hasUrgencyLevel">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#UrgencyLevel"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#indicatesCluster -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#indicatesCluster">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConditionCluster"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#recommendsPractice -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#recommendsPractice">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConditionCluster"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Practice"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#suggestsPractice -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#suggestsPractice">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Practice"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#durationWeeks -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#durationWeeks">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#frequency -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#frequency">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#impactDegree -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#impactDegree">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#selfHarmScreening -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#selfHarmScreening">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ActiveSelfHarmThoughts -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ActiveSelfHarmThoughts">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#RiskMarker"/>
+        <hasDescription>Thoughts about harming oneself or ending one&apos;s life, especially with an intent or a plan.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Anxiety -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Anxiety">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#EmotionalManifestation"/>
+        <hasDescription>Persistent worry, tension or fear that is hard to control.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AnxietyCluster -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AnxietyCluster">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConditionCluster"/>
+        <hasDescription>Manifestations related to worry, fear and tension.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AppetiteChange -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AppetiteChange">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SomaticManifestation"/>
+        <hasDescription>Eating noticeably more or less than usual.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AttentionMarker -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AttentionMarker">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#RiskMarker"/>
+        <hasDescription>A sign that does not need emergency help but should be discussed with a specialist soon.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Avoidance -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Avoidance">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BehaviouralManifestation"/>
+        <hasDescription>Staying away from situations, places or tasks because they cause distress.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BehaviouralManifestation -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BehaviouralManifestation">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation"/>
+        <hasDescription>Changes in what a person does and how they act.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BreathingPractice -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BreathingPractice">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Practice"/>
+        <hasDescription>Slow, paced breathing exercises that help reduce tension.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case">
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Concept"/>
+        <hasDescription>One assessment of a person&apos;s request, built from the dialogue.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#CognitiveManifestation -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#CognitiveManifestation">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation"/>
+        <hasDescription>Changes in attention, memory and thinking.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConcentrationProblems -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConcentrationProblems">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#CognitiveManifestation"/>
+        <hasDescription>Difficulty focusing, making decisions or remembering things.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Concept -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Concept">
+        <hasDescription>The root of the linguistic layer: everything the dialogue can talk about.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConditionCluster -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConditionCluster">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Concept"/>
+        <hasDescription>A group of related manifestations used to choose helpful practices. It is not a diagnosis.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DailyLife -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DailyLife">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LifeDomain"/>
+        <hasDescription>Household chores, self-care and daily routine.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DepressiveCluster -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DepressiveCluster">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConditionCluster"/>
+        <hasDescription>Manifestations related to low mood, loss of interest and low energy.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#EmotionalManifestation -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#EmotionalManifestation">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation"/>
+        <hasDescription>Changes in feelings and mood.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Fatigue -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Fatigue">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SomaticManifestation"/>
+        <hasDescription>Feeling tired or drained of energy even after rest.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#GroundingPractice -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#GroundingPractice">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Practice"/>
+        <hasDescription>Techniques that bring attention back to the present moment through the senses.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Hypersomnia -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Hypersomnia">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbance"/>
+        <hasDescription>Sleeping much more than usual and still not feeling rested.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Insomnia -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Insomnia">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbance"/>
+        <hasDescription>Difficulty falling asleep, staying asleep or waking up too early.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#IntrusiveThoughts -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#IntrusiveThoughts">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#CognitiveManifestation"/>
+        <hasDescription>Unwanted thoughts that keep coming back and are hard to dismiss.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Irritability -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Irritability">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#EmotionalManifestation"/>
+        <hasDescription>Getting annoyed or angry more easily than usual.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L0 -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L0">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#UrgencyLevel"/>
+        <hasDescription>You can try self-help practices and keep an eye on how you feel.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L1 -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L1">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#UrgencyLevel"/>
+        <hasDescription>It is worth considering a consultation with a specialist.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L2 -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L2">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#UrgencyLevel"/>
+        <hasDescription>It is recommended to see a specialist.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L3 -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L3">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#UrgencyLevel"/>
+        <hasDescription>You need urgent help right now.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LifeDomain -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LifeDomain">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Concept"/>
+        <hasDescription>An area of everyday life that the difficulties may affect.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LowMood -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LowMood">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#EmotionalManifestation"/>
+        <hasDescription>Feeling sad, empty or hopeless most of the time and losing interest in things that used to bring joy.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Concept"/>
+        <hasDescription>A sign or complaint that a person notices in their feelings, body, thinking or behaviour.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#MoodDiary -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#MoodDiary">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Practice"/>
+        <hasDescription>Writing down mood, events and thoughts every day to notice patterns.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PassiveDeathThoughts -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PassiveDeathThoughts">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AttentionMarker"/>
+        <hasDescription>Thoughts that life is not worth living or a wish not to wake up, without any intent to act.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Practice -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Practice">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Concept"/>
+        <hasDescription>A self-help technique without medication from the knowledge base.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PsychoticSign -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PsychoticSign">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#RiskMarker"/>
+        <hasDescription>Hearing or seeing things that others do not, or firm beliefs that others do not share.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Relationships -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Relationships">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LifeDomain"/>
+        <hasDescription>Family, partner and friends.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#RiskMarker -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#RiskMarker">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation"/>
+        <hasDescription>A sign that may indicate a risk to life or safety and needs urgent help.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbance -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbance">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SomaticManifestation"/>
+        <hasDescription>Changes in how well or how much a person sleeps.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbanceCluster -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbanceCluster">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConditionCluster"/>
+        <hasDescription>Manifestations related to sleep.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepHygiene -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepHygiene">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Practice"/>
+        <hasDescription>Habits and conditions that support healthy sleep.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SocialWithdrawal -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SocialWithdrawal">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BehaviouralManifestation"/>
+        <hasDescription>Pulling away from friends, family and social contact.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SomaticManifestation -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SomaticManifestation">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation"/>
+        <hasDescription>Bodily signs such as changes in sleep, appetite or energy.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#StressCluster -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#StressCluster">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConditionCluster"/>
+        <hasDescription>Manifestations related to overload, irritability and exhaustion.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Study -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Study">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LifeDomain"/>
+        <hasDescription>School, university and other learning.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#UrgencyLevel -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#UrgencyLevel">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Concept"/>
+        <hasDescription>How soon it is recommended to see a specialist.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Work -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Work">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LifeDomain"/>
+        <hasDescription>Job duties, performance and relationships at work.</hasDescription>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#acting_differently -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#acting_differently">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BehaviouralManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#always_tired -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#always_tired">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Fatigue"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#anxiety_related -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#anxiety_related">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AnxietyCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#area_of_life -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#area_of_life">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LifeDomain"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#at_the_office -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#at_the_office">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Work"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#avoid_people -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#avoid_people">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SocialWithdrawal"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#avoid_situations -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#avoid_situations">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Avoidance"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#awake_until_morning -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#awake_until_morning">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Insomnia"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#behaviour_changes -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#behaviour_changes">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BehaviouralManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#being_watched -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#being_watched">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PsychoticSign"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#body_signs -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#body_signs">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SomaticManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#book_an_appointment -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#book_an_appointment">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L2"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#box_breathing -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#box_breathing">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BreathingPractice"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#breathing_exercise -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#breathing_exercise">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BreathingPractice"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#burnout -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#burnout">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#StressCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#cannot_fall_asleep -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#cannot_fall_asleep">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Insomnia"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#cannot_focus -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#cannot_focus">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConcentrationProblems"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#cannot_get_out_of_bed -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#cannot_get_out_of_bed">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Hypersomnia"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#cannot_stop_thinking -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#cannot_stop_thinking">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#IntrusiveThoughts"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#changes_in_habits -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#changes_in_habits">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BehaviouralManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#cognitive_difficulties -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#cognitive_difficulties">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#CognitiveManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#complaint -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#complaint">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#condition_group -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#condition_group">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConditionCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#consider_a_consultation -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#consider_a_consultation">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L1"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#constant_worry -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#constant_worry">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Anxiety"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#coping_strategy -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#coping_strategy">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Practice"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#daily_notes -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#daily_notes">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#MoodDiary"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#daily_routine -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#daily_routine">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DailyLife"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#danger_to_life -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#danger_to_life">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#RiskMarker"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#deep_breathing -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#deep_breathing">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BreathingPractice"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#do_not_put_off -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#do_not_put_off">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L2"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#easily_annoyed -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#easily_annoyed">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Irritability"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#emergency -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#emergency">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L3"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#emotional_state -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#emotional_state">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#EmotionalManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#everyday_life -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#everyday_life">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LifeDomain"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#exams -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#exams">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Study"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#exercise -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#exercise">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Practice"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#exhausted -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#exhausted">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Fatigue"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#family -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#family">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Relationships"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#feel_anxious -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#feel_anxious">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Anxiety"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#feel_down -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#feel_down">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LowMood"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#feel_empty -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#feel_empty">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LowMood"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#feelings -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#feelings">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#EmotionalManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#five_senses_technique -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#five_senses_technique">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#GroundingPractice"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#forget_to_eat -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#forget_to_eat">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AppetiteChange"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#forgetful -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#forgetful">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConcentrationProblems"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#friends -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#friends">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Relationships"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#grounding -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#grounding">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#GroundingPractice"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#group_of_symptoms -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#group_of_symptoms">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConditionCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hard_to_decide -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hard_to_decide">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConcentrationProblems"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#have_a_plan -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#have_a_plan">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ActiveSelfHarmThoughts"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hear_voices -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hear_voices">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PsychoticSign"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#here_and_now -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#here_and_now">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#GroundingPractice"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hopeless -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hopeless">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LowMood"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#household_chores -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#household_chores">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DailyLife"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#how_soon -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#how_soon">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#UrgencyLevel"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#isolate_myself -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#isolate_myself">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SocialWithdrawal"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#job -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#job">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Work"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#journaling -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#journaling">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#MoodDiary"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#just_observe -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#just_observe">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L0"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#life_not_worth_living -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#life_not_worth_living">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PassiveDeathThoughts"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#life_sphere -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#life_sphere">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LifeDomain"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#loss_of_interest -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#loss_of_interest">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DepressiveCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#low_mood_related -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#low_mood_related">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DepressiveCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#mental_fog -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#mental_fog">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#CognitiveManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#mind_wanders -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#mind_wanders">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConcentrationProblems"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#mood_changes -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#mood_changes">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#EmotionalManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#mood_tracking -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#mood_tracking">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#MoodDiary"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#my_work -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#my_work">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Work"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#needs_attention -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#needs_attention">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AttentionMarker"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#nervousness -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#nervousness">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AnxietyCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#no_appetite -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#no_appetite">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AppetiteChange"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#no_energy -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#no_energy">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Fatigue"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#no_rush -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#no_rush">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L0"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#no_screens_before_bed -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#no_screens_before_bed">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepHygiene"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#nothing_brings_joy -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#nothing_brings_joy">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LowMood"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#on_edge -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#on_edge">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Anxiety"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#overeating -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#overeating">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AppetiteChange"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#overload -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#overload">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#StressCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#oversleeping -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#oversleeping">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Hypersomnia"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#overthinking -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#overthinking">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#IntrusiveThoughts"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#panic_attacks -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#panic_attacks">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Anxiety"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#partner -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#partner">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Relationships"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#physical_complaints -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#physical_complaints">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SomaticManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#physical_symptoms -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#physical_symptoms">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SomaticManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#poor_sleep -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#poor_sleep">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbance"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#priority -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#priority">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#UrgencyLevel"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#problem -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#problem">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#problem_area -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#problem_area">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConditionCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#put_things_off -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#put_things_off">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Avoidance"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#regular_bedtime -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#regular_bedtime">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepHygiene"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#rest_problems -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#rest_problems">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbanceCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#right_now -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#right_now">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L3"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#sadness -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#sadness">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DepressiveCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#safety_risk -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#safety_risk">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#RiskMarker"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#school -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#school">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Study"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#see_a_specialist -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#see_a_specialist">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L2"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#see_things_others_dont -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#see_things_others_dont">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PsychoticSign"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#self_care -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#self_care">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DailyLife"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#self_help_is_enough -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#self_help_is_enough">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L0"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#self_help_technique -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#self_help_technique">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Practice"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#short_temper -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#short_temper">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Irritability"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#sleep_all_day -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#sleep_all_day">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Hypersomnia"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#sleep_badly -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#sleep_badly">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbance"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#sleep_issues -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#sleep_issues">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbanceCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#sleep_problems -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#sleep_problems">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbance"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#sleep_related -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#sleep_related">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbanceCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#sleep_routine -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#sleep_routine">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepHygiene"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#snap_at_people -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#snap_at_people">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Irritability"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#stay_at_home -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#stay_at_home">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SocialWithdrawal"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#stay_away_from_places -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#stay_away_from_places">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Avoidance"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#stopped_seeing_friends -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#stopped_seeing_friends">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SocialWithdrawal"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#stress_related -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#stress_related">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#StressCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#symptom -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#symptom">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#thinking_about_suicide -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#thinking_about_suicide">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ActiveSelfHarmThoughts"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#thinking_problems -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#thinking_problems">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#CognitiveManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#thoughts_go_in_circles -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#thoughts_go_in_circles">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#IntrusiveThoughts"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#tired_of_living -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#tired_of_living">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PassiveDeathThoughts"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#university -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#university">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Study"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#urgency -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#urgency">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#UrgencyLevel"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#urgent_help -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#urgent_help">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L3"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#urgent_risk -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#urgent_risk">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#RiskMarker"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#wake_too_early -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#wake_too_early">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Insomnia"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#wake_up_at_night -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#wake_up_at_night">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Insomnia"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#want_to_hurt_myself -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#want_to_hurt_myself">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ActiveSelfHarmThoughts"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#warning_sign -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#warning_sign">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AttentionMarker"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#when_convenient -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#when_convenient">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L1"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#wish_not_to_wake_up -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#wish_not_to_wake_up">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PassiveDeathThoughts"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#worn_out -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#worn_out">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Fatigue"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#worry_and_fear -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#worry_and_fear">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AnxietyCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#worrying_sign -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#worrying_sign">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AttentionMarker"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#worth_talking_to_someone -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#worth_talking_to_someone">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L1"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ActiveSelfHarmThoughts! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ActiveSelfHarmThoughts!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ActiveSelfHarmThoughts"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Anxiety! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Anxiety!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Anxiety"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AnxietyCluster! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AnxietyCluster!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AnxietyCluster"/>
+        <recommendsPractice rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BreathingPractice!"/>
+        <recommendsPractice rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#GroundingPractice!"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AppetiteChange! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AppetiteChange!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AppetiteChange"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AttentionMarker! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AttentionMarker!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AttentionMarker"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Avoidance! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Avoidance!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Avoidance"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BehaviouralManifestation! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BehaviouralManifestation!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BehaviouralManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BreathingPractice! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BreathingPractice!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BreathingPractice"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#CognitiveManifestation! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#CognitiveManifestation!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#CognitiveManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConcentrationProblems! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConcentrationProblems!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConcentrationProblems"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConditionCluster! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConditionCluster!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConditionCluster"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DailyLife! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DailyLife!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DailyLife"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DepressiveCluster! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DepressiveCluster!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DepressiveCluster"/>
+        <recommendsPractice rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#MoodDiary!"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#EmotionalManifestation! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#EmotionalManifestation!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#EmotionalManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Fatigue! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Fatigue!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Fatigue"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#GroundingPractice! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#GroundingPractice!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#GroundingPractice"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Hypersomnia! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Hypersomnia!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Hypersomnia"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Insomnia! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Insomnia!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Insomnia"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#IntrusiveThoughts! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#IntrusiveThoughts!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#IntrusiveThoughts"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Irritability! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Irritability!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Irritability"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L0! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L0!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L0"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L1! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L1!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L1"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L2! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L2!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L2"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L3! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L3!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L3"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LifeDomain! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LifeDomain!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LifeDomain"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LowMood! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LowMood!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LowMood"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#MoodDiary! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#MoodDiary!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#MoodDiary"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PassiveDeathThoughts! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PassiveDeathThoughts!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PassiveDeathThoughts"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Practice! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Practice!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Practice"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PsychoticSign! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PsychoticSign!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#PsychoticSign"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Relationships! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Relationships!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Relationships"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#RiskMarker! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#RiskMarker!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#RiskMarker"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbance! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbance!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbance"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbanceCluster! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbanceCluster!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbanceCluster"/>
+        <recommendsPractice rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepHygiene!"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepHygiene! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepHygiene!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepHygiene"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SocialWithdrawal! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SocialWithdrawal!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SocialWithdrawal"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SomaticManifestation! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SomaticManifestation!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SomaticManifestation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#StressCluster! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#StressCluster!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#StressCluster"/>
+        <recommendsPractice rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#BreathingPractice!"/>
+        <recommendsPractice rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#MoodDiary!"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Study! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Study!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Study"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#UrgencyLevel! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#UrgencyLevel!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#UrgencyLevel"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Work! -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Work!">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Work"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#AnxietyCluster"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#DepressiveCluster"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#SleepDisturbanceCluster"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#StressCluster"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#ConditionCluster"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#LifeDomain"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Manifestation"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Practice"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#UrgencyLevel"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L0"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L1"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L2"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#L3"/>
+        </owl:members>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi -->
+
