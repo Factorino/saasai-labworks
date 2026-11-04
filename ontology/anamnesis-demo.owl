@@ -1,0 +1,244 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#"
+     xml:base="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:swrla="http://swrl.stanford.edu/ontologies/3.3/swrla.owl#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis-demo">
+        <owl:imports rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hasManifestation -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hasManifestation"/>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hasStressor -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#hasStressor"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#durationWeeks -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#durationWeeks"/>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#frequency -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#frequency"/>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#impactDegree -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#impactDegree"/>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#selfHarmScreening -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#selfHarmScreening"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_burnout -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_burnout">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <hasManifestation rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#always_tired"/>
+        <hasManifestation rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#easily_annoyed"/>
+        <hasStressor rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#workload"/>
+        <durationWeeks rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</durationWeeks>
+        <frequency rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</frequency>
+        <impactDegree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</impactDegree>
+        <selfHarmScreening>none</selfHarmScreening>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_crisis_plan -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_crisis_plan">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <hasManifestation rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#feel_sad"/>
+        <hasManifestation rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#want_to_end_life"/>
+        <durationWeeks rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</durationWeeks>
+        <frequency rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</frequency>
+        <impactDegree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</impactDegree>
+        <selfHarmScreening>plan</selfHarmScreening>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_domestic_violence -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_domestic_violence">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <hasManifestation rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#always_on_guard"/>
+        <hasStressor rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#partner_hits_me"/>
+        <durationWeeks rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</durationWeeks>
+        <frequency rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</frequency>
+        <impactDegree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</impactDegree>
+        <selfHarmScreening>none</selfHarmScreening>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_grief -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_grief">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <hasManifestation rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#cannot_fall_asleep"/>
+        <hasStressor rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#loved_one_died"/>
+        <durationWeeks rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</durationWeeks>
+        <frequency rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</frequency>
+        <impactDegree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</impactDegree>
+        <selfHarmScreening>none</selfHarmScreening>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_low_mood -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_low_mood">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <hasManifestation rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#apathy"/>
+        <hasManifestation rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#feel_sad"/>
+        <durationWeeks rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</durationWeeks>
+        <frequency rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</frequency>
+        <impactDegree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</impactDegree>
+        <selfHarmScreening>none</selfHarmScreening>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_passive_thoughts -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_passive_thoughts">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <hasManifestation rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#feel_sad"/>
+        <hasManifestation rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#wish_not_to_wake"/>
+        <durationWeeks rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</durationWeeks>
+        <frequency rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</frequency>
+        <impactDegree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</impactDegree>
+        <selfHarmScreening>passive</selfHarmScreening>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_recent_worry -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_recent_worry">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <hasManifestation rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#worry_all_the_time"/>
+        <hasStressor rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#exam_stress"/>
+        <durationWeeks rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</durationWeeks>
+        <frequency rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</frequency>
+        <impactDegree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</impactDegree>
+        <selfHarmScreening>none</selfHarmScreening>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_stroke_signs -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_stroke_signs">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <hasManifestation rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#face_droops"/>
+        <durationWeeks rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</durationWeeks>
+        <frequency rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</frequency>
+        <impactDegree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</impactDegree>
+        <selfHarmScreening>none</selfHarmScreening>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_trauma_with_tension -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_trauma_with_tension">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <hasManifestation rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#flashbacks"/>
+        <hasManifestation rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#tense_muscles"/>
+        <hasStressor rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#car_accident"/>
+        <durationWeeks rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</durationWeeks>
+        <frequency rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</frequency>
+        <impactDegree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</impactDegree>
+        <selfHarmScreening>none</selfHarmScreening>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_violence_threat -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#demo_case_violence_threat">
+        <rdf:type rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#Case"/>
+        <hasManifestation rdf:resource="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis#want_to_hurt_others"/>
+        <durationWeeks rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</durationWeeks>
+        <frequency rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</frequency>
+        <impactDegree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</impactDegree>
+        <selfHarmScreening>none</selfHarmScreening>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi -->
+

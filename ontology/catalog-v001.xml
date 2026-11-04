@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <uri name="http://www.semanticweb.org/masen/ontologies/2026/10/anamnesis" uri="anamnesis.owl"/>
+</catalog>
