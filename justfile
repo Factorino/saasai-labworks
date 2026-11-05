@@ -39,6 +39,16 @@ hooks:
     uv run pre-commit install --install-hooks
 
 
+# --- Run ---------------------------------------------------------------------
+# Settings come from .config/local.toml when it exists, then from APP__*
+# environment variables; see .config/local.toml.example.
+
+# Start the HTTP API; the OpenAPI docs are served at /docs.
+[group('run')]
+run:
+    uv run python -m anamnesis.main.api
+
+
 # --- Static analysis ---------------------------------------------------------
 # Configured in .ruff.toml, .mypy.ini and .importlinter.
 

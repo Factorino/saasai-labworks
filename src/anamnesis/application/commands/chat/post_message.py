@@ -19,10 +19,15 @@ from anamnesis.domain.value_objects.case_facts import CaseFacts
 from anamnesis.domain.value_objects.question import Answer, Question
 
 
-class PostMessageRequest(DTO):
-    chat_id: ChatId
+class PostMessageBody(DTO):
+    """Реплика пользователя: свой текст и/или коды выбранных вариантов."""
+
     text: str = ""
     option_codes: tuple[OptionCode, ...] = ()
+
+
+class PostMessageRequest(PostMessageBody):
+    chat_id: ChatId
 
 
 class PostMessageResponse(DTO):

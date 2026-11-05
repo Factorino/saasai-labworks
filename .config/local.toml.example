@@ -1,0 +1,29 @@
+# --- Local settings ----------------------------------------------------------
+#
+# Copy to .config/local.toml and edit the copy; that file is ignored by git.
+# Every value can also be set through an environment variable, which takes
+# precedence: APP__SERVER__PORT=8080, APP__KNOWLEDGE__QUESTION_LIMIT=6.
+#
+# Recipes: `just run`.
+
+[service]
+debug = false
+
+[server]
+host = "127.0.0.1"
+port = 8000
+reload = false
+
+[api]
+docs_enabled = true
+
+[api.cors]
+allow_origins = ["*"]
+
+[knowledge]
+ontology_path = "ontology/anamnesis.owl"
+locales_dir = "locales"
+# Pellet inferences running at once; each one is a separate Java process.
+reasoner_concurrency = 2
+# Clarifying questions per dialogue; the self-harm question may exceed it.
+question_limit = 8
