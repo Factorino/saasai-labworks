@@ -47,9 +47,16 @@ class YamlTextCatalog(ITextCatalog):
         raise KeyError(f"No label for option '{code}' of '{fact}' in '{language}'")
 
     @override
+    def disclaimer(self, language: LanguageCode) -> str:
+        return self._messages(language).disclaimer
+
+    @override
     def level(self, level: UrgencyLevel | None, language: LanguageCode) -> str:
-        key: str = level.name if level is not None else _INSUFFICIENT_DATA_KEY
-        return self._messages(language).levels[key]
+        return self._messages(language).levels[_level_key(level)]
+
+    @override
+    def specialist(self, level: UrgencyLevel | None, language: LanguageCode) -> str:
+        return self._messages(language).specialists[_level_key(level)]
 
     @override
     def referral(self, referral: Referral, language: LanguageCode) -> str:
@@ -68,8 +75,17 @@ class YamlTextCatalog(ITextCatalog):
         return self._locales[language].terms.descriptions.get(term, "")
 
     @override
+    def source(self, term: TermId, language: LanguageCode) -> str | None:
+        return self._locales[language].terms.sources.get(term)
+
+    @override
     def reply(self, stage: ChatStage, language: LanguageCode) -> str:
         return self._messages(language).replies[stage]
 
     def _messages(self, language: LanguageCode) -> Messages:
         return self._locales[language].messages
+
+
+def _level_key(level: UrgencyLevel | None) -> str:
+    """Ключ текстов уровня: `L0`–`L3` или «недостаточно данных»."""
+    return level.name if level is not None else _INSUFFICIENT_DATA_KEY

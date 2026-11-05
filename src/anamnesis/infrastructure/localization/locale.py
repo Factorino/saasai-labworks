@@ -30,8 +30,10 @@ class Messages(_File):
     """`messages.yaml`: тексты интерфейса по кодам домена."""
 
     greeting: str
+    disclaimer: str
     replies: Mapping[ChatStage, str]
     levels: Mapping[str, str]
+    specialists: Mapping[str, str]
     refuse: str
     referrals: Mapping[Referral, str]
     questions: Mapping[FactKind, QuestionTexts]
@@ -43,6 +45,7 @@ class Terms(_File):
 
     names: Mapping[TermId, str]
     descriptions: Mapping[TermId, str]
+    sources: Mapping[TermId, str] = Field(default_factory=dict)
 
 
 class Lexicon(_File):

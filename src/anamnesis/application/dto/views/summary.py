@@ -20,6 +20,7 @@ class EvidenceView(TermView):
 
 class PracticeView(TermView):
     description: str
+    source: str | None
     cautions: tuple[TermView, ...]
 
 
@@ -53,6 +54,7 @@ class CaseView(DTO):
 class SummaryView(DTO):
     level: UrgencyLevel | None
     phrase: str | None
+    specialist: str
     crisis: bool
     referrals: tuple[ReferralView, ...]
     practices: tuple[PracticeView, ...]
@@ -60,3 +62,4 @@ class SummaryView(DTO):
     explanation: tuple[RuleView, ...]
     missing: tuple[FactKind, ...]
     case: CaseView
+    disclaimer: str

@@ -1,7 +1,7 @@
 # Названия и описания понятий онтологии на русском языке.
 #
 # `names` — название понятия для каждого термина, `descriptions` — описание
-# понятия для его представителя (`X_`).
+# понятия для его представителя (`X_`), `sources` — источник практики.
 
 names:
   Manifestation_: Проявления
@@ -890,3 +890,30 @@ descriptions:
   GriefSelfCare_: Бережная забота о себе после потери без спешки чувствовать себя лучше.
   TimeOut_: Выйти из накалённой ситуации, пока не успокоишься.
   AssertiveCommunication_: Спокойно и уважительно говорить о своих потребностях через я-высказывания.
+
+# Источники практик: откуда взято описание и рекомендации.
+sources:
+  BreathingPractice_: 'Problem Management Plus (PM+), WHO, World Psychiatry 2015, https://pmc.ncbi.nlm.nih.gov/articles/PMC4592660'
+  ProgressiveMuscleRelaxation_: 'NHS Berkshire, Relaxation: a self-help guide, https://talkingtherapies.berkshirehealthcare.nhs.uk/media/109515154/gsh-14_v1_relaxation_january2024_final.pdf'
+  GroundingPractice_: 'Mind, Self-care for PTSD, https://www.mind.org.uk/information-support/types-of-mental-health-problems/post-traumatic-stress-disorder-ptsd/self-care-for-ptsd/'
+  WorryTime_: 'NHS Every Mind Matters, Tackling your worries, https://www.nhs.uk/every-mind-matters/mental-wellbeing-tips/self-help-cbt-techniques/tackling-your-worries/'
+  ThoughtRecord_: 'NHS Every Mind Matters, Thought record, https://www.nhs.uk/every-mind-matters/mental-wellbeing-tips/self-help-cbt-techniques/thought-record/'
+  MoodDiary_: '[ПРОВЕРИТЬ]'
+  SelfCompassionPractice_: 'Вторичный источник о Doing What Matters in Times of Stress, https://forum.howareu.com/wp-content/uploads/Psychological-Interventions_Section_ENG.pdf; первоисточник ВОЗ [ПРОВЕРИТЬ].'
+  BehaviouralActivation_: 'Problem Management Plus (PM+), WHO, World Psychiatry 2015, https://pmc.ncbi.nlm.nih.gov/articles/PMC4592660'
+  PhysicalActivity_: 'WHO, Depressive disorder (depression), https://www.who.int/news-room/fact-sheets/detail/depression'
+  RegularRoutine_: 'WHO, Depressive disorder (depression), https://www.who.int/news-room/fact-sheets/detail/depression'
+  PlanningAndBreaks_: '[ПРОВЕРИТЬ]'
+  SleepHygiene_: 'NHS Doncaster and Bassetlaw, Sleep hygiene, https://www.dbth.nhs.uk/wp-content/uploads/2025/09/Sleep-hygiene-leaflet-1.pdf'
+  BedForSleepOnly_: 'East London NHS Foundation Trust, Good bed, bad bed, https://elft.nhs.uk/sites/default/files/2022-06/good_bed_bad_bed.pdf'
+  SocialContact_: 'Problem Management Plus (PM+), WHO, World Psychiatry 2015, https://pmc.ncbi.nlm.nih.gov/articles/PMC4592660'
+  ProblemSolving_: 'Problem Management Plus (PM+), WHO, World Psychiatry 2015, https://pmc.ncbi.nlm.nih.gov/articles/PMC4592660'
+  RelaxingImagery_: 'NHS Berkshire, Relaxation: a self-help guide (visualisation), https://talkingtherapies.berkshirehealthcare.nhs.uk/media/109515154/gsh-14_v1_relaxation_january2024_final.pdf'
+  Mindfulness_: 'NHS Berkshire, Relaxation: a self-help guide (four-minute breathing space, body scan); NHS Every Mind Matters, Tackling your worries, https://www.nhs.uk/every-mind-matters/mental-wellbeing-tips/self-help-cbt-techniques/tackling-your-worries/'
+  StrengthsList_: 'Mind, How to improve self-esteem, https://www.mind.org.uk/information-support/types-of-mental-health-problems/self-esteem/tips-to-improve-your-self-esteem/'
+  LimitNewsAndSocialMedia_: 'Mind, How to improve self-esteem (меньше сравнивать себя с другими в соцсетях), https://www.mind.org.uk/information-support/types-of-mental-health-problems/self-esteem/tips-to-improve-your-self-esteem/; часть про новости [ПРОВЕРИТЬ].'
+  GradualExposure_: 'NHS CNTW, Shyness and social anxiety: a self-help guide (anxiety ladder), https://www.selfhelpguides.ntw.nhs.uk/blmk/leaflets/selfhelp/Shyness%20and%20Social%20Anxiety.pdf'
+  ValuesBasedAction_: 'Вторичный источник о Doing What Matters in Times of Stress (acting on your values), https://forum.howareu.com/wp-content/uploads/Psychological-Interventions_Section_ENG.pdf; первоисточник ВОЗ [ПРОВЕРИТЬ].'
+  TimeOut_: 'NHS inform, Problems with anger self-help guide, https://www.nhsinform.scot/illnesses-and-conditions/mental-health/mental-health-self-help-guides/problems-with-anger-self-help-guide/'
+  AssertiveCommunication_: 'NHS inform, Problems with anger self-help guide, https://www.nhsinform.scot/illnesses-and-conditions/mental-health/mental-health-self-help-guides/problems-with-anger-self-help-guide/'
+  GriefSelfCare_: 'Cruse Bereavement Care, Supporting yourself, https://healthwell.eani.org.uk/node/2495'

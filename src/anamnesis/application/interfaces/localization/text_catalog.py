@@ -29,8 +29,16 @@ class ITextCatalog(Protocol):
         """Подпись варианта ответа."""
 
     @abstractmethod
+    def disclaimer(self, language: LanguageCode) -> str:
+        """Предупреждение, что сводка — не диагноз."""
+
+    @abstractmethod
     def level(self, level: UrgencyLevel | None, language: LanguageCode) -> str:
         """Формулировка уровня; для `None` — «недостаточно данных»."""
+
+    @abstractmethod
+    def specialist(self, level: UrgencyLevel | None, language: LanguageCode) -> str:
+        """Общая подсказка, к какому специалисту обратиться при таком уровне."""
 
     @abstractmethod
     def referral(self, referral: Referral, language: LanguageCode) -> str:
@@ -47,6 +55,10 @@ class ITextCatalog(Protocol):
     @abstractmethod
     def description(self, term: TermId, language: LanguageCode) -> str:
         """Описание понятия онтологии; пустое, если его нет."""
+
+    @abstractmethod
+    def source(self, term: TermId, language: LanguageCode) -> str | None:
+        """Источник практики; `None`, если его нет."""
 
     @abstractmethod
     def reply(self, stage: ChatStage, language: LanguageCode) -> str:

@@ -64,6 +64,7 @@ class ViewRenderer:
         return SummaryView(
             level=assessment.level,
             phrase=self._phrase(assessment, language),
+            specialist=self._catalog.specialist(assessment.level, language),
             crisis=assessment.crisis,
             referrals=tuple(
                 ReferralView(referral=referral, text=self._catalog.referral(referral, language))
@@ -79,6 +80,7 @@ class ViewRenderer:
             ),
             missing=tuple(sorted(assessment.missing)),
             case=self._case(facts, language),
+            disclaimer=self._catalog.disclaimer(language),
         )
 
     def _phrase(self, assessment: Assessment, language: LanguageCode) -> str | None:
@@ -112,6 +114,7 @@ class ViewRenderer:
             term=advice.practice,
             name=self._catalog.term(advice.practice, language),
             description=self._catalog.description(advice.practice, language),
+            source=self._catalog.source(advice.practice, language),
             cautions=tuple(self._term(term, language) for term in sorted(advice.cautions)),
         )
 
