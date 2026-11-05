@@ -6,6 +6,7 @@ from anamnesis.domain.enums.urgency_level import UrgencyLevel
 from anamnesis.domain.errors.common import ValidationError
 from anamnesis.domain.types import RuleId, TermId
 from anamnesis.domain.value_objects.base import ValueObject, value_object
+from anamnesis.domain.value_objects.crisis_signal import CrisisSignal
 from anamnesis.domain.value_objects.inference import PracticeAdvice
 
 
@@ -24,6 +25,7 @@ class Assessment(ValueObject):
         practices: Все выведенные практики. Советовать можно только
             `advised_practices`.
         referrals: Куда обратиться за помощью, в порядке показа.
+        signals: Находки кризисного детектора за диалог.
         missing: Обязательные сведения, которых не хватило.
     """
 
@@ -35,6 +37,7 @@ class Assessment(ValueObject):
     clusters: tuple[TermId, ...] = ()
     practices: tuple[PracticeAdvice, ...] = ()
     referrals: tuple[Referral, ...] = ()
+    signals: tuple[CrisisSignal, ...] = ()
     missing: frozenset[FactKind] = frozenset()
 
     def __post_init__(self) -> None:

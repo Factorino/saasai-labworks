@@ -7,6 +7,7 @@ from anamnesis.application.interfaces.common.interactor import Interactor
 from anamnesis.application.interfaces.extraction.fact_extractor import IFactExtractor
 from anamnesis.application.interfaces.localization.text_catalog import ITextCatalog
 from anamnesis.application.interfaces.repositories.chat import IChatRepository
+from anamnesis.application.interfaces.safety.crisis_detector import ICrisisDetector
 from anamnesis.application.services.dialogue import DialogueService
 from anamnesis.application.services.rendering import ViewRenderer
 from anamnesis.domain.entities.chat import Chat, ChatId
@@ -40,12 +41,14 @@ class PostMessage(Interactor[PostMessageRequest, PostMessageResponse]):
         *,
         chat_repository: IChatRepository,
         extractor: IFactExtractor,
+        detector: ICrisisDetector,
         dialogue: DialogueService,
         catalog: ITextCatalog,
         renderer: ViewRenderer,
     ) -> None:
         self._chat_repo: IChatRepository = chat_repository
         self._extractor: IFactExtractor = extractor
+        self._detector: ICrisisDetector = detector
         self._dialogue: DialogueService = dialogue
         self._catalog: ITextCatalog = catalog
         self._renderer: ViewRenderer = renderer
@@ -67,12 +70,13 @@ class PostMessage(Interactor[PostMessageRequest, PostMessageResponse]):
             case ChatStage.CLARIFYING:
                 return await self._answer(chat, request)
             case ChatStage.SUMMARY | ChatStage.CRISIS:
-                return self._talk(chat, request)
+                return await self._talk(chat, request)
 
     async def _tell_story(self, chat: Chat, request: PostMessageRequest) -> ReplyView:
         self._validate_text(request)
         extracted: CaseFacts = await self._extractor.extract(request.text, chat.language)
         chat.tell_story(request.text, extracted)
+        await self._screen(chat, request.text)
         return await self._dialogue.after_story(chat)
 
     async def _answer(self, chat: Chat, request: PostMessageRequest) -> ReplyView:
@@ -80,13 +84,24 @@ class PostMessage(Interactor[PostMessageRequest, PostMessageResponse]):
         extracted: CaseFacts | None = await self._extract_manifestations(chat, answer)
         question: Question = chat.answer(answer, self._dialogue.questionnaire, extracted)
         chat.record(MessageRole.USER, self._renderer.answer(question, answer, chat.language))
+        if answer.text is not None:
+            await self._screen(chat, answer.text)
         return await self._dialogue.advance(chat)
 
-    def _talk(self, chat: Chat, request: PostMessageRequest) -> ReplyView:
+    async def _talk(self, chat: Chat, request: PostMessageRequest) -> ReplyView:
+        """Свободная реплика: шаблонный ответ, а при новом кризисе — кризисная сводка."""
+        was_crisis: bool = chat.is_crisis
         chat.post_message(request.text)
+        await self._screen(chat, request.text)
+        if chat.is_crisis and not was_crisis:
+            return await self._dialogue.conclude(chat)
         message: str = self._catalog.reply(chat.stage, chat.language)
         chat.record(MessageRole.ASSISTANT, message)
         return ReplyView(stage=chat.stage, message=message)
+
+    async def _screen(self, chat: Chat, text: str) -> None:
+        """Проверяет реплику кризисным детектором; кризисная находка переводит чат в кризис."""
+        chat.register_signals(await self._detector.detect(text, chat.language))
 
     async def _extract_manifestations(self, chat: Chat, answer: Answer) -> CaseFacts | None:
         """Ищет термины только в ответе на вопрос о проявлениях."""

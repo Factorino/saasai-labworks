@@ -1,0 +1,155 @@
+# Случаи для проверки кризисного детектора и кризисного сценария.
+#
+# `replies` — реплика и категории, которые должен найти детектор (пусто — ничего).
+# `dialogues` — реплики пользователя по порядку и ожидаемое состояние после них.
+# В репликах `text` — свой текст, `options` — коды выбранных вариантов.
+
+replies:
+  # Явные формулировки.
+  - text: Хочу покончить с собой
+    categories: [suicide]
+  - text: Я больше не хочу жить
+    categories: [suicide]
+  - text: Мне не хочется жить
+    categories: [suicide]
+  - text: Иногда думаю о самоубийстве
+    categories: [suicide]
+  - text: Вчера хотела умереть
+    categories: [suicide]
+  - text: Не вижу смысла жить дальше
+    categories: [suicide]
+  - text: Хочу убить себя
+    categories: [suicide]
+  - text: Думаю выпрыгнуть из окна
+    categories: [suicide]
+  - text: Я не могу больше, хочу умереть
+    categories: [suicide]
+  - text: Он меня бьёт, и я хочу умереть
+    categories: [suicide]
+  - text: Иногда режу руки
+    categories: [self_harm]
+  - text: Я специально делаю себе больно
+    categories: [self_harm]
+  - text: Иногда хочется убить его
+    categories: [violence]
+  - text: Хочу убить всех вокруг
+    categories: [violence]
+
+  # Косвенные признаки.
+  - text: Всем будет лучше без меня
+    categories: [indirect]
+  - text: Написала прощальное письмо маме
+    categories: [indirect]
+  - text: Я раздаю свои вещи друзьям
+    categories: [indirect]
+  - text: Скоро меня не станет
+    categories: [indirect]
+
+  # Пассивные мысли о смерти: не кризис, но службы помощи в сводке.
+  - text: Лучше бы меня не было
+    categories: [passive]
+  - text: Хочу уснуть и не проснуться
+    categories: [passive]
+  - text: Я устала жить
+    categories: [passive]
+  - text: Иногда хочется исчезнуть
+    categories: [passive]
+
+  # Речь о другом человеке.
+  - text: Подруга сказала, что хочет умереть
+    categories: [other_person]
+  - text: Я боюсь, что он покончит с собой
+    categories: [other_person]
+  - text: Сестра режет себя
+    categories: [other_person]
+
+  # Отрицание.
+  - text: Я никогда не хотел умереть
+    categories: []
+  - text: Я не думаю о самоубийстве
+    categories: []
+  - text: Мне грустно, но умирать я не хочу
+    categories: []
+  - text: Я не хочу причинить себе вред
+    categories: []
+
+  # Обычные жалобы без признаков кризиса.
+  - text: Последнее время мне тревожно и плохо сплю
+    categories: []
+  - text: Я устал от работы
+    categories: []
+  - text: На работе завал, начальник убивает своими требованиями
+    categories: []
+  - text: Смотрела фильм про самолёты и не могла уснуть
+    categories: []
+
+dialogues:
+  - name: crisis_in_story
+    messages:
+      - text: Последнее время всё плохо, хочу покончить с собой
+    stage: crisis
+    level: L3
+    crisis_message: true
+    helplines: true
+    support_others: false
+    categories: [suicide]
+
+  - name: crisis_in_answer_about_manifestations
+    messages:
+      - text: Сложно сказать, что со мной
+      - text: Мне кажется, я хочу умереть
+    stage: crisis
+    level: L3
+    crisis_message: true
+    helplines: true
+    support_others: false
+    categories: [suicide]
+
+  - name: crisis_after_summary
+    messages:
+      - text: Мне грустно
+      - options: [refuse]
+      - options: [refuse]
+      - options: [refuse]
+      - options: [none]
+      - options: [refuse]
+      - options: [refuse]
+      - options: [refuse]
+      - options: [refuse]
+      - text: На самом деле я иногда режу руки
+    stage: crisis
+    level: L3
+    crisis_message: true
+    helplines: true
+    support_others: false
+    categories: [self_harm]
+
+  - name: passive_thoughts_are_not_a_crisis
+    messages:
+      - text: Мне грустно, и лучше бы меня не было
+    finish: true
+    stage: summary
+    crisis_message: false
+    helplines: true
+    support_others: false
+    categories: [passive]
+
+  - name: worry_about_a_friend
+    messages:
+      - text: Мне тревожно, подруга сказала, что хочет умереть
+    finish: true
+    stage: summary
+    crisis_message: false
+    helplines: true
+    support_others: true
+    categories: [other_person]
+
+  - name: ordinary_story
+    messages:
+      - text: Мне тревожно и плохо сплю
+    finish: true
+    stage: summary
+    crisis_message: false
+    helplines: false
+    support_others: false
+    categories: []

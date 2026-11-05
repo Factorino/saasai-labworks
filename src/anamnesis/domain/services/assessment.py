@@ -2,6 +2,7 @@ from anamnesis.domain.enums.referral import Referral
 from anamnesis.domain.enums.urgency_level import UrgencyLevel
 from anamnesis.domain.value_objects.assessment import Assessment
 from anamnesis.domain.value_objects.case_facts import CaseFacts
+from anamnesis.domain.value_objects.crisis_signal import CrisisSignal
 from anamnesis.domain.value_objects.inference import InferenceResult
 
 
@@ -19,6 +20,7 @@ class AssessmentService:
         inference: InferenceResult,
         *,
         crisis: bool = False,
+        signals: tuple[CrisisSignal, ...] = (),
     ) -> Assessment:
         """Собирает оценку случая.
 
@@ -26,6 +28,7 @@ class AssessmentService:
             facts: Что известно о случае.
             inference: Что утвердила машина вывода.
             crisis: Чат в кризисном сценарии.
+            signals: Находки кризисного детектора за диалог.
 
         Returns:
             Оценка с уровнем, объяснением, практиками и направлениями.
@@ -37,7 +40,8 @@ class AssessmentService:
             fired_rules=tuple(sorted(inference.fired_rules)),
             clusters=tuple(sorted(inference.clusters)),
             practices=inference.practices,
-            referrals=self._referrals(inference, level),
+            referrals=self._referrals(inference, level, signals),
+            signals=signals,
             missing=facts.missing_required,
         )
 
@@ -67,13 +71,14 @@ class AssessmentService:
     def _referrals(
         inference: InferenceResult,
         level: UrgencyLevel | None,
+        signals: tuple[CrisisSignal, ...],
     ) -> tuple[Referral, ...]:
         """Направления в порядке показа.
 
-        При L3 добавляются службы помощи, даже если кризис зафиксирован вне
-        онтологии и правила их не вывели.
+        Службы помощи добавляются при L3 и при любой находке детектора, даже
+        если правила их не вывели: кризис мог быть найден вне онтологии.
         """
         referrals: set[Referral] = set(inference.referrals)
-        if level is UrgencyLevel.L3:
+        if level is UrgencyLevel.L3 or signals:
             referrals.add(Referral.CRISIS_HELPLINE)
         return tuple(referral for referral in Referral if referral in referrals)

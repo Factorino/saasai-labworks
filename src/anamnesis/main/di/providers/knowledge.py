@@ -6,6 +6,7 @@ from dishka.dependency_source import CompositeDependencySource
 from anamnesis.application.interfaces.extraction.fact_extractor import IFactExtractor
 from anamnesis.application.interfaces.localization.text_catalog import ITextCatalog
 from anamnesis.application.interfaces.reasoning.case_reasoner import ICaseReasoner
+from anamnesis.application.interfaces.safety.crisis_detector import ICrisisDetector
 from anamnesis.application.services.dialogue import DialogueService
 from anamnesis.application.services.rendering import ViewRenderer
 from anamnesis.domain.services.assessment import AssessmentService
@@ -15,6 +16,7 @@ from anamnesis.infrastructure.extraction.lexicon_extractor import LexiconFactExt
 from anamnesis.infrastructure.localization.locale import Locale, load_locales
 from anamnesis.infrastructure.localization.text_catalog import YamlTextCatalog
 from anamnesis.infrastructure.reasoning.owl_reasoner import OwlCaseReasoner
+from anamnesis.infrastructure.safety.lexicon_detector import LexiconCrisisDetector
 from anamnesis.main.config.knowledge import KnowledgeConfig
 
 
@@ -37,6 +39,10 @@ class KnowledgeProvider(Provider):
         return LexiconFactExtractor(locales)
 
     @provide
+    def detector(self, locales: Mapping[LanguageCode, Locale]) -> ICrisisDetector:
+        return LexiconCrisisDetector(locales)
+
+    @provide
     def reasoner(self, config: KnowledgeConfig) -> ICaseReasoner:
         return OwlCaseReasoner(
             ontology_path=config.ontology_path,
@@ -53,11 +59,13 @@ class KnowledgeProvider(Provider):
         questionnaire: Questionnaire,
         assessment_service: AssessmentService,
         reasoner: ICaseReasoner,
+        catalog: ITextCatalog,
         renderer: ViewRenderer,
     ) -> DialogueService:
         return DialogueService(
             questionnaire=questionnaire,
             assessment_service=assessment_service,
             reasoner=reasoner,
+            catalog=catalog,
             renderer=renderer,
         )

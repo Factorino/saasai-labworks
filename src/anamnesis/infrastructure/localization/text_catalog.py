@@ -1,6 +1,7 @@
 from collections.abc import Mapping
 from typing import Final, override
 
+from anamnesis.application.dto.views.summary import HelplineView
 from anamnesis.application.interfaces.localization.text_catalog import ITextCatalog
 from anamnesis.domain.enums.chat_stage import ChatStage
 from anamnesis.domain.enums.fact_kind import FactKind
@@ -45,6 +46,21 @@ class YamlTextCatalog(ITextCatalog):
         if code == REFUSE_OPTION_CODE:
             return messages.refuse
         raise KeyError(f"No label for option '{code}' of '{fact}' in '{language}'")
+
+    @override
+    def crisis_message(self, language: LanguageCode) -> str:
+        return self._messages(language).crisis_message
+
+    @override
+    def support_others(self, language: LanguageCode) -> str:
+        return self._messages(language).support_others
+
+    @override
+    def helplines(self, language: LanguageCode) -> tuple[HelplineView, ...]:
+        return tuple(
+            HelplineView(name=helpline.name, phone=helpline.phone, note=helpline.note)
+            for helpline in self._messages(language).helplines
+        )
 
     @override
     def disclaimer(self, language: LanguageCode) -> str:

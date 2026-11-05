@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field
 import yaml
 
 from anamnesis.domain.enums.chat_stage import ChatStage
+from anamnesis.domain.enums.crisis_category import CrisisCategory
 from anamnesis.domain.enums.fact_kind import FactKind
 from anamnesis.domain.enums.referral import Referral
 from anamnesis.domain.types import LanguageCode, OptionCode, RuleId, TermId
@@ -26,10 +27,21 @@ class QuestionTexts(_File):
     options: Mapping[OptionCode, str] = Field(default_factory=dict)
 
 
+class Helpline(_File):
+    """Служба помощи: название, телефон и пояснение."""
+
+    name: str
+    phone: str
+    note: str = ""
+
+
 class Messages(_File):
     """`messages.yaml`: тексты интерфейса по кодам домена."""
 
     greeting: str
+    crisis_message: str
+    support_others: str
+    helplines: tuple[Helpline, ...]
     disclaimer: str
     replies: Mapping[ChatStage, str]
     levels: Mapping[str, str]
@@ -56,6 +68,19 @@ class Lexicon(_File):
     stressors: Mapping[TermId, tuple[str, ...]]
 
 
+class Crisis(_File):
+    """`crisis.yaml`: шаблоны кризисного детектора.
+
+    Шаблон — слова через пробел, `...` — пропуск до нескольких слов.
+    """
+
+    stemmer: str
+    negations: tuple[str, ...]
+    first_person: tuple[str, ...]
+    others: tuple[str, ...]
+    patterns: Mapping[CrisisCategory, tuple[str, ...]]
+
+
 class Locale(_File):
     """Все тексты одного языка."""
 
@@ -63,10 +88,16 @@ class Locale(_File):
     messages: Messages
     terms: Terms
     lexicon: Lexicon
+    crisis: Crisis
 
 
 _FILES: Final[Mapping[str, str]] = MappingProxyType(
-    {"messages": "messages.yaml", "terms": "terms.yaml", "lexicon": "lexicon.yaml"},
+    {
+        "messages": "messages.yaml",
+        "terms": "terms.yaml",
+        "lexicon": "lexicon.yaml",
+        "crisis": "crisis.yaml",
+    },
 )
 """Файлы, без которых язык не поддерживается."""
 

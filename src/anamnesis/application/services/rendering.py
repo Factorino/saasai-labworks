@@ -3,14 +3,18 @@ from anamnesis.application.dto.views.question import OptionView, QuestionView
 from anamnesis.application.dto.views.summary import (
     CaseView,
     EvidenceView,
+    HelplineView,
     PracticeView,
     ReferralView,
     RuleView,
+    SignalView,
     SummaryView,
     TermView,
 )
 from anamnesis.application.interfaces.localization.text_catalog import ITextCatalog
 from anamnesis.domain.entities.chat import Chat
+from anamnesis.domain.enums.crisis_category import CrisisCategory
+from anamnesis.domain.enums.referral import Referral
 from anamnesis.domain.enums.urgency_level import UrgencyLevel
 from anamnesis.domain.types import LanguageCode, TermId
 from anamnesis.domain.value_objects.assessment import Assessment
@@ -70,6 +74,12 @@ class ViewRenderer:
                 ReferralView(referral=referral, text=self._catalog.referral(referral, language))
                 for referral in assessment.referrals
             ),
+            helplines=self._helplines(assessment, language),
+            signals=tuple(
+                SignalView(category=signal.category, quote=signal.quote)
+                for signal in assessment.signals
+            ),
+            support_others=self._support_others(assessment, language),
             practices=tuple(
                 self._practice(advice, language) for advice in assessment.advised_practices
             ),
@@ -82,6 +92,24 @@ class ViewRenderer:
             case=self._case(facts, language),
             disclaimer=self._catalog.disclaimer(language),
         )
+
+    def _helplines(
+        self,
+        assessment: Assessment,
+        language: LanguageCode,
+    ) -> tuple[HelplineView, ...]:
+        """Контакты помощи — при любом срочном направлении."""
+        urgent: set[Referral] = {Referral.CRISIS_HELPLINE, Referral.EMERGENCY_MEDICAL_CARE}
+        if urgent.isdisjoint(assessment.referrals):
+            return ()
+        return self._catalog.helplines(language)
+
+    def _support_others(self, assessment: Assessment, language: LanguageCode) -> str | None:
+        """Совет поддержать близкого, если пользователь тревожится за другого человека."""
+        categories: set[CrisisCategory] = {signal.category for signal in assessment.signals}
+        if CrisisCategory.OTHER_PERSON not in categories:
+            return None
+        return self._catalog.support_others(language)
 
     def _phrase(self, assessment: Assessment, language: LanguageCode) -> str | None:
         """Формулировка уровня; L0 о самопомощи не показывается, если она запрещена."""

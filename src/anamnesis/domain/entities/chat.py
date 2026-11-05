@@ -15,6 +15,7 @@ from anamnesis.domain.services.questionnaire import Questionnaire
 from anamnesis.domain.types import LanguageCode
 from anamnesis.domain.value_objects.assessment import Assessment
 from anamnesis.domain.value_objects.case_facts import CaseFacts
+from anamnesis.domain.value_objects.crisis_signal import CrisisSignal
 from anamnesis.domain.value_objects.inference import InferenceResult
 from anamnesis.domain.value_objects.message import Message
 from anamnesis.domain.value_objects.question import Answer, Question
@@ -39,6 +40,7 @@ class Chat(Entity[ChatId]):
         self_harm_followed_up: Повторный вопрос о самоповреждении уже задан.
         assessment: Выданная оценка.
         messages: Последние `HISTORY_LIMIT` реплик.
+        signals: Находки кризисного детектора за весь диалог.
     """
 
     HISTORY_LIMIT: ClassVar[int] = 20
@@ -53,6 +55,7 @@ class Chat(Entity[ChatId]):
     self_harm_followed_up: bool = False
     assessment: Assessment | None = None
     messages: tuple[Message, ...] = ()
+    signals: tuple[CrisisSignal, ...] = ()
 
     @classmethod
     def start(
@@ -134,10 +137,18 @@ class Chat(Entity[ChatId]):
             self.facts,
             inference,
             crisis=self.is_crisis,
+            signals=self.signals,
         )
         if not self.is_crisis:
             self.stage = ChatStage.SUMMARY
         return self.assessment
+
+    def register_signals(self, signals: tuple[CrisisSignal, ...]) -> None:
+        """Запоминает находки детектора; кризисная переводит чат в кризис на любом этапе."""
+        known: set[CrisisSignal] = set(self.signals)
+        self.signals = (*self.signals, *(signal for signal in signals if signal not in known))
+        if any(signal.category.is_crisis for signal in signals):
+            self.mark_crisis()
 
     def mark_crisis(self) -> None:
         """Переводит чат в кризисный сценарий, вопросы больше не задаются."""

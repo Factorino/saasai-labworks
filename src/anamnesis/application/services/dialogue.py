@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 from anamnesis.application.dto.views.reply import ReplyView
+from anamnesis.application.interfaces.localization.text_catalog import ITextCatalog
 from anamnesis.application.interfaces.reasoning.case_reasoner import ICaseReasoner
 from anamnesis.application.services.rendering import ViewRenderer
 from anamnesis.domain.entities.chat import Chat
@@ -27,11 +28,13 @@ class DialogueService:
         questionnaire: Questionnaire,
         assessment_service: AssessmentService,
         reasoner: ICaseReasoner,
+        catalog: ITextCatalog,
         renderer: ViewRenderer,
     ) -> None:
         self._questionnaire: Questionnaire = questionnaire
         self._assessment_service: AssessmentService = assessment_service
         self._reasoner: ICaseReasoner = reasoner
+        self._catalog: ITextCatalog = catalog
         self._renderer: ViewRenderer = renderer
 
     @property
@@ -46,7 +49,7 @@ class DialogueService:
         тоже не ждёт уточняющих вопросов: диалог завершается со сводкой.
         """
         if chat.is_crisis:
-            return await self._conclude(chat)
+            return await self.conclude(chat)
         inference: InferenceResult = await self._reasoner.infer(chat.facts)
         if UrgencyLevel.L3 in inference.levels:
             chat.mark_crisis()
@@ -62,15 +65,18 @@ class DialogueService:
             question: Question | None = chat.next_question(self._questionnaire)
             if question is not None:
                 return self._ask(chat, question)
-        return await self._conclude(chat)
+        return await self.conclude(chat)
 
-    async def _conclude(self, chat: Chat) -> ReplyView:
+    async def conclude(self, chat: Chat) -> ReplyView:
         """Запускает вывод; вместо сводки может прийти повторный вопрос."""
         inference: InferenceResult = await self._reasoner.infer(chat.facts)
         return self._summarize(chat, inference)
 
     def _summarize(self, chat: Chat, inference: InferenceResult) -> ReplyView:
-        """Итог по готовому выводу; вместо сводки может прийти повторный вопрос."""
+        """Итог по готовому выводу; вместо сводки может прийти повторный вопрос.
+
+        В кризисе к сводке добавляется фиксированное кризисное сообщение.
+        """
         result: Question | Assessment = chat.conclude(
             inference, self._assessment_service, self._questionnaire
         )
@@ -78,6 +84,7 @@ class DialogueService:
             return self._ask(chat, result)
         return ReplyView(
             stage=chat.stage,
+            message=self._catalog.crisis_message(chat.language) if chat.is_crisis else None,
             summary=self._renderer.summary(result, chat.facts, chat.language),
         )
 

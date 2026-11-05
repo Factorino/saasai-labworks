@@ -1,6 +1,7 @@
 from abc import abstractmethod
 from typing import Protocol
 
+from anamnesis.application.dto.views.summary import HelplineView
 from anamnesis.domain.enums.chat_stage import ChatStage
 from anamnesis.domain.enums.fact_kind import FactKind
 from anamnesis.domain.enums.referral import Referral
@@ -19,6 +20,18 @@ class ITextCatalog(Protocol):
     @abstractmethod
     def greeting(self, language: LanguageCode) -> str:
         """Приглашение рассказать, что беспокоит."""
+
+    @abstractmethod
+    def crisis_message(self, language: LanguageCode) -> str:
+        """Фиксированное сообщение в момент кризиса; контакты помощи идут отдельно."""
+
+    @abstractmethod
+    def support_others(self, language: LanguageCode) -> str:
+        """Совет, как поддержать близкого, о котором тревожится пользователь."""
+
+    @abstractmethod
+    def helplines(self, language: LanguageCode) -> tuple[HelplineView, ...]:
+        """Контакты служб помощи для региона языка."""
 
     @abstractmethod
     def question(self, question: Question, language: LanguageCode) -> str:

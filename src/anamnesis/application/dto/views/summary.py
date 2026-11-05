@@ -1,5 +1,6 @@
 from anamnesis.application.dto.base import DTO
 from anamnesis.domain.enums.change_direction import ChangeDirection
+from anamnesis.domain.enums.crisis_category import CrisisCategory
 from anamnesis.domain.enums.fact_kind import FactKind
 from anamnesis.domain.enums.frequency import Frequency
 from anamnesis.domain.enums.impact_degree import ImpactDegree
@@ -16,6 +17,17 @@ class TermView(DTO):
 
 class EvidenceView(TermView):
     quote: str
+
+
+class SignalView(DTO):
+    category: CrisisCategory
+    quote: str
+
+
+class HelplineView(DTO):
+    name: str
+    phone: str
+    note: str = ""
 
 
 class PracticeView(TermView):
@@ -57,6 +69,9 @@ class SummaryView(DTO):
     specialist: str
     crisis: bool
     referrals: tuple[ReferralView, ...]
+    helplines: tuple[HelplineView, ...]
+    signals: tuple[SignalView, ...]
+    support_others: str | None
     practices: tuple[PracticeView, ...]
     clusters: tuple[TermView, ...]
     explanation: tuple[RuleView, ...]
