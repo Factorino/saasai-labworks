@@ -10,6 +10,7 @@ from anamnesis.domain.enums.chat_stage import ChatStage
 from anamnesis.domain.enums.crisis_category import CrisisCategory
 from anamnesis.domain.enums.fact_kind import FactKind
 from anamnesis.domain.enums.referral import Referral
+from anamnesis.domain.enums.violation_kind import ViolationKind
 from anamnesis.domain.types import LanguageCode, OptionCode, RuleId, TermId
 
 
@@ -81,6 +82,20 @@ class Crisis(_File):
     patterns: Mapping[CrisisCategory, tuple[str, ...]]
 
 
+class Guard(_File):
+    """`guard.yaml`: шаблоны проверки ответов системы.
+
+    `codes` — регулярные выражения кодов МКБ; `levels` — утверждения об уровне
+    срочности (`L0`–`L3`), по которым видно расхождение с правилами.
+    """
+
+    stemmer: str
+    negations: tuple[str, ...]
+    patterns: Mapping[ViolationKind, tuple[str, ...]]
+    codes: tuple[str, ...]
+    levels: Mapping[str, tuple[str, ...]]
+
+
 class Locale(_File):
     """Все тексты одного языка."""
 
@@ -89,6 +104,7 @@ class Locale(_File):
     terms: Terms
     lexicon: Lexicon
     crisis: Crisis
+    guard: Guard
 
 
 _FILES: Final[Mapping[str, str]] = MappingProxyType(
@@ -97,6 +113,7 @@ _FILES: Final[Mapping[str, str]] = MappingProxyType(
         "terms": "terms.yaml",
         "lexicon": "lexicon.yaml",
         "crisis": "crisis.yaml",
+        "guard": "guard.yaml",
     },
 )
 """Файлы, без которых язык не поддерживается."""
