@@ -9,3 +9,6 @@ RuleId = NewType("RuleId", str)
 
 OptionCode = NewType("OptionCode", str)
 """Код варианта ответа: `about_month`, `work_and_study`, `refuse`."""
+
+LanguageCode = NewType("LanguageCode", str)
+"""Код языка диалога"""

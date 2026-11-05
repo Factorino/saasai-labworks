@@ -12,6 +12,7 @@ from anamnesis.domain.enums.self_harm_screening import SelfHarmScreening
 from anamnesis.domain.errors.chat import ChatStageError, ConsentRequiredError
 from anamnesis.domain.services.assessment import AssessmentService
 from anamnesis.domain.services.questionnaire import Questionnaire
+from anamnesis.domain.types import LanguageCode
 from anamnesis.domain.value_objects.assessment import Assessment
 from anamnesis.domain.value_objects.case_facts import CaseFacts
 from anamnesis.domain.value_objects.inference import InferenceResult
@@ -28,6 +29,7 @@ class Chat(Entity[ChatId]):
     """Диалог с одним пользователем.
 
     Attributes:
+        language: Язык диалога: по нему извлекаются термины и подбираются тексты.
         created_at: Когда начат диалог.
         stage: Текущий этап.
         facts: Накопленные сведения о случае.
@@ -41,6 +43,7 @@ class Chat(Entity[ChatId]):
 
     HISTORY_LIMIT: ClassVar[int] = 20
 
+    language: LanguageCode
     created_at: datetime
     stage: ChatStage = ChatStage.STORY
     facts: CaseFacts = field(default_factory=CaseFacts)
@@ -52,10 +55,17 @@ class Chat(Entity[ChatId]):
     messages: tuple[Message, ...] = ()
 
     @classmethod
-    def start(cls, *, chat_id: ChatId, consent: bool, now: datetime) -> Self:
+    def start(
+        cls,
+        *,
+        chat_id: ChatId,
+        consent: bool,
+        language: LanguageCode,
+        now: datetime,
+    ) -> Self:
         """Начинает диалог."""
         cls._validate_consent(consent=consent)
-        return cls(id=chat_id, created_at=now)
+        return cls(id=chat_id, language=language, created_at=now)
 
     @property
     def is_crisis(self) -> bool:
@@ -87,14 +97,15 @@ class Chat(Entity[ChatId]):
         answer: Answer,
         questionnaire: Questionnaire,
         extracted: CaseFacts | None = None,
-    ) -> None:
-        """Принимает ответ на вопрос."""
+    ) -> Question:
+        """Принимает ответ на вопрос и возвращает вопрос, на который ответили."""
         self._validate_stage(ChatStage.CLARIFYING, action="answer a question")
         self._validate_pending()
         question: Question = cast("Question", self.pending)
         self.facts = questionnaire.apply(self.facts, question, answer, extracted)
         self.pending = None
         self._check_crisis()
+        return question
 
     def finish(self) -> None:
         """Завершает диалог, не дожидаясь конца вопросов."""

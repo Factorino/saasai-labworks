@@ -46,7 +46,9 @@ classifiers = [
 
 # Runtime dependencies. Everything the service needs, and nothing else —
 # development tooling belongs in the groups at the bottom of this file.
-dependencies = []
+dependencies = [
+    "pydantic>=2.13.5",
+]
 
 
 # --- Dependency groups -------------------------------------------------------
