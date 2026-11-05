@@ -111,6 +111,7 @@ class ViewRenderer:
         return PracticeView(
             term=advice.practice,
             name=self._catalog.term(advice.practice, language),
+            description=self._catalog.description(advice.practice, language),
             cautions=tuple(self._term(term, language) for term in sorted(advice.cautions)),
         )
 

@@ -68,7 +68,7 @@ class PostMessage(Interactor[PostMessageRequest, PostMessageResponse]):
         self._validate_text(request)
         extracted: CaseFacts = await self._extractor.extract(request.text, chat.language)
         chat.tell_story(request.text, extracted)
-        return await self._dialogue.advance(chat)
+        return await self._dialogue.after_story(chat)
 
     async def _answer(self, chat: Chat, request: PostMessageRequest) -> ReplyView:
         answer = Answer(option_codes=request.option_codes, text=request.text or None)

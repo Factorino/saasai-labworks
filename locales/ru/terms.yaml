@@ -1,0 +1,892 @@
+# Названия и описания понятий онтологии на русском языке.
+#
+# `names` — название понятия для каждого термина, `descriptions` — описание
+# понятия для его представителя (`X_`).
+
+names:
+  Manifestation_: Проявления
+  symptoms_in_general: Проявления
+  general_complaints: Проявления
+  EmotionalManifestation_: Эмоциональные проявления
+  emotional_state: Эмоциональные проявления
+  hard_feelings: Эмоциональные проявления
+  Anxiety_: Тревога
+  feel_anxious: Тревога
+  on_edge: Тревога
+  fear_something_bad: Тревога
+  ExcessiveWorry_: Постоянное беспокойство
+  worry_all_the_time: Постоянное беспокойство
+  cannot_stop_worrying: Постоянное беспокойство
+  PanicEpisode_: Приступ паники
+  panic_attacks: Приступ паники
+  sudden_terror: Приступ паники
+  SocialFear_: Страх социальных ситуаций
+  afraid_of_judgement: Страх социальных ситуаций
+  fear_of_speaking: Страх социальных ситуаций
+  shyness: Страх социальных ситуаций
+  SpecificFear_: Сильный конкретный страх
+  phobia: Сильный конкретный страх
+  fear_of_flying_heights: Сильный конкретный страх
+  FearOfBeingTrapped_: Страх оказаться в ловушке
+  afraid_of_crowds: Страх оказаться в ловушке
+  afraid_to_leave_home: Страх оказаться в ловушке
+  HealthWorry_: Тревога о здоровье
+  fear_of_illness: Тревога о здоровье
+  checking_symptoms: Тревога о здоровье
+  LowMood_: Подавленное настроение
+  feel_sad: Подавленное настроение
+  feel_empty: Подавленное настроение
+  feel_down: Подавленное настроение
+  LossOfInterest_: Потеря интереса
+  nothing_brings_joy: Потеря интереса
+  apathy: Потеря интереса
+  Hopelessness_: Безнадёжность
+  no_way_out: Безнадёжность
+  nothing_will_change: Безнадёжность
+  NegativeSelfView_: Негативный взгляд на себя
+  bad_about_myself: Негативный взгляд на себя
+  self_esteem_problems: Негативный взгляд на себя
+  ExcessiveGuilt_: Чрезмерная вина
+  feel_guilty: Чрезмерная вина
+  guilty_for_everything: Чрезмерная вина
+  LowSelfWorth_: Низкая самооценка
+  feel_worthless: Низкая самооценка
+  low_self_esteem: Низкая самооценка
+  Shame_: Стыд
+  deeply_ashamed: Стыд
+  want_to_hide: Стыд
+  HarshSelfCriticism_: Жёсткая самокритика
+  perfectionism: Жёсткая самокритика
+  constant_self_criticism: Жёсткая самокритика
+  BodyImageWorry_: Недовольство внешностью
+  hate_my_appearance: Недовольство внешностью
+  body_flaw_focus: Недовольство внешностью
+  Irritability_: Раздражительность
+  easily_annoyed: Раздражительность
+  short_temper: Раздражительность
+  EmotionalNumbness_: Эмоциональное онемение
+  feel_nothing: Эмоциональное онемение
+  emotionally_flat: Эмоциональное онемение
+  UnusuallyHighEnergy_: Необычный прилив энергии
+  barely_need_sleep: Необычный прилив энергии
+  racing_with_ideas: Необычный прилив энергии
+  feel_unstoppable: Необычный прилив энергии
+  MoodSwings_: Перепады настроения
+  mood_jumps: Перепады настроения
+  emotional_rollercoaster: Перепады настроения
+  EmotionalOverwhelm_: Ощущение перегруза
+  feel_overwhelmed: Ощущение перегруза
+  at_breaking_point: Ощущение перегруза
+  WorkDisengagement_: Выгорание на работе
+  burned_out: Выгорание на работе
+  dont_care_about_work: Выгорание на работе
+  feel_ineffective_at_work: Выгорание на работе
+  LongingForDeceased_: Тоска по умершему
+  miss_them_unbearably: Тоска по умершему
+  cannot_accept_death: Тоска по умершему
+  SomaticManifestation_: Телесные проявления
+  body_complaints: Телесные проявления
+  physical_condition: Телесные проявления
+  SleepDisturbance_: Нарушения сна
+  bad_sleep: Нарушения сна
+  sleep_changed: Нарушения сна
+  Insomnia_: Бессонница
+  cannot_fall_asleep: Бессонница
+  wake_at_night: Бессонница
+  Hypersomnia_: Избыточная сонливость
+  sleep_all_day: Избыточная сонливость
+  always_sleepy: Избыточная сонливость
+  Nightmares_: Кошмары
+  bad_dreams: Кошмары
+  wake_from_dreams: Кошмары
+  AppetiteChange_: Изменение аппетита
+  no_appetite: Изменение аппетита
+  eat_much_more: Изменение аппетита
+  Fatigue_: Усталость
+  always_tired: Усталость
+  no_energy: Усталость
+  exhausted: Усталость
+  MuscleTension_: Мышечное напряжение
+  tense_muscles: Мышечное напряжение
+  clenched_jaw: Мышечное напряжение
+  BodilyArousalSigns_: Телесные реакции
+  body_on_alert: Телесные реакции
+  body_reacts_to_stress: Телесные реакции
+  HeartSensations_: Ощущения в сердце
+  heart_pounding: Ощущения в сердце
+  pressure_jumps: Ощущения в сердце
+  BreathingDifficulty_: Трудности с дыханием
+  not_enough_air: Трудности с дыханием
+  lump_in_throat: Трудности с дыханием
+  TremblingAndSweating_: Дрожь и потливость
+  shaking_hands: Дрожь и потливость
+  sweating_a_lot: Дрожь и потливость
+  blushing: Дрожь и потливость
+  Dizziness_: Головокружение
+  feel_lightheaded: Головокружение
+  head_feels_foggy: Головокружение
+  DigestiveUpset_: Расстройство ЖКТ
+  feel_nauseous: Расстройство ЖКТ
+  stomach_trouble: Расстройство ЖКТ
+  OtherBodilySymptoms_: Другие телесные жалобы
+  unexplained_symptoms: Другие телесные жалобы
+  doctors_find_nothing: Другие телесные жалобы
+  EarRinging_: Шум в ушах
+  tinnitus_complaint: Шум в ушах
+  buzzing_in_ears: Шум в ушах
+  Headache_: Головная боль
+  head_hurts: Головная боль
+  head_pressure: Головная боль
+  BodyPain_: Боль в теле
+  back_and_neck_pain: Боль в теле
+  body_aches: Боль в теле
+  NumbnessOrTingling_: Онемение и покалывание
+  tingling_fingers: Онемение и покалывание
+  numb_hands_feet: Онемение и покалывание
+  MenstrualProblems_: Проблемы с циклом
+  painful_periods: Проблемы с циклом
+  irregular_cycle: Проблемы с циклом
+  SexualDifficulties_: Сексуальные трудности
+  low_libido: Сексуальные трудности
+  sex_problems: Сексуальные трудности
+  UrgentBodilyWarningSigns_: Опасные телесные признаки
+  need_emergency_care: Опасные телесные признаки
+  suddenly_very_unwell: Опасные телесные признаки
+  SuddenHearingOrBalanceChange_: Внезапная потеря слуха или равновесия
+  sudden_hearing_loss: Внезапная потеря слуха или равновесия
+  room_is_spinning: Внезапная потеря слуха или равновесия
+  StrokeLikeSigns_: Признаки как при инсульте
+  face_droops: Признаки как при инсульте
+  one_side_weak: Признаки как при инсульте
+  speech_slurred: Признаки как при инсульте
+  sudden_headache_or_vision_loss: Признаки как при инсульте
+  ChestPainOrSevereBreathing_: Боль в груди или сильное удушье
+  chest_pain: Боль в груди или сильное удушье
+  cannot_breathe: Боль в груди или сильное удушье
+  LossOfConsciousness_: Потеря сознания
+  fainted: Потеря сознания
+  passed_out: Потеря сознания
+  CognitiveManifestation_: Когнитивные проявления
+  thinking_problems: Когнитивные проявления
+  mind_not_working: Когнитивные проявления
+  ThinkingDifficulties_: Трудности с мышлением
+  slow_thinking: Трудности с мышлением
+  brain_fog: Трудности с мышлением
+  ConcentrationProblems_: Трудности с концентрацией
+  cannot_focus: Трудности с концентрацией
+  mind_wanders: Трудности с концентрацией
+  MemoryProblems_: Проблемы с памятью
+  forgetful: Проблемы с памятью
+  lose_things: Проблемы с памятью
+  DecisionDifficulty_: Трудности с решениями
+  cannot_decide: Трудности с решениями
+  fear_wrong_choice: Трудности с решениями
+  ThreatVigilance_: Постоянная настороженность
+  always_on_guard: Постоянная настороженность
+  sense_of_danger: Постоянная настороженность
+  IntrusiveThoughts_: Непрошеные мысли
+  thoughts_wont_leave: Непрошеные мысли
+  unwanted_images: Непрошеные мысли
+  ObsessiveThoughts_: Повторяющиеся навязчивые мысли
+  same_thought_loop: Повторяющиеся навязчивые мысли
+  fear_of_germs_or_harm: Повторяющиеся навязчивые мысли
+  ReexperiencingEvent_: Повторное переживание события
+  flashbacks: Повторное переживание события
+  event_nightmares: Повторное переживание события
+  Rumination_: Прокручивание мыслей
+  replay_the_past: Прокручивание мыслей
+  overthinking: Прокручивание мыслей
+  MeaningAndIdentity_: Поиск смысла и себя
+  existential_questions: Поиск смысла и себя
+  lost_in_life: Поиск смысла и себя
+  LackOfPurpose_: Нет смысла и цели
+  no_meaning: Нет смысла и цели
+  dont_know_what_i_want: Нет смысла и цели
+  IdentityConfusion_: Непонимание себя
+  dont_know_who_i_am: Непонимание себя
+  lost_myself: Непонимание себя
+  Dissociation_: Ощущение отстранённости
+  feel_detached: Ощущение отстранённости
+  lost_time: Ощущение отстранённости
+  Depersonalization_: Деперсонализация
+  watching_myself: Деперсонализация
+  body_not_mine: Деперсонализация
+  Derealization_: Дереализация
+  world_feels_unreal: Дереализация
+  behind_glass: Дереализация
+  SelfHarmThoughts_: Мысли о смерти и самоповреждении
+  dark_thoughts: Мысли о смерти и самоповреждении
+  thoughts_of_self_harm: Мысли о смерти и самоповреждении
+  PassiveDeathThoughts_: Пассивные мысли о смерти
+  wish_not_to_wake: Пассивные мысли о смерти
+  tired_of_living: Пассивные мысли о смерти
+  ActiveSelfHarmThoughts_: Активные мысли о самоповреждении
+  want_to_end_life: Активные мысли о самоповреждении
+  want_to_hurt_myself: Активные мысли о самоповреждении
+  PsychoticSign_: Психотические признаки
+  hear_voices: Психотические признаки
+  being_watched_belief: Психотические признаки
+  confused_thinking: Психотические признаки
+  BehaviouralManifestation_: Поведенческие проявления
+  behaviour_changed: Поведенческие проявления
+  habits_changed: Поведенческие проявления
+  SocialWithdrawal_: Уход от общения
+  avoid_people: Уход от общения
+  stay_alone: Уход от общения
+  Avoidance_: Избегание
+  avoid_situations: Избегание
+  avoid_reminders: Избегание
+  Restlessness_: Двигательное беспокойство
+  cannot_sit_still: Двигательное беспокойство
+  fidgeting: Двигательное беспокойство
+  CompulsiveActions_: Ритуалы и проверки
+  keep_checking: Ритуалы и проверки
+  repeated_washing: Ритуалы и проверки
+  hair_pulling_skin_picking: Ритуалы и проверки
+  hoarding: Ритуалы и проверки
+  AngerOutbursts_: Вспышки гнева
+  lose_control_anger: Вспышки гнева
+  shout_and_break: Вспышки гнева
+  SelfNeglect_: Пренебрежение собой
+  stopped_washing: Пренебрежение собой
+  dont_care_for_myself: Пренебрежение собой
+  SelfHarmBehaviour_: Самоповреждение
+  cuts_myself: Самоповреждение
+  hurts_self_physically: Самоповреждение
+  SlowedMovement_: Заторможенность
+  moving_slowly: Заторможенность
+  speaking_slowly: Заторможенность
+  Procrastination_: Прокрастинация
+  keep_postponing: Прокрастинация
+  cannot_organise: Прокрастинация
+  ImpulsiveOrRiskyBehaviour_: Импульсивное и рискованное поведение
+  reckless_actions: Импульсивное и рискованное поведение
+  act_without_thinking: Импульсивное и рискованное поведение
+  AddictiveBehaviours_: Зависимое поведение
+  cannot_quit_habit: Зависимое поведение
+  out_of_control_habit: Зависимое поведение
+  SubstanceUse_: Проблемное употребление веществ
+  drinking_to_cope: Проблемное употребление веществ
+  cannot_control_use: Проблемное употребление веществ
+  Gambling_: Азартные игры
+  cannot_stop_gambling: Азартные игры
+  betting: Азартные игры
+  ExcessiveGaming_: Чрезмерные игры и экранное время
+  gaming_all_night: Чрезмерные игры и экранное время
+  phone_addiction: Чрезмерные игры и экранное время
+  CompulsiveSexualBehaviour_: Неконтролируемое сексуальное поведение
+  porn_compulsion: Неконтролируемое сексуальное поведение
+  risky_sex_urges: Неконтролируемое сексуальное поведение
+  CompulsiveShopping_: Неконтролируемые покупки
+  shopping_spree: Неконтролируемые покупки
+  buy_to_feel_better: Неконтролируемые покупки
+  InterpersonalDifficulties_: Трудности в общении
+  hard_to_connect: Трудности в общении
+  relationships_keep_failing: Трудности в общении
+  TrustDifficulties_: Трудности с доверием
+  cannot_trust_people: Трудности с доверием
+  jealousy: Трудности с доверием
+  FearOfRejection_: Страх отвержения
+  fear_of_abandonment: Страх отвержения
+  hurt_by_criticism: Страх отвержения
+  DifficultySettingBoundaries_: Трудности с границами
+  cannot_say_no: Трудности с границами
+  people_pleasing: Трудности с границами
+  DisorderedEating_: Нарушенное пищевое поведение
+  restricting_food: Нарушенное пищевое поведение
+  obsessed_with_weight: Нарушенное пищевое поведение
+  binge_eating: Нарушенное пищевое поведение
+  ViolenceThreat_: Угроза насилия
+  want_to_hurt_others: Угроза насилия
+  threatening_someone: Угроза насилия
+  Stressor_: Источник стресса
+  source_of_stress: Источник стресса
+  hard_situation: Источник стресса
+  WorkStressor_: Стресс из-за работы
+  stress_at_work: Стресс из-за работы
+  job_is_draining: Стресс из-за работы
+  Workload_: Рабочая перегрузка
+  workload: Рабочая перегрузка
+  constant_deadlines: Рабочая перегрузка
+  WorkSchedule_: Тяжёлый рабочий график
+  night_shifts: Тяжёлый рабочий график
+  overtime: Тяжёлый рабочий график
+  LowWorkControl_: Нет контроля над работой
+  no_say_at_work: Нет контроля над работой
+  unclear_role: Нет контроля над работой
+  WorkplaceConflict_: Конфликт на работе
+  conflict_with_boss: Конфликт на работе
+  workplace_bullying: Конфликт на работе
+  JobInsecurity_: Страх потерять работу
+  might_be_fired: Страх потерять работу
+  unstable_job: Страх потерять работу
+  JobLoss_: Потеря работы
+  got_fired: Потеря работы
+  unemployed: Потеря работы
+  CareerUncertainty_: Неопределённость с карьерой
+  career_doubts: Неопределённость с карьерой
+  stuck_in_career: Неопределённость с карьерой
+  StudyStressor_: Стресс из-за учёбы
+  stress_at_school: Стресс из-за учёбы
+  study_is_draining: Стресс из-за учёбы
+  AcademicPressure_: Учебное давление
+  grades_pressure: Учебное давление
+  fear_of_failing_studies: Учебное давление
+  ExamStress_: Стресс из-за экзаменов
+  exam_stress: Стресс из-за экзаменов
+  exam_session: Стресс из-за экзаменов
+  SchoolBullying_: Травля в учёбе
+  bullied_at_school: Травля в учёбе
+  bullied_at_university: Травля в учёбе
+  RelationshipStressor_: Сложности в отношениях
+  relationship_trouble: Сложности в отношениях
+  people_problems: Сложности в отношениях
+  PartnerConflict_: Конфликт с партнёром
+  fights_with_partner: Конфликт с партнёром
+  partner_tension: Конфликт с партнёром
+  BreakupOrDivorce_: Расставание или развод
+  breakup: Расставание или развод
+  divorce: Расставание или развод
+  FamilyConflict_: Конфликт в семье
+  fights_with_parents: Конфликт в семье
+  family_tension: Конфликт в семье
+  Loneliness_: Одиночество
+  feel_alone: Одиночество
+  no_one_to_talk_to: Одиночество
+  DiscriminationOrExclusion_: Дискриминация или исключение
+  treated_unfairly: Дискриминация или исключение
+  left_out: Дискриминация или исключение
+  ParentingStress_: Стресс из-за родительства
+  hard_with_child: Стресс из-за родительства
+  parenting_exhaustion: Стресс из-за родительства
+  Infidelity_: Измена
+  partner_cheated: Измена
+  betrayal: Измена
+  LossStressor_: Утрата
+  experienced_loss: Утрата
+  mourning: Утрата
+  Bereavement_: Смерть близкого
+  loved_one_died: Смерть близкого
+  death_in_family: Смерть близкого
+  suicide_loss: Смерть близкого
+  PregnancyLoss_: Потеря беременности
+  miscarriage: Потеря беременности
+  stillbirth: Потеря беременности
+  PetLoss_: Потеря питомца
+  pet_died: Потеря питомца
+  lost_pet: Потеря питомца
+  LifeTransition_: Крупная перемена в жизни
+  big_change: Крупная перемена в жизни
+  hard_to_adapt: Крупная перемена в жизни
+  Relocation_: Переезд
+  moved_home: Переезд
+  moved_abroad: Переезд
+  JobChange_: Смена работы
+  new_job: Смена работы
+  career_change: Смена работы
+  Retirement_: Выход на пенсию
+  retired: Выход на пенсию
+  stopped_working_by_age: Выход на пенсию
+  Marriage_: Свадьба
+  getting_married: Свадьба
+  moved_in_together: Свадьба
+  NewFamilyMember_: Новый член семьи
+  new_baby: Новый член семьи
+  relative_moved_in: Новый член семьи
+  ForcedMigration_: Вынужденная миграция
+  had_to_flee: Вынужденная миграция
+  refugee: Вынужденная миграция
+  PregnancyOrPostpartum_: Беременность и послеродовой период
+  pregnant: Беременность и послеродовой период
+  after_birth: Беременность и послеродовой период
+  AgingAndMidlife_: Возрастные перемены
+  midlife_crisis: Возрастные перемены
+  empty_nest: Возрастные перемены
+  HealthStressor_: Стресс из-за здоровья
+  health_worries: Стресс из-за здоровья
+  medical_problems: Стресс из-за здоровья
+  OwnIllness_: Своя болезнь
+  diagnosed_with_illness: Своя болезнь
+  chronic_illness: Своя болезнь
+  RelativeIllness_: Болезнь близкого
+  parent_is_ill: Болезнь близкого
+  loved_one_is_ill: Болезнь близкого
+  Disability_: Инвалидность
+  have_disability: Инвалидность
+  lost_ability: Инвалидность
+  CaregivingBurden_: Нагрузка из-за ухода
+  caring_for_relative: Нагрузка из-за ухода
+  no_break_from_caring: Нагрузка из-за ухода
+  Infertility_: Бесплодие
+  cannot_get_pregnant: Бесплодие
+  trying_for_baby: Бесплодие
+  FinancialAndLegalStressor_: Денежные и юридические проблемы
+  money_and_law_trouble: Денежные и юридические проблемы
+  material_problems: Денежные и юридические проблемы
+  FinancialHardship_: Нехватка денег
+  no_money: Нехватка денег
+  cannot_afford_basics: Нехватка денег
+  in_debt: Нехватка денег
+  loans: Нехватка денег
+  HousingInsecurity_: Угроза потери жилья
+  might_lose_home: Угроза потери жилья
+  nowhere_to_live: Угроза потери жилья
+  LegalProblems_: Проблемы с законом
+  court_case: Проблемы с законом
+  police_trouble: Проблемы с законом
+  SocialContextStressor_: Общественные источники стресса
+  society_pressure: Общественные источники стресса
+  outside_world_stress: Общественные источники стресса
+  WorldEvents_: События в мире
+  news_anxiety: События в мире
+  world_situation: События в мире
+  SocialMediaPressure_: Давление соцсетей
+  compare_on_social_media: Давление соцсетей
+  online_harassment: Давление соцсетей
+  AcculturationStress_: Культурная адаптация
+  new_culture: Культурная адаптация
+  feel_like_outsider: Культурная адаптация
+  TraumaticStressor_: Травмирующее событие
+  scary_event: Травмирующее событие
+  life_threatening_event: Травмирующее событие
+  AccidentOrDisaster_: Авария или катастрофа
+  car_accident: Авария или катастрофа
+  disaster: Авария или катастрофа
+  WarConflict_: Война
+  war_experience: Война
+  shelling: Война
+  Assault_: Нападение
+  was_attacked: Нападение
+  robbed_with_violence: Нападение
+  SexualViolence_: Сексуальное насилие
+  sexual_assault: Сексуальное насилие
+  sexual_harassment_violence: Сексуальное насилие
+  ChildhoodAbuse_: Насилие в детстве
+  abused_as_child: Насилие в детстве
+  harmed_as_child: Насилие в детстве
+  OngoingDomesticViolence_: Насилие дома сейчас
+  partner_hits_me: Насилие дома сейчас
+  afraid_at_home: Насилие дома сейчас
+  controls_and_humiliates_me: Насилие дома сейчас
+  LifeDomain_: Сфера жизни
+  area_of_life: Сфера жизни
+  everyday_life_affected: Сфера жизни
+  WorkAndStudy_: Работа и учёба
+  hard_to_perform: Работа и учёба
+  miss_commitments: Работа и учёба
+  Work_: Работа
+  cannot_work: Работа
+  worse_at_job: Работа
+  Study_: Учёба
+  cannot_study: Учёба
+  grades_dropped: Учёба
+  Relationships_: Отношения
+  relationships_suffer: Отношения
+  distant_from_people: Отношения
+  PartnerRelationship_: Отношения с партнёром
+  affects_partner: Отношения с партнёром
+  intimacy_suffers: Отношения с партнёром
+  FamilyRelationships_: Отношения в семье
+  affects_family: Отношения в семье
+  neglect_family: Отношения в семье
+  ParentalRole_: Роль родителя
+  snap_at_children: Роль родителя
+  neglect_children: Роль родителя
+  FriendsAndSocialLife_: Друзья и общение
+  lost_friends: Друзья и общение
+  cancel_meetings: Друзья и общение
+  DailyLife_: Повседневная жизнь
+  hard_daily_tasks: Повседневная жизнь
+  day_falls_apart: Повседневная жизнь
+  HouseholdTasks_: Домашние дела
+  house_is_a_mess: Домашние дела
+  chores_undone: Домашние дела
+  SelfCare_: Забота о себе
+  self_care_affected: Забота о себе
+  hard_to_get_up: Забота о себе
+  Finances_: Управление деньгами
+  stopped_paying_bills: Управление деньгами
+  money_chaos: Управление деньгами
+  LeisureAndCommunity_: Досуг и сообщество
+  no_life_outside: Досуг и сообщество
+  less_participation: Досуг и сообщество
+  Leisure_: Отдых и хобби
+  gave_up_hobbies: Отдых и хобби
+  no_free_time_joy: Отдых и хобби
+  CommunityParticipation_: Участие в сообществе
+  stopped_attending_groups: Участие в сообществе
+  dropped_community: Участие в сообществе
+  ConditionCluster_: Кластер состояния
+  pattern_of_experience: Кластер состояния
+  self_help_group: Кластер состояния
+  SymptomCluster_: Группа по проявлениям
+  grouped_by_symptoms: Группа по проявлениям
+  own_experience_group: Группа по проявлениям
+  LifeEventCluster_: Группа по жизненным событиям
+  grouped_by_events: Группа по жизненным событиям
+  life_circumstances: Группа по жизненным событиям
+  AnxietyCluster_: Тревожная группа
+  anxiety_pattern: Тревожная группа
+  fear_and_worry_pattern: Тревожная группа
+  DepressiveCluster_: Группа сниженного настроения
+  low_mood_pattern: Группа сниженного настроения
+  withdrawal_and_low_mood_pattern: Группа сниженного настроения
+  StressCluster_: Группа стресса
+  stress_pattern: Группа стресса
+  overload_pattern: Группа стресса
+  SleepDisturbanceCluster_: Группа нарушений сна
+  sleep_pattern: Группа нарушений сна
+  sleep_rhythm_pattern: Группа нарушений сна
+  TraumaReactionCluster_: Группа реакций на травмирующее событие
+  after_event_pattern: Группа реакций на травмирующее событие
+  reliving_and_alert_pattern: Группа реакций на травмирующее событие
+  RepetitiveThoughtsAndActionsCluster_: Группа повторяющихся мыслей и действий
+  repetition_pattern: Группа повторяющихся мыслей и действий
+  checks_and_loops_pattern: Группа повторяющихся мыслей и действий
+  EmotionalDisconnectionCluster_: Группа эмоциональной отстранённости
+  disconnection_pattern: Группа эмоциональной отстранённости
+  numb_and_detached_pattern: Группа эмоциональной отстранённости
+  SelfWorthCluster_: Группа самооценки и смысла
+  self_esteem_pattern: Группа самооценки и смысла
+  meaning_pattern: Группа самооценки и смысла
+  GriefCluster_: Группа поддержки при утрате
+  grief_support_need: Группа поддержки при утрате
+  coping_with_loss: Группа поддержки при утрате
+  RelationshipDifficultiesCluster_: Группа трудностей в отношениях
+  relationship_support_need: Группа трудностей в отношениях
+  coping_with_conflict: Группа трудностей в отношениях
+  LifeChangeCluster_: Группа жизненных перемен
+  adaptation_support_need: Группа жизненных перемен
+  coping_with_change: Группа жизненных перемен
+  PracticalProblemsCluster_: Группа практических проблем
+  practical_support_need: Группа практических проблем
+  coping_with_tasks: Группа практических проблем
+  UrgencyLevel_: Уровень срочности
+  how_urgent: Уровень срочности
+  when_to_seek_help: Уровень срочности
+  L0_: Можно понаблюдать
+  try_self_help: Можно понаблюдать
+  keep_watching: Можно понаблюдать
+  L1_: Желательна консультация
+  consider_consultation: Желательна консультация
+  advisable_to_talk: Желательна консультация
+  L2_: Рекомендуется обратиться
+  see_specialist: Рекомендуется обратиться
+  need_professional: Рекомендуется обратиться
+  L3_: Срочно за помощью
+  urgent_help: Срочно за помощью
+  crisis_help: Срочно за помощью
+  Practice_: Практика самопомощи
+  self_help_exercise: Практика самопомощи
+  coping_technique: Практика самопомощи
+  BodyCalmingPractice_: Практики для тела
+  relax_the_body: Практики для тела
+  calm_body_technique: Практики для тела
+  BreathingPractice_: Дыхательная практика
+  slow_breathing: Дыхательная практика
+  breathing_exercise: Дыхательная практика
+  ProgressiveMuscleRelaxation_: Мышечная релаксация
+  tense_and_release: Мышечная релаксация
+  muscle_relax_exercise: Мышечная релаксация
+  GroundingPractice_: Заземление
+  grounding_exercise: Заземление
+  back_to_present: Заземление
+  RelaxingImagery_: Расслабляющая визуализация
+  imagine_calm_place: Расслабляющая визуализация
+  guided_imagery: Расслабляющая визуализация
+  ThoughtPractice_: Практики для мыслей
+  work_with_thoughts: Практики для мыслей
+  thinking_exercises: Практики для мыслей
+  WorryTime_: Время для беспокойства
+  scheduled_worry: Время для беспокойства
+  write_worries_down: Время для беспокойства
+  ThoughtRecord_: Запись мыслей
+  thought_diary: Запись мыслей
+  check_a_thought: Запись мыслей
+  MoodDiary_: Дневник настроения
+  track_mood: Дневник настроения
+  daily_feelings_notes: Дневник настроения
+  SelfCompassionPractice_: Доброе отношение к себе
+  be_kind_to_myself: Доброе отношение к себе
+  friend_to_myself: Доброе отношение к себе
+  Mindfulness_: Осознанность
+  mindful_breathing: Осознанность
+  body_scan: Осознанность
+  StrengthsList_: Список сильных сторон
+  list_strengths: Список сильных сторон
+  note_small_wins: Список сильных сторон
+  LimitNewsAndSocialMedia_: Меньше новостей и соцсетей
+  digital_detox: Меньше новостей и соцсетей
+  less_news: Меньше новостей и соцсетей
+  ActivityPractice_: Практики активности
+  daily_activity: Практики активности
+  activity_changes: Практики активности
+  BehaviouralActivation_: Постепенное возвращение к делам
+  small_steps: Постепенное возвращение к делам
+  plan_pleasant_activity: Постепенное возвращение к делам
+  PhysicalActivity_: Физическая активность
+  go_for_walk: Физическая активность
+  exercise: Физическая активность
+  RegularRoutine_: Режим дня
+  daily_schedule: Режим дня
+  regular_meals: Режим дня
+  PlanningAndBreaks_: Планирование и перерывы
+  plan_the_day: Планирование и перерывы
+  take_breaks: Планирование и перерывы
+  GradualExposure_: Постепенное привыкание
+  anxiety_ladder: Постепенное привыкание
+  face_fears_gradually: Постепенное привыкание
+  ValuesBasedAction_: Действия по ценностям
+  what_matters_to_me: Действия по ценностям
+  small_value_step: Действия по ценностям
+  SleepPractice_: Практики для сна
+  sleep_habits: Практики для сна
+  evening_routine: Практики для сна
+  SleepHygiene_: Гигиена сна
+  dark_quiet_room: Гигиена сна
+  no_late_caffeine: Гигиена сна
+  BedForSleepOnly_: Кровать только для сна
+  no_screens_in_bed: Кровать только для сна
+  get_up_if_awake: Кровать только для сна
+  SupportAndCopingPractice_: Поддержка и совладание
+  find_support: Поддержка и совладание
+  handle_life_problems: Поддержка и совладание
+  SocialContact_: Контакт с близкими
+  talk_to_someone: Контакт с близкими
+  meet_people: Контакт с близкими
+  ProblemSolving_: Разбор проблемы по шагам
+  step_by_step_plan: Разбор проблемы по шагам
+  list_options: Разбор проблемы по шагам
+  GriefSelfCare_: Забота о себе после утраты
+  remember_the_person: Забота о себе после утраты
+  time_to_grieve: Забота о себе после утраты
+  TimeOut_: Пауза в конфликте
+  step_away: Пауза в конфликте
+  calm_down_kit: Пауза в конфликте
+  AssertiveCommunication_: Уверенное общение
+  i_statements: Уверенное общение
+  plan_hard_talk: Уверенное общение
+descriptions:
+  Manifestation_: Всё, что человек замечает в чувствах, теле, мыслях или поведении.
+  EmotionalManifestation_: Изменения эмоционального состояния.
+  Anxiety_: Напряжение, нервозность, страх, что случится плохое.
+  ExcessiveWorry_: Постоянное беспокойство о многом, которое трудно остановить.
+  PanicEpisode_: Внезапная волна сильного страха, которая со временем проходит.
+  SocialFear_: Сильный страх оценки, неловкости или отвержения в социальных ситуациях.
+  SpecificFear_: Сильный страх конкретного предмета или ситуации, например высоты или полётов.
+  FearOfBeingTrapped_: 'Страх мест, откуда трудно уйти или где трудно получить помощь: толпа, транспорт.'
+  HealthWorry_: Постоянное беспокойство о том, что есть или будет серьёзная болезнь.
+  LowMood_: Подавленность, грусть, пустота большую часть времени.
+  LossOfInterest_: Потеря интереса и удовольствия от того, что раньше радовало.
+  Hopelessness_: Ощущение, что впереди нет ничего хорошего и ничего не изменится.
+  NegativeSelfView_: Резко негативный взгляд на себя.
+  ExcessiveGuilt_: Вина намного сильнее, чем требует ситуация.
+  LowSelfWorth_: Ощущение никчёмности и недостаточной хорошести.
+  Shame_: Глубокий стыд за себя, желание спрятаться.
+  HarshSelfCriticism_: Очень жёсткая самокритика или требование совершенства.
+  BodyImageWorry_: Сильное недовольство своим телом или внешностью.
+  Irritability_: Раздражение и злость возникают легче, чем обычно.
+  EmotionalNumbness_: Почти нет эмоций, будто чувства выключены.
+  UnusuallyHighEnergy_: Необычно приподнятое настроение и энергия, мало сна, импульсивность.
+  MoodSwings_: Резкие и быстрые перепады настроения без ясной причины.
+  EmotionalOverwhelm_: Ощущение, что навалилось слишком много сразу.
+  WorkDisengagement_: Отстранённость, цинизм или ощущение неэффективности в работе.
+  LongingForDeceased_: Сильная тоска по умершему или постоянные мысли о нём.
+  SomaticManifestation_: Изменения, которые человек замечает в теле, сне или аппетите.
+  SleepDisturbance_: Сон заметно хуже, короче или длиннее обычного.
+  Insomnia_: Трудности с засыпанием, частые пробуждения или слишком ранний подъём.
+  Hypersomnia_: Сон намного дольше обычного при сохраняющейся сонливости.
+  Nightmares_: Частые плохие сны, после которых человек просыпается или не может успокоиться.
+  AppetiteChange_: Человек ест заметно больше или меньше обычного.
+  Fatigue_: Усталость и нехватка сил даже после отдыха.
+  MuscleTension_: Мышцы напряжены, их трудно расслабить.
+  BodilyArousalSigns_: Телесные реакции вроде сильного сердцебиения или дрожи; причину может проверить
+    врач.
+  HeartSensations_: Заметное сильное или частое сердцебиение, ощущение скачков давления.
+  BreathingDifficulty_: Нехватка воздуха, невозможность вдохнуть полной грудью, без тяжёлого состояния.
+  TremblingAndSweating_: Дрожь или потливость сильнее, чем можно объяснить ситуацией.
+  Dizziness_: Лёгкость в голове и лёгкая неустойчивость, не внезапная и не сильная.
+  DigestiveUpset_: Тошнота, расстройство желудка или другой дискомфорт в ЖКТ.
+  OtherBodilySymptoms_: Телесные жалобы с неясной причиной, которые сначала должен проверить врач.
+  EarRinging_: Звон, гул или другой шум в ушах без внешнего источника.
+  Headache_: Обычная головная боль или давление в голове без внезапного сильного начала.
+  BodyPain_: Боль в спине, шее или других частях тела.
+  NumbnessOrTingling_: Лёгкое онемение или покалывание, не на всей одной стороне тела.
+  MenstrualProblems_: Болезненные или нерегулярные месячные и другие проблемы цикла.
+  SexualDifficulties_: Сниженное влечение, боль или другие трудности в сексе.
+  UrgentBodilyWarningSigns_: Телесные признаки, при которых нужна срочная медицинская помощь, а не самопомощь.
+  SuddenHearingOrBalanceChange_: Внезапная потеря слуха или сильное вращательное головокружение.
+  StrokeLikeSigns_: Внезапное опущение лица, слабость с одной стороны, нарушения речи или зрения, резкая
+    сильная головная боль.
+  ChestPainOrSevereBreathing_: Боль или сдавливание в груди, сильное затруднение дыхания.
+  LossOfConsciousness_: Обморок или потеря сознания.
+  CognitiveManifestation_: Изменения мышления, внимания, памяти или ощущения реальности.
+  ThinkingDifficulties_: Трудности с вниманием, памятью или принятием решений.
+  ConcentrationProblems_: Трудно сосредоточиться и запоминать.
+  MemoryProblems_: Забывчивость сильнее обычного.
+  DecisionDifficulty_: Трудно принимать даже небольшие решения.
+  ThreatVigilance_: Постоянное ожидание опасности и настороженность.
+  IntrusiveThoughts_: Непрошеные мысли и образы, приходящие против воли.
+  ObsessiveThoughts_: Одна и та же тревожащая мысль возвращается снова и снова.
+  ReexperiencingEvent_: Прошлое пугающее событие переживается так, будто происходит сейчас.
+  Rumination_: Снова и снова прокручивать прошлые события или проблемы, не находя выхода.
+  MeaningAndIdentity_: Вопросы о том, кто ты и что придаёт жизни смысл.
+  LackOfPurpose_: Ощущение, что в жизни нет смысла или направления.
+  IdentityConfusion_: Неуверенность в том, кто ты и что для тебя важно.
+  Dissociation_: Ощущение отстранённости от себя или от происходящего.
+  Depersonalization_: Ощущение, что смотришь на себя со стороны.
+  Derealization_: Ощущение, что окружающий мир нереален или странен.
+  SelfHarmThoughts_: Мысли о смерти или самоповреждении, характер которых пока не уточнён.
+  PassiveDeathThoughts_: Желание не существовать или не проснуться без намерения что-либо делать.
+  ActiveSelfHarmThoughts_: Мысли о том, чтобы на самом деле навредить себе или покончить с собой.
+  PsychoticSign_: Человек слышит или видит то, чего не замечают другие, или твёрдо придерживается необычных
+    убеждений.
+  BehaviouralManifestation_: Изменения в том, что человек делает или избегает делать.
+  SocialWithdrawal_: Уход от общения с друзьями, семьёй и другими людьми.
+  Avoidance_: Избегание трудных ситуаций, мест или напоминаний.
+  Restlessness_: Трудно усидеть на месте и успокоиться телом.
+  CompulsiveActions_: Повторяющиеся действия вроде проверок или мытья, чтобы снизить тревогу.
+  AngerOutbursts_: 'Внезапные сильные вспышки гнева: крики, порча вещей.'
+  SelfNeglect_: 'Отказ от базовой заботы о себе: гигиены, нормальной еды, повседневных нужд.'
+  SelfHarmBehaviour_: Намеренное причинение себе вреда, например порезы или ожоги.
+  SlowedMovement_: Движения или речь заметно медленнее обычного.
+  Procrastination_: Откладывание дел, даже когда это создаёт проблемы.
+  ImpulsiveOrRiskyBehaviour_: 'Импульсивные поступки, которые могут быть рискованными: опасная езда,
+    траты.'
+  AddictiveBehaviours_: Привычки, которые трудно контролировать и которые создают проблемы.
+  SubstanceUse_: Употребление алкоголя или наркотиков, которое трудно контролировать или которое создаёт
+    проблемы.
+  Gambling_: Ставки и азартные игры, которые трудно прекратить.
+  ExcessiveGaming_: Видеоигры или экраны вытесняют другие части жизни.
+  CompulsiveSexualBehaviour_: Сексуальные побуждения или поведение, которые трудно контролировать и которые
+    создают проблемы.
+  CompulsiveShopping_: Покупки или траты, которые трудно контролировать.
+  InterpersonalDifficulties_: Повторяющиеся трудности в том, как человек строит отношения с другими.
+  TrustDifficulties_: Трудно доверять и сближаться с другими.
+  FearOfRejection_: Сильный страх отвержения, критики или того, что бросят.
+  DifficultySettingBoundaries_: Трудно отказывать и отстаивать себя.
+  DisorderedEating_: Жёсткие правила в еде, переедание, очищение или постоянная тревога из-за веса и
+    фигуры.
+  ViolenceThreat_: Мысли или угрозы серьёзно навредить другому человеку.
+  Stressor_: Ситуация или событие в жизни, создающие нагрузку.
+  WorkStressor_: Нагрузка, связанная с работой или её потерей.
+  Workload_: Слишком много работы, высокий темп или постоянные дедлайны.
+  WorkSchedule_: Сменный или ночной график, переработки, непредсказуемые часы.
+  LowWorkControl_: Мало влияния на свою работу или нечёткая роль.
+  WorkplaceConflict_: Конфликты, притеснение или травля на работе.
+  JobInsecurity_: Страх потерять работу или нестабильный заработок.
+  JobLoss_: Потеря работы или безработица.
+  CareerUncertainty_: Неопределённость с карьерой или будущей работой.
+  StudyStressor_: Нагрузка, связанная со школой или вузом.
+  AcademicPressure_: Давление из-за оценок и учебной нагрузки.
+  ExamStress_: Стресс из-за экзаменов и сессии.
+  SchoolBullying_: Травля или унижения в школе или вузе.
+  RelationshipStressor_: Нагрузка, связанная с отношениями с другими людьми.
+  PartnerConflict_: Повторяющиеся ссоры или напряжение с партнёром.
+  BreakupOrDivorce_: Расставание с партнёром или развод.
+  FamilyConflict_: Конфликты с родителями, детьми или другими родственниками.
+  Loneliness_: Одиночество, слишком мало контактов с другими.
+  DiscriminationOrExclusion_: Несправедливое отношение или исключение из группы из-за того, кто ты есть.
+  ParentingStress_: Нагрузка от воспитания детей или трудностей с ребёнком.
+  Infidelity_: Измена или предательство партнёра.
+  LossStressor_: Потеря значимого человека.
+  Bereavement_: Смерть близкого человека.
+  PregnancyLoss_: Потеря беременности.
+  PetLoss_: Смерть или потеря домашнего животного.
+  LifeTransition_: Крупная перемена, требующая адаптации, даже если она приятная.
+  Relocation_: Переезд в новый дом, город или страну.
+  JobChange_: Новая работа или смена профессии.
+  Retirement_: Завершение трудовой жизни.
+  Marriage_: Свадьба или начало совместной жизни.
+  NewFamilyMember_: Новый ребёнок или другой новый член семьи.
+  ForcedMigration_: Вынужденный отъезд из дома из-за опасности или тяжёлых условий.
+  PregnancyOrPostpartum_: Беременность или первые месяцы после родов.
+  AgingAndMidlife_: Привыкание к возрасту, середина жизни или отъезд детей.
+  HealthStressor_: Нагрузка из-за проблем со здоровьем, своих или близкого.
+  OwnIllness_: Собственная серьёзная болезнь.
+  RelativeIllness_: Серьёзная болезнь близкого человека.
+  Disability_: Инвалидность или недавняя потеря физических возможностей.
+  CaregivingBurden_: Уход за родственником, которому нужно много заботы.
+  Infertility_: Трудности с тем, чтобы завести ребёнка.
+  FinancialAndLegalStressor_: Нагрузка из-за денег, жилья или юридических проблем.
+  FinancialHardship_: Нехватка денег на необходимое.
+  HousingInsecurity_: Угроза потери жилья.
+  LegalProblems_: Суд, арест или другие проблемы с законом.
+  SocialContextStressor_: Нагрузка от внешнего мира и общественной среды.
+  WorldEvents_: Переживания из-за новостей, политики или положения в мире.
+  SocialMediaPressure_: Давление соцсетей, сравнение себя с другими онлайн, вредный контент.
+  AcculturationStress_: Трудности адаптации к новой культуре или языку.
+  TraumaticStressor_: Пугающее или опасное пережитое событие.
+  AccidentOrDisaster_: Серьёзная авария или катастрофа.
+  WarConflict_: Переживание войны или вооружённого конфликта.
+  Assault_: Физическое нападение.
+  SexualViolence_: Сексуальное нападение или нежеланные сексуальные действия.
+  ChildhoodAbuse_: Насилие или жестокое пренебрежение в детстве.
+  OngoingDomesticViolence_: Человека сейчас бьют, запугивают или контролируют дома.
+  LifeDomain_: Часть жизни, на которую могут влиять трудности.
+  WorkAndStudy_: Насколько человек справляется с работой и учёбой.
+  Work_: Насколько человек справляется с работой.
+  Study_: Насколько человек справляется с учёбой.
+  Relationships_: Как человек ладит с близкими людьми.
+  PartnerRelationship_: Отношения с партнёром.
+  FamilyRelationships_: Отношения с членами семьи.
+  ParentalRole_: Забота о детях и их воспитание.
+  FriendsAndSocialLife_: Общение с друзьями и знакомыми.
+  DailyLife_: Справляться с обычными повседневными делами.
+  HouseholdTasks_: Домашние дела и ведение хозяйства.
+  SelfCare_: Повседневная способность заботиться о гигиене, еде и отдыхе.
+  Finances_: Оплата счетов и повседневное управление деньгами.
+  LeisureAndCommunity_: Свободное время и участие в жизни сообщества.
+  Leisure_: Хобби, отдых и другие приятные занятия.
+  CommunityParticipation_: Участие в местных, религиозных и других групповых занятиях.
+  ConditionCluster_: Группа связанных проявлений для подбора практик; не диагноз.
+  SymptomCluster_: Группа по тому, что человек замечает у себя.
+  LifeEventCluster_: Группа по тому, что происходит в жизни человека.
+  AnxietyCluster_: Проявления, связанные с беспокойством, страхом и избеганием.
+  DepressiveCluster_: Проявления, связанные с подавленностью и потерей интереса.
+  StressCluster_: Проявления, связанные с напряжением и перегрузкой.
+  SleepDisturbanceCluster_: Проявления, связанные с трудностями со сном.
+  TraumaReactionCluster_: Проявления, которые могут возникать после пугающего события.
+  RepetitiveThoughtsAndActionsCluster_: Проявления, связанные с повторяющимися мыслями и действиями.
+  EmotionalDisconnectionCluster_: Проявления, связанные с онемением и отстранённостью.
+  SelfWorthCluster_: Проявления, связанные с тем, как человек видит и ценит себя.
+  GriefCluster_: Потребности в поддержке после потери; горе само по себе естественная реакция.
+  RelationshipDifficultiesCluster_: Потребности в поддержке при трудностях с другими людьми.
+  LifeChangeCluster_: Потребности в поддержке при адаптации к большим переменам.
+  PracticalProblemsCluster_: Потребности в поддержке при проблемах с работой, учёбой, здоровьем, деньгами
+    или законом.
+  UrgencyLevel_: Насколько скоро стоит обратиться к специалисту.
+  L0_: Пока можно попробовать практики самопомощи и понаблюдать.
+  L1_: Желательно рассмотреть консультацию.
+  L2_: Рекомендуется обратиться к специалисту.
+  L3_: Необходимо срочно обратиться за помощью.
+  Practice_: Безопасное немедикаментозное упражнение, которое можно выполнять самостоятельно.
+  BodyCalmingPractice_: Упражнения, успокаивающие тело.
+  BreathingPractice_: Медленное ровное дыхание, помогающее телу успокоиться.
+  ProgressiveMuscleRelaxation_: Мягкое напряжение и расслабление групп мышц.
+  GroundingPractice_: Использование органов чувств, чтобы вернуть внимание к настоящему моменту.
+  RelaxingImagery_: Подробное представление спокойного безопасного места для расслабления.
+  ThoughtPractice_: Упражнения для работы с мыслями и чувствами.
+  WorryTime_: Короткое ежедневное время для записи беспокойств, чтобы они не заполняли весь день.
+  ThoughtRecord_: Запись мысли и проверка доводов за и против.
+  MoodDiary_: Краткие записи о настроении и событиях дня.
+  SelfCompassionPractice_: Отношение к себе с той же добротой, что и к другу.
+  Mindfulness_: Мягкое внимание к настоящему моменту, дыханию и мыслям без оценки.
+  StrengthsList_: Запись своих сильных сторон, маленьких успехов и добрых слов других.
+  LimitNewsAndSocialMedia_: Ограничение новостей и соцсетей, особенно сравнения себя с другими.
+  ActivityPractice_: Упражнения на основе повседневной активности и режима.
+  BehaviouralActivation_: Постепенное возвращение к приятным и полезным делам маленькими шагами.
+  PhysicalActivity_: Регулярное подходящее движение, даже короткая прогулка.
+  RegularRoutine_: Примерно постоянное время для сна, еды и повседневных дел.
+  PlanningAndBreaks_: Разделение дня на посильные задачи и настоящие перерывы.
+  GradualExposure_: Постепенно встречаться с пугающими ситуациями, начиная с самых лёгких.
+  ValuesBasedAction_: Выбор небольших действий, соответствующих тому, что для тебя важно.
+  SleepPractice_: Привычки, которые могут улучшить сон.
+  SleepHygiene_: Повседневные привычки и условия, облегчающие сон.
+  BedForSleepOnly_: Использовать кровать только для сна и вставать, если сон не приходит.
+  SupportAndCopingPractice_: Способы получить поддержку и справляться с жизненными проблемами.
+  SocialContact_: Общение и время с человеком, которому доверяешь.
+  ProblemSolving_: Выбор одной проблемы и разбор возможных шагов.
+  GriefSelfCare_: Бережная забота о себе после потери без спешки чувствовать себя лучше.
+  TimeOut_: Выйти из накалённой ситуации, пока не успокоишься.
+  AssertiveCommunication_: Спокойно и уважительно говорить о своих потребностях через я-высказывания.

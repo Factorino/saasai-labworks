@@ -5,15 +5,17 @@ from anamnesis.application.interfaces.reasoning.case_reasoner import ICaseReason
 from anamnesis.application.services.rendering import ViewRenderer
 from anamnesis.domain.entities.chat import Chat
 from anamnesis.domain.enums.message_role import MessageRole
+from anamnesis.domain.enums.referral import Referral
+from anamnesis.domain.enums.urgency_level import UrgencyLevel
 from anamnesis.domain.services.assessment import AssessmentService
 from anamnesis.domain.services.questionnaire import Questionnaire
+from anamnesis.domain.value_objects.inference import InferenceResult
 from anamnesis.domain.value_objects.question import Question
 
 
 if TYPE_CHECKING:
     from anamnesis.application.dto.views.question import QuestionView
     from anamnesis.domain.value_objects.assessment import Assessment
-    from anamnesis.domain.value_objects.inference import InferenceResult
 
 
 class DialogueService:
@@ -36,6 +38,24 @@ class DialogueService:
     def questionnaire(self) -> Questionnaire:
         return self._questionnaire
 
+    async def after_story(self, chat: Chat) -> ReplyView:
+        """Проверяет рассказ на риск, затем продолжает диалог.
+
+        Пока известен только рассказ, L3 может дать лишь правило по `RiskMarker`,
+        поэтому такой уровень переводит чат в кризис. Направление на скорую
+        тоже не ждёт уточняющих вопросов: диалог завершается со сводкой.
+        """
+        if chat.is_crisis:
+            return await self._conclude(chat)
+        inference: InferenceResult = await self._reasoner.infer(chat.facts)
+        if UrgencyLevel.L3 in inference.levels:
+            chat.mark_crisis()
+        elif Referral.EMERGENCY_MEDICAL_CARE in inference.referrals:
+            chat.finish()
+        else:
+            return await self.advance(chat)
+        return self._summarize(chat, inference)
+
     async def advance(self, chat: Chat) -> ReplyView:
         """Задаёт следующий вопрос; если вопросов нет или это кризис — подводит итог."""
         if not chat.is_crisis:
@@ -47,6 +67,10 @@ class DialogueService:
     async def _conclude(self, chat: Chat) -> ReplyView:
         """Запускает вывод; вместо сводки может прийти повторный вопрос."""
         inference: InferenceResult = await self._reasoner.infer(chat.facts)
+        return self._summarize(chat, inference)
+
+    def _summarize(self, chat: Chat, inference: InferenceResult) -> ReplyView:
+        """Итог по готовому выводу; вместо сводки может прийти повторный вопрос."""
         result: Question | Assessment = chat.conclude(
             inference, self._assessment_service, self._questionnaire
         )

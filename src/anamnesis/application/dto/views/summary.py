@@ -19,6 +19,7 @@ class EvidenceView(TermView):
 
 
 class PracticeView(TermView):
+    description: str
     cautions: tuple[TermView, ...]
 
 

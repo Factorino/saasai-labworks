@@ -45,5 +45,9 @@ class ITextCatalog(Protocol):
         """Название понятия онтологии: кластера, практики, проявления, сферы."""
 
     @abstractmethod
+    def description(self, term: TermId, language: LanguageCode) -> str:
+        """Описание понятия онтологии; пустое, если его нет."""
+
+    @abstractmethod
     def reply(self, stage: ChatStage, language: LanguageCode) -> str:
         """Шаблонный ответ на свободную реплику после сводки или в кризисе."""

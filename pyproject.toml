@@ -47,7 +47,10 @@ classifiers = [
 # Runtime dependencies. Everything the service needs, and nothing else —
 # development tooling belongs in the groups at the bottom of this file.
 dependencies = [
+    "owlready2>=0.51",
     "pydantic>=2.13.5",
+    "pyyaml>=6.0.3",
+    "snowballstemmer>=3.1.1",
 ]
 
 
@@ -60,6 +63,7 @@ dependencies = [
 # ignore_missing_imports = False: a dependency without types must be handled
 # explicitly. Add stubs here as dependencies appear.
 types = [
+    "types-pyyaml>=6.0.12.20261103",
 ]
 
 lint = [
