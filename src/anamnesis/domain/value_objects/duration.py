@@ -10,7 +10,7 @@ class Duration(ValueObject):
 
     _FIELD_NAME: ClassVar[str] = "Duration"
 
-    _MAX_WEEKS: ClassVar[int] = 520
+    MAX_WEEKS: ClassVar[int] = 520
 
     weeks: int
 
@@ -18,8 +18,8 @@ class Duration(ValueObject):
         self._validate()
 
     def _validate(self) -> None:
-        if not 0 <= self.weeks <= self._MAX_WEEKS:
+        if not 0 <= self.weeks <= self.MAX_WEEKS:
             raise ValidationError(
                 field=self._FIELD_NAME,
-                reason=f"must be between 0 and {self._MAX_WEEKS} weeks",
+                reason=f"must be between 0 and {self.MAX_WEEKS} weeks",
             )

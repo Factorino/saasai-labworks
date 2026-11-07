@@ -63,6 +63,10 @@ class YamlTextCatalog(ITextCatalog):
         )
 
     @override
+    def approximate(self, fact: FactKind, language: LanguageCode) -> str:
+        return self._messages(language).approximate[fact]
+
+    @override
     def disclaimer(self, language: LanguageCode) -> str:
         return self._messages(language).disclaimer
 

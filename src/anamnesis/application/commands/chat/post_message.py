@@ -1,10 +1,12 @@
-from typing import override
+from typing import TYPE_CHECKING, override
 
 from anamnesis.application.dto.base import DTO
 from anamnesis.application.dto.views.reply import ReplyView
 from anamnesis.application.errors.chat import ChatNotFoundError
 from anamnesis.application.interfaces.common.interactor import Interactor
+from anamnesis.application.interfaces.extraction.estimate_extractor import IEstimateExtractor
 from anamnesis.application.interfaces.extraction.fact_extractor import IFactExtractor
+from anamnesis.application.interfaces.extraction.fact_normalizer import IFactNormalizer
 from anamnesis.application.interfaces.localization.text_catalog import ITextCatalog
 from anamnesis.application.interfaces.repositories.chat import IChatRepository
 from anamnesis.application.interfaces.safety.crisis_detector import ICrisisDetector
@@ -12,12 +14,16 @@ from anamnesis.application.services.dialogue import DialogueService
 from anamnesis.application.services.rendering import ViewRenderer
 from anamnesis.domain.entities.chat import Chat, ChatId
 from anamnesis.domain.enums.chat_stage import ChatStage
-from anamnesis.domain.enums.fact_kind import FactKind
+from anamnesis.domain.enums.fact_kind import ESTIMATED_FACTS, FactKind
 from anamnesis.domain.enums.message_role import MessageRole
 from anamnesis.domain.errors.common import ValidationError
 from anamnesis.domain.types import OptionCode
 from anamnesis.domain.value_objects.case_facts import CaseFacts
 from anamnesis.domain.value_objects.question import Answer, Question
+
+
+if TYPE_CHECKING:
+    from anamnesis.application.dto.estimate import Estimate
 
 
 class PostMessageBody(DTO):
@@ -41,6 +47,8 @@ class PostMessage(Interactor[PostMessageRequest, PostMessageResponse]):
         *,
         chat_repository: IChatRepository,
         extractor: IFactExtractor,
+        estimator: IEstimateExtractor,
+        normalizer: IFactNormalizer,
         detector: ICrisisDetector,
         dialogue: DialogueService,
         catalog: ITextCatalog,
@@ -48,6 +56,8 @@ class PostMessage(Interactor[PostMessageRequest, PostMessageResponse]):
     ) -> None:
         self._chat_repo: IChatRepository = chat_repository
         self._extractor: IFactExtractor = extractor
+        self._estimator: IEstimateExtractor = estimator
+        self._normalizer: IFactNormalizer = normalizer
         self._detector: ICrisisDetector = detector
         self._dialogue: DialogueService = dialogue
         self._catalog: ITextCatalog = catalog
@@ -81,7 +91,7 @@ class PostMessage(Interactor[PostMessageRequest, PostMessageResponse]):
 
     async def _answer(self, chat: Chat, request: PostMessageRequest) -> ReplyView:
         answer = Answer(option_codes=request.option_codes, text=request.text or None)
-        extracted: CaseFacts | None = await self._extract_manifestations(chat, answer)
+        extracted: CaseFacts | None = await self._extract(chat, answer)
         question: Question = chat.answer(answer, self._dialogue.questionnaire, extracted)
         chat.record(MessageRole.USER, self._renderer.answer(question, answer, chat.language))
         if answer.text is not None:
@@ -103,12 +113,23 @@ class PostMessage(Interactor[PostMessageRequest, PostMessageResponse]):
         """Проверяет реплику кризисным детектором; кризисная находка переводит чат в кризис."""
         chat.register_signals(await self._detector.detect(text, chat.language))
 
-    async def _extract_manifestations(self, chat: Chat, answer: Answer) -> CaseFacts | None:
-        """Ищет термины только в ответе на вопрос о проявлениях."""
+    async def _extract(self, chat: Chat, answer: Answer) -> CaseFacts | None:
+        """Сведения из своего текста ответа.
+
+        В ответе о проявлениях ищутся термины, в ответе о длительности,
+        частоте или влиянии — оценка, которая затем нормализуется.
+        """
         pending: Question | None = chat.pending
-        if answer.text is None or pending is None or pending.fact is not FactKind.MANIFESTATIONS:
+        if answer.text is None or pending is None:
             return None
-        return await self._extractor.extract(answer.text, chat.language)
+        if pending.fact is FactKind.MANIFESTATIONS:
+            return await self._extractor.extract(answer.text, chat.language)
+        if pending.fact in ESTIMATED_FACTS:
+            estimate: Estimate | None = await self._estimator.extract(
+                answer.text, pending.fact, chat.language
+            )
+            return self._normalizer.normalize(estimate) if estimate is not None else None
+        return None
 
     @staticmethod
     def _validate_text(request: PostMessageRequest) -> None:

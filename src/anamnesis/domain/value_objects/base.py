@@ -26,6 +26,12 @@ class ValueObject(ABC):
             raise TypeError(f"{cls.__name__} is missing the @value_object decorator")
         return object.__new__(cls)
 
+    def __copy__(self) -> Self:
+        return self
+
+    def __deepcopy__(self, _memo: dict[int, Any]) -> Self:
+        return self
+
     def _set(self, name: str, value: Any) -> None:
         """Записывает поле в замороженный объект; только для `_normalize`."""
         object.__setattr__(self, name, value)

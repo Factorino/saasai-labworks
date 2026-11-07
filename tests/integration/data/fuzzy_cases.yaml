@@ -1,0 +1,55 @@
+# Оценка сведений по словам пользователя: ответ своими словами → значение для
+# правил и уверенность.
+#
+# value — длительность в неделях, частота и влияние — коды шкалы; `null` —
+# оценки нет. confidence — степень принадлежности после центра тяжести;
+# `null` — значение точное (число в ответе).
+
+duration:
+  # Размытые выражения.
+  - {text: пару недель, value: 2, confidence: 1.0}
+  - {text: Где-то пару недель уже, value: 2, confidence: 1.0}
+  - {text: несколько недель, value: 2, confidence: 1.0}
+  - {text: около месяца, value: 4, confidence: 1.0}
+  - {text: недавно началось, value: 0, confidence: 1.0}
+  - {text: не так давно, value: 0, confidence: 1.0}
+  - {text: уже давно, value: 24, confidence: 1.0}
+  - {text: несколько месяцев, value: 24, confidence: 1.0}
+  - {text: около недели, value: 1, confidence: 0.55}
+  # Два выражения объединяются, центр тяжести ложится между термами.
+  - {text: "то ли пару недель, то ли месяц", value: 3, confidence: 0.79}
+  # Числа: значение точное, у диапазона — нижняя граница.
+  - {text: 3 недели, value: 3, confidence: null}
+  - {text: две-три недели, value: 2, confidence: null}
+  - {text: 2–3 недели, value: 2, confidence: null}
+  - {text: полтора месяца, value: 6, confidence: null}
+  - {text: 10 дней, value: 1, confidence: null}
+  - {text: уже два года, value: 104, confidence: null}
+  # Ничего не найдено.
+  - {text: не помню, value: null, confidence: null}
+
+frequency:
+  - {text: почти каждый день, value: most_days, confidence: 1.0}
+  - {text: каждый день, value: constantly, confidence: 1.0}
+  - {text: "постоянно, не проходит", value: constantly, confidence: 1.0}
+  - {text: иногда, value: rarely, confidence: 1.0}
+  - {text: пару раз в неделю, value: several_times_a_week, confidence: 1.0}
+  - {text: часто, value: most_days, confidence: 0.75}
+  - {text: 3 раза в неделю, value: several_times_a_week, confidence: null}
+  - {text: 4 дня в неделю, value: most_days, confidence: null}
+  - {text: по-разному, value: null, confidence: null}
+
+impact:
+  # Крайние термы: центр тяжести смещён внутрь универсума.
+  - {text: почти не мешает, value: none, confidence: 0.96}
+  - {text: никак не влияет, value: none, confidence: 0.96}
+  - {text: немного мешает, value: mild, confidence: 1.0}
+  - {text: не очень мешает, value: mild, confidence: 1.0}
+  - {text: мешает, value: moderate, confidence: 1.0}
+  - {text: сильно мешает, value: moderate, confidence: 1.0}
+  # Смешанные оценки не завышаются до тяжёлого влияния (R06, L3).
+  - {text: очень сильно мешает, value: moderate, confidence: 0.89}
+  - {text: работать почти не могу, value: moderate, confidence: 0.89}
+  - {text: совсем не могу ничего делать, value: severe, confidence: 0.96}
+  - {text: не справляюсь с делами, value: severe, confidence: 0.96}
+  - {text: нормально, value: null, confidence: null}

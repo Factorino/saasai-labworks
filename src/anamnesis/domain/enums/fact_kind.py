@@ -46,3 +46,12 @@ REQUIRED_FACTS: Final[frozenset[FactKind]] = frozenset(
     },
 )
 """Сведения, без которых уровень L0 не утверждается."""
+
+ESTIMATED_FACTS: Final[frozenset[FactKind]] = frozenset(
+    {
+        FactKind.DURATION,
+        FactKind.FREQUENCY,
+        FactKind.IMPACT,
+    },
+)
+"""Сведения, которые можно оценить по словам пользователя через лингвистические переменные."""

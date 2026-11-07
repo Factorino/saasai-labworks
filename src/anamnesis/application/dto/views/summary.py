@@ -46,6 +46,12 @@ class ReferralView(DTO):
     text: str
 
 
+class ApproximationView(DTO):
+    fact: FactKind
+    confidence: float
+    text: str
+
+
 class CaseView(DTO):
     manifestations: tuple[EvidenceView, ...]
     stressors: tuple[EvidenceView, ...]
@@ -76,5 +82,6 @@ class SummaryView(DTO):
     clusters: tuple[TermView, ...]
     explanation: tuple[RuleView, ...]
     missing: tuple[FactKind, ...]
+    approximations: tuple[ApproximationView, ...]
     case: CaseView
     disclaimer: str

@@ -1,6 +1,7 @@
 from anamnesis.application.dto.views.chat import ChatView
 from anamnesis.application.dto.views.question import OptionView, QuestionView
 from anamnesis.application.dto.views.summary import (
+    ApproximationView,
     CaseView,
     EvidenceView,
     HelplineView,
@@ -89,8 +90,24 @@ class ViewRenderer:
                 for rule in assessment.fired_rules
             ),
             missing=tuple(sorted(assessment.missing)),
+            approximations=self._approximations(facts, language),
             case=self._case(facts, language),
             disclaimer=self._catalog.disclaimer(language),
+        )
+
+    def _approximations(
+        self,
+        facts: CaseFacts,
+        language: LanguageCode,
+    ) -> tuple[ApproximationView, ...]:
+        """Сведения, оценённые по размытым словам, с уверенностью."""
+        return tuple(
+            ApproximationView(
+                fact=fact,
+                confidence=confidence,
+                text=self._catalog.approximate(fact, language),
+            )
+            for fact, confidence in sorted(facts.confidence.items())
         )
 
     def _helplines(

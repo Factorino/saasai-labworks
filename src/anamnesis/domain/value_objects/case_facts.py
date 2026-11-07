@@ -1,9 +1,10 @@
 from collections.abc import Iterable, Mapping
+from dataclasses import field
 from types import MappingProxyType
 from typing import Any, ClassVar, Final
 
 from anamnesis.domain.enums.change_direction import ChangeDirection
-from anamnesis.domain.enums.fact_kind import REQUIRED_FACTS, FactKind
+from anamnesis.domain.enums.fact_kind import ESTIMATED_FACTS, REQUIRED_FACTS, FactKind
 from anamnesis.domain.enums.frequency import Frequency
 from anamnesis.domain.enums.impact_degree import ImpactDegree
 from anamnesis.domain.enums.self_harm_screening import SelfHarmScreening
@@ -45,6 +46,9 @@ class CaseFacts(ValueObject):
         duration: Длительность (`durationWeeks`).
         frequency: Частота (`frequency`).
         impact: Влияние на жизнь (`impactDegree`).
+        confidence: Уверенность в длительности, частоте и влиянии, оценённых по
+            размытым словам: степень принадлежности чёткого значения терму.
+            Значения из вариантов ответа и чисел точные, их здесь нет.
         affected_domains: Затронутые сферы (`affectsDomain`).
         self_harm: Скрининг самоповреждения (`selfHarmScreening`).
         sleep: Изменение сна; в онтологию не передаётся.
@@ -66,6 +70,7 @@ class CaseFacts(ValueObject):
     duration: Duration | None = None
     frequency: Frequency | None = None
     impact: ImpactDegree | None = None
+    confidence: Mapping[FactKind, float] = field(default_factory=lambda: MappingProxyType({}))
 
     affected_domains: frozenset[TermId] = frozenset()
 
@@ -123,6 +128,10 @@ class CaseFacts(ValueObject):
             return self.self_harm not in {None, SelfHarmScreening.UNKNOWN}
         return getattr(self, _SCALAR_ATTRS[kind]) is not None
 
+    def is_approximate(self, kind: FactKind) -> bool:
+        """Значение сведения оценено по размытым словам."""
+        return kind in self.confidence
+
     def is_settled(self, kind: FactKind) -> bool:
         """Больше не нужно спрашивать: сведение известно или от него отказались."""
         return self.is_known(kind) or kind in self.refused
@@ -146,6 +155,7 @@ class CaseFacts(ValueObject):
             duration=_newer(self.duration, newer.duration),
             frequency=_newer(self.frequency, newer.frequency),
             impact=_newer(self.impact, newer.impact),
+            confidence=self._merge_confidence(newer),
             affected_domains=self.affected_domains | newer.affected_domains,
             self_harm=self._merge_self_harm(newer.self_harm),
             sleep=_newer(self.sleep, newer.sleep),
@@ -184,6 +194,15 @@ class CaseFacts(ValueObject):
         unrecognized: tuple[str, ...] = () if extracted.manifestations else (text,)
         return self.merge(extracted).merge(CaseFacts(unrecognized=unrecognized))
 
+    def _merge_confidence(self, newer: "CaseFacts") -> Mapping[FactKind, float]:
+        """Уверенность берётся вместе со значением: новое значение приносит свою."""
+        merged: dict[FactKind, float] = {}
+        for kind in ESTIMATED_FACTS:
+            source: CaseFacts = newer if newer.is_known(kind) else self
+            if kind in source.confidence:
+                merged[kind] = source.confidence[kind]
+        return MappingProxyType(merged)
+
     def _merge_self_harm(self, newer: SelfHarmScreening | None) -> SelfHarmScreening | None:
         """Новый скрининг; `unknown` — тоже неясность, известный ответ он не перекрывает."""
         if newer not in {None, SelfHarmScreening.UNKNOWN}:
@@ -194,6 +213,7 @@ class CaseFacts(ValueObject):
         self._normalize_evidence()
         self._normalize_goal()
         self._normalize_refused()
+        self._normalize_confidence()
 
     def _normalize_evidence(self) -> None:
         """Отбрасывает повторы терминов и цитат; остаётся первое упоминание."""
@@ -212,8 +232,18 @@ class CaseFacts(ValueObject):
         if FactKind.SELF_HARM in self.refused and self.self_harm is None:
             self._set("self_harm", SelfHarmScreening.UNKNOWN)
 
+    def _normalize_confidence(self) -> None:
+        """Отбрасывает уверенность в неизвестных значениях."""
+        self._set(
+            "confidence",
+            MappingProxyType(
+                {kind: value for kind, value in self.confidence.items() if self.is_known(kind)},
+            ),
+        )
+
     def _validate(self) -> None:
         self._validate_goal()
+        self._validate_confidence()
 
     def _validate_goal(self) -> None:
         if self.goal is not None and len(self.goal) > self._MAX_GOAL_LENGTH:
@@ -221,6 +251,19 @@ class CaseFacts(ValueObject):
                 field=self._FIELD_NAME,
                 reason=f"goal must not exceed {self._MAX_GOAL_LENGTH} characters",
             )
+
+    def _validate_confidence(self) -> None:
+        for kind, value in self.confidence.items():
+            if kind not in ESTIMATED_FACTS:
+                raise ValidationError(
+                    field=self._FIELD_NAME,
+                    reason=f"'{kind}' cannot have a confidence",
+                )
+            if not 0 < value <= 1:
+                raise ValidationError(
+                    field=self._FIELD_NAME,
+                    reason=f"confidence of '{kind}' must be in (0, 1]",
+                )
 
 
 def _newer[T](old: T | None, new: T | None) -> T | None:

@@ -42,6 +42,10 @@ class ITextCatalog(Protocol):
         """Подпись варианта ответа."""
 
     @abstractmethod
+    def approximate(self, fact: FactKind, language: LanguageCode) -> str:
+        """Отметка, что сведение оценено приблизительно, по размытым словам."""
+
+    @abstractmethod
     def disclaimer(self, language: LanguageCode) -> str:
         """Предупреждение, что сводка — не диагноз."""
 

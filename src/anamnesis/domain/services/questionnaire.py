@@ -1,6 +1,6 @@
 from collections.abc import Collection, Mapping
 from types import MappingProxyType
-from typing import Final, cast
+from typing import Final
 
 from anamnesis.domain.enums.change_direction import ChangeDirection
 from anamnesis.domain.enums.fact_kind import FactKind
@@ -109,8 +109,16 @@ _CHOICES: Final[Mapping[FactKind, _Choices]] = MappingProxyType(
 )
 """Варианты по видам сведений. у вопросов со свободным текстом вариантов нет."""
 
-_FREE_TEXT: Final[frozenset[FactKind]] = frozenset({FactKind.MANIFESTATIONS, FactKind.GOAL})
-"""Вопросы, на которые отвечают своими словами."""
+_FREE_TEXT: Final[frozenset[FactKind]] = frozenset(
+    {
+        FactKind.MANIFESTATIONS,
+        FactKind.DURATION,
+        FactKind.FREQUENCY,
+        FactKind.IMPACT,
+        FactKind.GOAL,
+    },
+)
+"""Вопросы, на которые можно ответить своими словами; у части из них есть и варианты."""
 
 _MULTIPLE: Final[frozenset[FactKind]] = frozenset({FactKind.AFFECTED_DOMAINS})
 """Вопросы, в которых можно выбрать несколько вариантов."""
@@ -215,16 +223,17 @@ class Questionnaire:
     ) -> CaseFacts:
         """Добавляет к сведениям ответ на вопрос.
 
-        Отказ отмечается в `refused`. Текст становится целью обращения или
-        добавляется к проявлениям. Каждый выбранный вариант даёт свою часть
-        сведений.
+        Отказ отмечается в `refused`. Текст становится целью обращения,
+        добавляется к проявлениям или даёт сведения через `extracted`. Каждый
+        выбранный вариант даёт свою часть сведений.
 
         Args:
             facts: Что известно о случае.
             question: Вопрос, на который ответили.
             answer: Ответ пользователя.
             extracted: Сведения, извлечённые из текста ответа вне домена; для
-                вопроса о проявлениях это единственный источник терминов.
+                вопроса о проявлениях это единственный источник терминов, для
+                длительности, частоты и влияния — оценка по словам.
 
         Returns:
             Новые сведения о случае.
@@ -236,8 +245,8 @@ class Questionnaire:
         found: CaseFacts = extracted if extracted is not None else CaseFacts()
         if answer.is_refusal:
             return facts.merge(found).refuse(question.fact)
-        if question.free_text:
-            return self._apply_text(facts, question.fact, cast("str", answer.text), found)
+        if answer.text is not None:
+            return self._apply_text(facts, question.fact, answer.text, found)
         return facts.merge(found).merge(self._apply_choice(question.fact, answer.option_codes))
 
     @staticmethod
@@ -254,14 +263,10 @@ class Questionnaire:
 
     @classmethod
     def _validate_answer(cls, question: Question, answer: Answer) -> None:
-        """Проверяет ответ по виду вопроса: отказ, текст или выбор.
-
-        После проверки текст у ответа на текстовый вопрос точно есть, поэтому
-        `apply` приводит его к `str`.
-        """
+        """Проверяет ответ по виду: отказ, свой текст или выбор вариантов."""
         if answer.is_refusal:
             cls._validate_refusal(question, answer)
-        elif question.free_text:
+        elif answer.text is not None:
             cls._validate_text_answer(question, answer)
         else:
             cls._validate_choice(question, answer)
@@ -277,14 +282,21 @@ class Questionnaire:
 
     @staticmethod
     def _validate_text_answer(question: Question, answer: Answer) -> None:
-        """На текстовый вопрос отвечают текстом, без вариантов."""
-        if answer.text is None or answer.option_codes:
-            raise ValidationError(field=question.fact, reason="expects a text answer")
+        """Своими словами — только где можно и без вариантов вместе с текстом."""
+        if not question.free_text:
+            raise ValidationError(field=question.fact, reason="expects one of the options")
+        if answer.option_codes:
+            raise ValidationError(
+                field=question.fact,
+                reason="expects either an option or a text, not both",
+            )
 
     @staticmethod
     def _validate_choice(question: Question, answer: Answer) -> None:
         """Нужен хотя бы один известный вариант; несколько — только где можно."""
         codes: tuple[OptionCode, ...] = answer.option_codes
+        if question.fact not in _CHOICES:
+            raise ValidationError(field=question.fact, reason="expects a text answer")
         if not codes:
             raise ValidationError(field=question.fact, reason="expects one of the options")
         if len(codes) > 1 and not question.multiple:
@@ -296,10 +308,12 @@ class Questionnaire:
 
     @staticmethod
     def _apply_text(facts: CaseFacts, kind: FactKind, text: str, found: CaseFacts) -> CaseFacts:
-        """Текст становится целью обращения или добавляется к проявлениям."""
+        """Текст становится целью, добавляется к проявлениям или даёт оценку сведения."""
         if kind is FactKind.GOAL:
             return facts.merge(found).merge(CaseFacts(goal=text))
-        return facts.absorb(text, found)
+        if kind is FactKind.MANIFESTATIONS:
+            return facts.absorb(text, found)
+        return facts.merge(found)
 
     @staticmethod
     def _apply_choice(kind: FactKind, codes: tuple[OptionCode, ...]) -> CaseFacts:

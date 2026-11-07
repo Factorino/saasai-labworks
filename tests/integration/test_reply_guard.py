@@ -53,6 +53,7 @@ def locale_texts(locale: Locale) -> Iterator[tuple[str, str, UrgencyLevel | None
         "refuse": messages.refuse,
         **{f"replies.{stage}": text for stage, text in messages.replies.items()},
         **{f"referrals.{code}": text for code, text in messages.referrals.items()},
+        **{f"approximate.{fact}": text for fact, text in messages.approximate.items()},
         **{f"rules.{rule}": text for rule, text in messages.rules.items()},
         **{f"helplines.{item.phone}": f"{item.name}. {item.note}" for item in messages.helplines},
         **{f"terms.{term}": text for term, text in locale.terms.names.items()},

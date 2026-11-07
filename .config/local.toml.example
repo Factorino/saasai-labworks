@@ -23,15 +23,15 @@ allow_origins = ["*"]
 [knowledge]
 ontology_path = "ontology/anamnesis.owl"
 locales_dir = "locales"
+# Membership functions of the fuzzy normalization; language independent.
+linguistic_variables_path = "knowledge/linguistic_variables.yaml"
 # Pellet inferences running at once; each one is a separate Java process.
 reasoner_concurrency = 2
 # Clarifying questions per dialogue; the self-harm question may exceed it.
 question_limit = 8
 
 [llm]
-# Any server speaking the OpenAI protocol: Ollama, vLLM, LM Studio. A server
-# on the Windows host is reachable from WSL as localhost only in mirrored
-# networking mode; in NAT mode use the default gateway address instead.
+# Any server speaking the OpenAI protocol: Ollama, vLLM, LM Studio.
 base_url = "http://localhost:11434/v1"
 # Ollama and vLLM ignore the key, but the client requires one.
 api_key = "unused"

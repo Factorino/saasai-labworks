@@ -25,7 +25,10 @@ from anamnesis.domain.services.questionnaire import Questionnaire
 from anamnesis.domain.types import LanguageCode
 from anamnesis.infrastructure.common.clock import SystemClock
 from anamnesis.infrastructure.common.id_generator import ChatIdGenerator
+from anamnesis.infrastructure.extraction.lexicon_estimator import LexiconEstimateExtractor
 from anamnesis.infrastructure.extraction.lexicon_extractor import LexiconFactExtractor
+from anamnesis.infrastructure.fuzzy.normalizer import FuzzyFactNormalizer
+from anamnesis.infrastructure.fuzzy.variables import load_linguistic_variables
 from anamnesis.infrastructure.localization.locale import load_locales
 from anamnesis.infrastructure.localization.text_catalog import YamlTextCatalog
 from anamnesis.infrastructure.persistence.chat_repository import InMemoryChatRepository
@@ -38,6 +41,7 @@ pytestmark = [pytest.mark.slow, pytest.mark.timeout(120)]
 ROOT = Path(__file__).parents[2]
 RU = LanguageCode("ru")
 LOCALES = load_locales(ROOT / "locales")
+VARIABLES = load_linguistic_variables(ROOT / "knowledge" / "linguistic_variables.yaml")
 CASES: dict[str, list[dict[str, Any]]] = yaml.safe_load(
     (Path(__file__).parent / "data" / "crisis_cases.yaml").read_text(encoding="utf-8"),
 )
@@ -73,6 +77,8 @@ def service() -> Service:
         post=PostMessage(
             chat_repository=repository,
             extractor=LexiconFactExtractor(LOCALES),
+            estimator=LexiconEstimateExtractor(LOCALES, VARIABLES),
+            normalizer=FuzzyFactNormalizer(VARIABLES),
             detector=LexiconCrisisDetector(LOCALES),
             dialogue=dialogue,
             catalog=catalog,

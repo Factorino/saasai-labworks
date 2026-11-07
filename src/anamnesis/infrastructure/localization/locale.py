@@ -6,6 +6,7 @@ from typing import Any, ClassVar, Final
 from pydantic import BaseModel, ConfigDict, Field
 import yaml
 
+from anamnesis.application.dto.estimate import LinguisticTerm
 from anamnesis.domain.enums.chat_stage import ChatStage
 from anamnesis.domain.enums.crisis_category import CrisisCategory
 from anamnesis.domain.enums.fact_kind import FactKind
@@ -44,6 +45,7 @@ class Messages(_File):
     support_others: str
     helplines: tuple[Helpline, ...]
     disclaimer: str
+    approximate: Mapping[FactKind, str]
     replies: Mapping[ChatStage, str]
     levels: Mapping[str, str]
     specialists: Mapping[str, str]
@@ -96,6 +98,25 @@ class Guard(_File):
     levels: Mapping[str, tuple[str, ...]]
 
 
+class Fuzzy(_File):
+    """`fuzzy.yaml`: слова, по которым оцениваются длительность, частота и влияние.
+
+    `expressions` — размытые выражения и термы лингвистических переменных:
+    один терм со степенью 1 или несколько со своими степенями. `units` —
+    единицы при числе и их вес в единицах универсума; `numbers` — числа
+    словами. Выражения — шаблоны, как в `crisis.yaml`.
+    """
+
+    stemmer: str
+    negations: tuple[str, ...]
+    numbers: Mapping[str, float]
+    units: Mapping[FactKind, Mapping[str, float]]
+    expressions: Mapping[
+        FactKind,
+        Mapping[str, LinguisticTerm | Mapping[LinguisticTerm, float]],
+    ]
+
+
 class Locale(_File):
     """Все тексты одного языка."""
 
@@ -105,6 +126,7 @@ class Locale(_File):
     lexicon: Lexicon
     crisis: Crisis
     guard: Guard
+    fuzzy: Fuzzy
 
 
 _FILES: Final[Mapping[str, str]] = MappingProxyType(
@@ -114,6 +136,7 @@ _FILES: Final[Mapping[str, str]] = MappingProxyType(
         "lexicon": "lexicon.yaml",
         "crisis": "crisis.yaml",
         "guard": "guard.yaml",
+        "fuzzy": "fuzzy.yaml",
     },
 )
 """Файлы, без которых язык не поддерживается."""
