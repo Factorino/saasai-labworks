@@ -13,6 +13,7 @@ from pydantic_settings import (
 
 from anamnesis.main.config.api import APIConfig
 from anamnesis.main.config.knowledge import KnowledgeConfig
+from anamnesis.main.config.llm import LLMConfig
 from anamnesis.main.config.server import ServerConfig
 from anamnesis.main.config.service import ServiceConfig
 
@@ -46,6 +47,7 @@ class Config(BaseSettings):
     server: ServerConfig = Field(default_factory=ServerConfig)
     api: APIConfig = Field(default_factory=APIConfig)
     knowledge: KnowledgeConfig = Field(default_factory=KnowledgeConfig)
+    llm: LLMConfig = Field(default_factory=LLMConfig)
 
     @classmethod
     def load(cls, *, path: str | None = None) -> "Config":

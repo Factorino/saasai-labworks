@@ -4,12 +4,14 @@ from dishka.integrations.fastapi import FastapiProvider
 from anamnesis.main.config.api import APIConfig
 from anamnesis.main.config.config import Config
 from anamnesis.main.config.knowledge import KnowledgeConfig
+from anamnesis.main.config.llm import LLMConfig
 from anamnesis.main.config.server import ServerConfig
 from anamnesis.main.config.service import ServiceConfig
 from anamnesis.main.di.providers.common import CommonProvider
 from anamnesis.main.di.providers.config import ConfigProvider
 from anamnesis.main.di.providers.interactors import InteractorsProvider
 from anamnesis.main.di.providers.knowledge import KnowledgeProvider
+from anamnesis.main.di.providers.llm import LLMProvider
 
 
 def create_container(config: Config) -> AsyncContainer:
@@ -18,6 +20,7 @@ def create_container(config: Config) -> AsyncContainer:
         ConfigProvider(),
         CommonProvider(),
         KnowledgeProvider(),
+        LLMProvider(),
         InteractorsProvider(),
     ]
 
@@ -27,6 +30,7 @@ def create_container(config: Config) -> AsyncContainer:
         ServerConfig: config.server,
         APIConfig: config.api,
         KnowledgeConfig: config.knowledge,
+        LLMConfig: config.llm,
     }
 
     return make_async_container(*providers, context=context)

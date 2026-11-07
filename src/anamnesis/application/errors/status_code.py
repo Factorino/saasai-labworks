@@ -8,3 +8,6 @@ class StatusCode(StrEnum):
 
     UNSUPPORTED_LANGUAGE_ERROR = auto()
     UNKNOWN_TERM_ERROR = auto()
+
+    LANGUAGE_MODEL_UNAVAILABLE_ERROR = auto()
+    LANGUAGE_MODEL_REPLY_ERROR = auto()

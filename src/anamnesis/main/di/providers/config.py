@@ -4,6 +4,7 @@ from dishka.dependency_source import CompositeDependencySource
 from anamnesis.main.config.api import APIConfig
 from anamnesis.main.config.config import Config
 from anamnesis.main.config.knowledge import KnowledgeConfig
+from anamnesis.main.config.llm import LLMConfig
 from anamnesis.main.config.server import ServerConfig
 from anamnesis.main.config.service import ServiceConfig
 
@@ -17,4 +18,5 @@ class ConfigProvider(Provider):
         + from_context(ServerConfig)
         + from_context(APIConfig)
         + from_context(KnowledgeConfig)
+        + from_context(LLMConfig)
     )

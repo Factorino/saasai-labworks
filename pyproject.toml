@@ -49,6 +49,7 @@ classifiers = [
 dependencies = [
     "dishka>=1.10.1",
     "fastapi>=0.141.1",
+    "openai>=3.46.0",
     "owlready2>=0.51",
     "pydantic>=2.13.5",
     "pydantic-settings>=2.15.0",

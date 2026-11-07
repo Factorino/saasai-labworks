@@ -27,3 +27,22 @@ locales_dir = "locales"
 reasoner_concurrency = 2
 # Clarifying questions per dialogue; the self-harm question may exceed it.
 question_limit = 8
+
+[llm]
+# Any server speaking the OpenAI protocol: Ollama, vLLM, LM Studio. A server
+# on the Windows host is reachable from WSL as localhost only in mirrored
+# networking mode; in NAT mode use the default gateway address instead.
+base_url = "http://localhost:11434/v1"
+# Ollama and vLLM ignore the key, but the client requires one.
+api_key = "unused"
+model = "qwen3.5:9b"
+temperature = 0.2
+# Reply length limit; a reply cut off by it is treated as invalid.
+max_tokens = 2048
+# "none" turns off the thinking phase of reasoning models; remove the line to
+# leave the server default.
+reasoning_effort = "none"
+# Seconds. The first request after idle also loads the model into memory.
+connect_timeout = 5.0
+request_timeout = 120.0
+max_retries = 1

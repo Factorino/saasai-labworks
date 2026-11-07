@@ -9,6 +9,10 @@ from pydantic import BaseModel, Field
 
 from anamnesis.application.errors.common import NotFoundError
 from anamnesis.application.errors.knowledge import UnknownTermError, UnsupportedLanguageError
+from anamnesis.application.errors.llm import (
+    LanguageModelReplyError,
+    LanguageModelUnavailableError,
+)
 from anamnesis.domain.errors.base import AppError, DomainError
 from anamnesis.domain.errors.chat import ChatStageError, ConsentRequiredError
 from anamnesis.domain.errors.common import ValidationError
@@ -25,6 +29,8 @@ _ERROR_STATUS_CODE: Final[Mapping[type[AppError], int]] = MappingProxyType(
         ChatStageError: status.HTTP_409_CONFLICT,
         DomainError: status.HTTP_400_BAD_REQUEST,
         NotFoundError: status.HTTP_404_NOT_FOUND,
+        LanguageModelUnavailableError: status.HTTP_503_SERVICE_UNAVAILABLE,
+        LanguageModelReplyError: status.HTTP_502_BAD_GATEWAY,
         AppError: status.HTTP_500_INTERNAL_SERVER_ERROR,
     },
 )
