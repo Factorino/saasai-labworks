@@ -8,7 +8,7 @@
 import asyncio
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, override
 
 import pytest
 import yaml
@@ -16,8 +16,12 @@ import yaml
 from anamnesis.application.commands.chat.finish_chat import FinishChat, FinishChatRequest
 from anamnesis.application.commands.chat.post_message import PostMessage, PostMessageRequest
 from anamnesis.application.commands.chat.start_chat import StartChat, StartChatRequest
+from anamnesis.application.dto.base import DTO
 from anamnesis.application.dto.views.reply import ReplyView
+from anamnesis.application.errors.llm import LanguageModelUnavailableError
+from anamnesis.application.interfaces.llm.language_model import ILanguageModel, ModelRequest
 from anamnesis.application.services.dialogue import DialogueService
+from anamnesis.application.services.extraction import FactExtraction
 from anamnesis.application.services.rendering import ViewRenderer
 from anamnesis.domain.enums.urgency_level import UrgencyLevel
 from anamnesis.domain.services.assessment import AssessmentService
@@ -29,10 +33,12 @@ from anamnesis.infrastructure.extraction.lexicon_estimator import LexiconEstimat
 from anamnesis.infrastructure.extraction.lexicon_extractor import LexiconFactExtractor
 from anamnesis.infrastructure.fuzzy.normalizer import FuzzyFactNormalizer
 from anamnesis.infrastructure.fuzzy.variables import load_linguistic_variables
+from anamnesis.infrastructure.llm.file_instructions import FileInstructions
 from anamnesis.infrastructure.localization.locale import load_locales
 from anamnesis.infrastructure.localization.text_catalog import YamlTextCatalog
 from anamnesis.infrastructure.persistence.chat_repository import InMemoryChatRepository
 from anamnesis.infrastructure.reasoning.owl_reasoner import OwlCaseReasoner
+from anamnesis.infrastructure.reasoning.owl_vocabulary import OwlOntologyVocabulary
 from anamnesis.infrastructure.safety.lexicon_detector import LexiconCrisisDetector
 
 
@@ -47,6 +53,22 @@ CASES: dict[str, list[dict[str, Any]]] = yaml.safe_load(
 )
 
 
+class OfflineModel(ILanguageModel):
+    """Языковая модель, которая всегда недоступна: кризисный контур работает без неё."""
+
+    @override
+    async def complete(self, request: ModelRequest) -> str:
+        raise LanguageModelUnavailableError(model="offline", reason="not used in these tests")
+
+    @override
+    async def complete_structured[OutputT: DTO](
+        self,
+        request: ModelRequest,
+        output: type[OutputT],
+    ) -> OutputT:
+        raise LanguageModelUnavailableError(model="offline", reason="not used in these tests")
+
+
 @dataclass(frozen=True)
 class Service:
     start: StartChat
@@ -59,10 +81,21 @@ def service() -> Service:
     catalog = YamlTextCatalog(LOCALES)
     renderer = ViewRenderer(catalog)
     repository = InMemoryChatRepository()
+    ontology = ROOT / "ontology" / "anamnesis.owl"
+    extraction = FactExtraction(
+        lexicon=LexiconFactExtractor(LOCALES),
+        estimator=LexiconEstimateExtractor(LOCALES, VARIABLES),
+        normalizer=FuzzyFactNormalizer(VARIABLES),
+        model=OfflineModel(),
+        vocabulary=OwlOntologyVocabulary(ontology_path=ontology),
+        instructions=FileInstructions(ROOT / "knowledge" / "instructions"),
+        catalog=catalog,
+        clock=SystemClock(),
+    )
     dialogue = DialogueService(
         questionnaire=Questionnaire(),
         assessment_service=AssessmentService(),
-        reasoner=OwlCaseReasoner(ontology_path=ROOT / "ontology" / "anamnesis.owl"),
+        reasoner=OwlCaseReasoner(ontology_path=ontology),
         catalog=catalog,
         renderer=renderer,
     )
@@ -76,9 +109,7 @@ def service() -> Service:
         ),
         post=PostMessage(
             chat_repository=repository,
-            extractor=LexiconFactExtractor(LOCALES),
-            estimator=LexiconEstimateExtractor(LOCALES, VARIABLES),
-            normalizer=FuzzyFactNormalizer(VARIABLES),
+            extraction=extraction,
             detector=LexiconCrisisDetector(LOCALES),
             dialogue=dialogue,
             catalog=catalog,

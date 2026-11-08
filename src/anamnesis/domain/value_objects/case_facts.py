@@ -42,7 +42,8 @@ class CaseFacts(ValueObject):
     Attributes:
         manifestations: Найденные проявления (`hasManifestation`).
         stressors: Найденные стрессоры (`hasStressor`).
-        unrecognized: Реплики, в которых не нашлось ни одного проявления.
+        unrecognized: Жалобы вне понятий онтологии («Другое»): цитаты или целые
+            реплики, в которых не нашлось ни одного проявления.
         duration: Длительность (`durationWeeks`).
         frequency: Частота (`frequency`).
         impact: Влияние на жизнь (`impactDegree`).
@@ -184,14 +185,15 @@ class CaseFacts(ValueObject):
         """Добавляет сведения, извлечённые из реплики.
 
         Args:
-            text: Реплика пользователя. Если в ней не нашлось ни одного
-                проявления, она сохраняется в `unrecognized`.
+            text: Реплика пользователя. Если в ней не нашлось ни проявлений,
+                ни цитат «Другого», она целиком сохраняется в `unrecognized`.
             extracted: Сведения, найденные в реплике вне домена.
 
         Returns:
             Новый объект с добавленными сведениями.
         """
-        unrecognized: tuple[str, ...] = () if extracted.manifestations else (text,)
+        recognized: bool = bool(extracted.manifestations or extracted.unrecognized)
+        unrecognized: tuple[str, ...] = () if recognized else (text,)
         return self.merge(extracted).merge(CaseFacts(unrecognized=unrecognized))
 
     def _merge_confidence(self, newer: "CaseFacts") -> Mapping[FactKind, float]:

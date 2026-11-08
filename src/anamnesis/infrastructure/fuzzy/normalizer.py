@@ -38,6 +38,10 @@ class FuzzyFactNormalizer(IFactNormalizer):
         )
 
     @override
+    def terms(self, fact: FactKind) -> tuple[LinguisticTerm, ...]:
+        return tuple(self._variables[fact].terms)
+
+    @override
     def normalize(self, estimate: Estimate) -> CaseFacts:
         variable: LinguisticVariable = self._variables[estimate.fact]
         crisp: float = (

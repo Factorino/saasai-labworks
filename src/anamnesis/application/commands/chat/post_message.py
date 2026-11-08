@@ -1,16 +1,14 @@
-from typing import TYPE_CHECKING, override
+from typing import Final, override
 
 from anamnesis.application.dto.base import DTO
 from anamnesis.application.dto.views.reply import ReplyView
 from anamnesis.application.errors.chat import ChatNotFoundError
 from anamnesis.application.interfaces.common.interactor import Interactor
-from anamnesis.application.interfaces.extraction.estimate_extractor import IEstimateExtractor
-from anamnesis.application.interfaces.extraction.fact_extractor import IFactExtractor
-from anamnesis.application.interfaces.extraction.fact_normalizer import IFactNormalizer
 from anamnesis.application.interfaces.localization.text_catalog import ITextCatalog
 from anamnesis.application.interfaces.repositories.chat import IChatRepository
 from anamnesis.application.interfaces.safety.crisis_detector import ICrisisDetector
 from anamnesis.application.services.dialogue import DialogueService
+from anamnesis.application.services.extraction import FactExtraction
 from anamnesis.application.services.rendering import ViewRenderer
 from anamnesis.domain.entities.chat import Chat, ChatId
 from anamnesis.domain.enums.chat_stage import ChatStage
@@ -19,11 +17,14 @@ from anamnesis.domain.enums.message_role import MessageRole
 from anamnesis.domain.errors.common import ValidationError
 from anamnesis.domain.types import OptionCode
 from anamnesis.domain.value_objects.case_facts import CaseFacts
+from anamnesis.domain.value_objects.crisis_signal import CrisisSignal
 from anamnesis.domain.value_objects.question import Answer, Question
 
 
-if TYPE_CHECKING:
-    from anamnesis.application.dto.estimate import Estimate
+_EXTRACTED_ANSWERS: Final[frozenset[FactKind]] = frozenset(
+    {FactKind.MANIFESTATIONS, *ESTIMATED_FACTS},
+)
+"""Вопросы, из своего ответа на которые извлекаются сведения."""
 
 
 class PostMessageBody(DTO):
@@ -46,18 +47,14 @@ class PostMessage(Interactor[PostMessageRequest, PostMessageResponse]):
         self,
         *,
         chat_repository: IChatRepository,
-        extractor: IFactExtractor,
-        estimator: IEstimateExtractor,
-        normalizer: IFactNormalizer,
+        extraction: FactExtraction,
         detector: ICrisisDetector,
         dialogue: DialogueService,
         catalog: ITextCatalog,
         renderer: ViewRenderer,
     ) -> None:
         self._chat_repo: IChatRepository = chat_repository
-        self._extractor: IFactExtractor = extractor
-        self._estimator: IEstimateExtractor = estimator
-        self._normalizer: IFactNormalizer = normalizer
+        self._extraction: FactExtraction = extraction
         self._detector: ICrisisDetector = detector
         self._dialogue: DialogueService = dialogue
         self._catalog: ITextCatalog = catalog
@@ -84,54 +81,57 @@ class PostMessage(Interactor[PostMessageRequest, PostMessageResponse]):
 
     async def _tell_story(self, chat: Chat, request: PostMessageRequest) -> ReplyView:
         self._validate_text(request)
-        extracted: CaseFacts = await self._extractor.extract(request.text, chat.language)
+        signals: tuple[CrisisSignal, ...] = await self._detect(chat, request.text)
+        extracted: CaseFacts = await self._extraction.extract(
+            request.text, chat.language, with_model=not _is_crisis(signals)
+        )
         chat.tell_story(request.text, extracted)
-        await self._screen(chat, request.text)
+        chat.register_signals(signals)
         return await self._dialogue.after_story(chat)
 
     async def _answer(self, chat: Chat, request: PostMessageRequest) -> ReplyView:
         answer = Answer(option_codes=request.option_codes, text=request.text or None)
-        extracted: CaseFacts | None = await self._extract(chat, answer)
+        signals: tuple[CrisisSignal, ...] = (
+            await self._detect(chat, answer.text) if answer.text is not None else ()
+        )
+        extracted: CaseFacts | None = await self._extract(
+            chat, answer, with_model=not _is_crisis(signals)
+        )
         question: Question = chat.answer(answer, self._dialogue.questionnaire, extracted)
         chat.record(MessageRole.USER, self._renderer.answer(question, answer, chat.language))
-        if answer.text is not None:
-            await self._screen(chat, answer.text)
+        chat.register_signals(signals)
         return await self._dialogue.advance(chat)
 
     async def _talk(self, chat: Chat, request: PostMessageRequest) -> ReplyView:
         """Свободная реплика: шаблонный ответ, а при новом кризисе — кризисная сводка."""
         was_crisis: bool = chat.is_crisis
         chat.post_message(request.text)
-        await self._screen(chat, request.text)
+        chat.register_signals(await self._detect(chat, request.text))
         if chat.is_crisis and not was_crisis:
             return await self._dialogue.conclude(chat)
         message: str = self._catalog.reply(chat.stage, chat.language)
         chat.record(MessageRole.ASSISTANT, message)
         return ReplyView(stage=chat.stage, message=message)
 
-    async def _screen(self, chat: Chat, text: str) -> None:
-        """Проверяет реплику кризисным детектором; кризисная находка переводит чат в кризис."""
-        chat.register_signals(await self._detector.detect(text, chat.language))
+    async def _detect(self, chat: Chat, text: str) -> tuple[CrisisSignal, ...]:
+        """Находки кризисного детектора; проверка идёт до языковой модели."""
+        return await self._detector.detect(text, chat.language)
 
-    async def _extract(self, chat: Chat, answer: Answer) -> CaseFacts | None:
-        """Сведения из своего текста ответа.
-
-        В ответе о проявлениях ищутся термины, в ответе о длительности,
-        частоте или влиянии — оценка, которая затем нормализуется.
-        """
+    async def _extract(self, chat: Chat, answer: Answer, *, with_model: bool) -> CaseFacts | None:
+        """Сведения из своего текста ответа о проявлениях, длительности, частоте или влиянии."""
         pending: Question | None = chat.pending
-        if answer.text is None or pending is None:
+        if answer.text is None or pending is None or pending.fact not in _EXTRACTED_ANSWERS:
             return None
-        if pending.fact is FactKind.MANIFESTATIONS:
-            return await self._extractor.extract(answer.text, chat.language)
-        if pending.fact in ESTIMATED_FACTS:
-            estimate: Estimate | None = await self._estimator.extract(
-                answer.text, pending.fact, chat.language
-            )
-            return self._normalizer.normalize(estimate) if estimate is not None else None
-        return None
+        return await self._extraction.extract(
+            answer.text, chat.language, pending.fact, with_model=with_model
+        )
 
     @staticmethod
     def _validate_text(request: PostMessageRequest) -> None:
         if not request.text.strip():
             raise ValidationError(field="text", reason="the story must not be empty")
+
+
+def _is_crisis(signals: tuple[CrisisSignal, ...]) -> bool:
+    """Кризисная находка: тогда языковая модель не вызывается вовсе."""
+    return any(signal.category.is_crisis for signal in signals)

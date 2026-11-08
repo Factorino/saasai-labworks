@@ -6,10 +6,13 @@ from dishka.dependency_source import CompositeDependencySource
 from anamnesis.application.interfaces.extraction.estimate_extractor import IEstimateExtractor
 from anamnesis.application.interfaces.extraction.fact_extractor import IFactExtractor
 from anamnesis.application.interfaces.extraction.fact_normalizer import IFactNormalizer
+from anamnesis.application.interfaces.knowledge.vocabulary import IOntologyVocabulary
+from anamnesis.application.interfaces.llm.instructions import IInstructions
 from anamnesis.application.interfaces.localization.text_catalog import ITextCatalog
 from anamnesis.application.interfaces.reasoning.case_reasoner import ICaseReasoner
 from anamnesis.application.interfaces.safety.crisis_detector import ICrisisDetector
 from anamnesis.application.services.dialogue import DialogueService
+from anamnesis.application.services.extraction import FactExtraction
 from anamnesis.application.services.rendering import ViewRenderer
 from anamnesis.domain.enums.fact_kind import FactKind
 from anamnesis.domain.services.assessment import AssessmentService
@@ -20,9 +23,11 @@ from anamnesis.infrastructure.extraction.lexicon_extractor import LexiconFactExt
 from anamnesis.infrastructure.fuzzy.linguistic_variable import LinguisticVariable
 from anamnesis.infrastructure.fuzzy.normalizer import FuzzyFactNormalizer
 from anamnesis.infrastructure.fuzzy.variables import load_linguistic_variables
+from anamnesis.infrastructure.llm.file_instructions import FileInstructions
 from anamnesis.infrastructure.localization.locale import Locale, load_locales
 from anamnesis.infrastructure.localization.text_catalog import YamlTextCatalog
 from anamnesis.infrastructure.reasoning.owl_reasoner import OwlCaseReasoner
+from anamnesis.infrastructure.reasoning.owl_vocabulary import OwlOntologyVocabulary
 from anamnesis.infrastructure.safety.lexicon_detector import LexiconCrisisDetector
 from anamnesis.main.config.knowledge import KnowledgeConfig
 
@@ -32,6 +37,7 @@ class KnowledgeProvider(Provider):
 
     renderer: CompositeDependencySource = provide(ViewRenderer)
     assessment_service: CompositeDependencySource = provide(AssessmentService)
+    extraction: CompositeDependencySource = provide(FactExtraction)
 
     @provide
     def locales(self, config: KnowledgeConfig) -> Mapping[LanguageCode, Locale]:
@@ -63,6 +69,14 @@ class KnowledgeProvider(Provider):
     @provide
     def normalizer(self, variables: Mapping[FactKind, LinguisticVariable]) -> IFactNormalizer:
         return FuzzyFactNormalizer(variables)
+
+    @provide
+    def vocabulary(self, config: KnowledgeConfig) -> IOntologyVocabulary:
+        return OwlOntologyVocabulary(ontology_path=config.ontology_path)
+
+    @provide
+    def instructions(self, config: KnowledgeConfig) -> IInstructions:
+        return FileInstructions(config.instructions_dir)
 
     @provide
     def detector(self, locales: Mapping[LanguageCode, Locale]) -> ICrisisDetector:
