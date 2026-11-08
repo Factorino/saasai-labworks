@@ -27,6 +27,8 @@ locales_dir = "locales"
 linguistic_variables_path = "knowledge/linguistic_variables.yaml"
 # Fixed instructions for the language model, one file per task.
 instructions_dir = "knowledge/instructions"
+# How many practices the summary shows at each urgency level.
+practice_selection_path = "knowledge/practice_selection.yaml"
 # Pellet inferences running at once; each one is a separate Java process.
 reasoner_concurrency = 2
 # Clarifying questions per dialogue; the self-harm question may exceed it.

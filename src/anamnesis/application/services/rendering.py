@@ -18,6 +18,7 @@ from anamnesis.domain.entities.chat import Chat
 from anamnesis.domain.enums.crisis_category import CrisisCategory
 from anamnesis.domain.enums.referral import Referral
 from anamnesis.domain.enums.urgency_level import UrgencyLevel
+from anamnesis.domain.services.practice_selection import PracticeSelection
 from anamnesis.domain.types import LanguageCode, TermId
 from anamnesis.domain.value_objects.assessment import Assessment
 from anamnesis.domain.value_objects.case_facts import CaseFacts
@@ -30,8 +31,9 @@ from anamnesis.domain.value_objects.question import Answer, Question
 class ViewRenderer:
     """Собирает представления из доменных объектов с текстами на языке чата."""
 
-    def __init__(self, catalog: ITextCatalog) -> None:
+    def __init__(self, catalog: ITextCatalog, selection: PracticeSelection) -> None:
         self._catalog: ITextCatalog = catalog
+        self._selection: PracticeSelection = selection
 
     @staticmethod
     def chat(chat: Chat) -> ChatView:
@@ -95,11 +97,7 @@ class ViewRenderer:
                 for signal in assessment.signals
             ),
             support_others=self._support_others(assessment, language),
-            practices=tuple(
-                view
-                for advice in assessment.advised_practices
-                if (view := self._practice(advice, language)) is not None
-            ),
+            practices=self._practices(assessment, language),
             clusters=tuple(self._term(term, language) for term in assessment.clusters),
             explanation=tuple(
                 RuleView(rule=rule, explanation=self._catalog.rule(rule, language))
@@ -170,11 +168,32 @@ class ViewRenderer:
             refused=tuple(sorted(facts.refused)),
         )
 
-    def _practice(self, advice: PracticeAdvice, language: LanguageCode) -> PracticeView | None:
-        """Практика с документом; без проверенного документа она не советуется."""
-        guide: PracticeGuideView | None = self._catalog.practice_guide(advice.practice, language)
-        if guide is None:
-            return None
+    def _practices(
+        self,
+        assessment: Assessment,
+        language: LanguageCode,
+    ) -> tuple[PracticeView, ...]:
+        """Практики для сводки; без проверенного документа практика не советуется."""
+        guides: dict[TermId, PracticeGuideView] = {
+            advice.practice: guide
+            for advice in assessment.advised_practices
+            if (guide := self._catalog.practice_guide(advice.practice, language)) is not None
+        }
+        selected: tuple[PracticeAdvice, ...] = self._selection.select(
+            (advice for advice in assessment.advised_practices if advice.practice in guides),
+            level=assessment.level,
+            clusters=assessment.clusters,
+        )
+        return tuple(
+            self._practice(advice, guides[advice.practice], language) for advice in selected
+        )
+
+    def _practice(
+        self,
+        advice: PracticeAdvice,
+        guide: PracticeGuideView,
+        language: LanguageCode,
+    ) -> PracticeView:
         return PracticeView(
             term=advice.practice,
             name=self._catalog.term(advice.practice, language),

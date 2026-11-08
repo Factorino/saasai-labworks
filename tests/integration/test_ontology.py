@@ -12,6 +12,7 @@ from anamnesis.application.queries.assessment.assess_case import AssessCase, Ass
 from anamnesis.application.services.rendering import ViewRenderer
 from anamnesis.domain.enums.urgency_level import UrgencyLevel
 from anamnesis.domain.services.assessment import AssessmentService
+from anamnesis.infrastructure.knowledge.practice_selection import load_practice_selection
 from anamnesis.infrastructure.localization.locale import load_locales
 from anamnesis.infrastructure.localization.text_catalog import YamlTextCatalog
 from anamnesis.infrastructure.reasoning.owl_reasoner import OwlCaseReasoner
@@ -53,7 +54,10 @@ def summaries() -> dict[str, SummaryView]:
         ),
         assessment_service=AssessmentService(),
         catalog=catalog,
-        renderer=ViewRenderer(catalog),
+        renderer=ViewRenderer(
+            catalog,
+            load_practice_selection(ROOT / "knowledge" / "practice_selection.yaml"),
+        ),
     )
     cases = [*CASES["reference"], *CASES["rules"]]
 

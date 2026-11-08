@@ -1,0 +1,103 @@
+# Предложенные онтологией практики и что покажет сводка.
+
+- name: limit_of_l0
+  level: L0
+  clusters: []
+  practices: &seven
+    - {practice: A_}
+    - {practice: B_}
+    - {practice: C_}
+    - {practice: D_}
+    - {practice: E_}
+    - {practice: F_}
+    - {practice: G_}
+  expected: [A_, B_, C_, D_, E_]
+
+- name: limit_of_l1
+  level: L1
+  clusters: []
+  practices: *seven
+  expected: [A_, B_, C_, D_]
+
+- name: limit_of_l2
+  level: L2
+  clusters: []
+  practices: *seven
+  expected: [A_, B_, C_]
+
+- name: limit_of_undefined_level
+  level: null
+  clusters: []
+  practices: *seven
+  expected: [A_, B_, C_]
+
+- name: no_self_help_at_l3
+  level: L3
+  clusters: []
+  practices: *seven
+  expected: []
+
+- name: demanding_practices_are_not_advised_at_l2
+  level: L2
+  clusters: []
+  practices:
+    - {practice: GradualExposure_}
+    - {practice: ThoughtRecord_}
+    - {practice: WorryTime_}
+  expected: [WorryTime_]
+
+- name: demanding_practices_are_advised_at_l1
+  level: L1
+  clusters: []
+  practices:
+    - {practice: GradualExposure_}
+    - {practice: ThoughtRecord_}
+  expected: [GradualExposure_, ThoughtRecord_]
+
+- name: every_cluster_gets_a_practice
+  level: L2
+  clusters: [Anxiety_, Sleep_, Grief_]
+  practices:
+    - {practice: A1_, clusters: [Anxiety_]}
+    - {practice: A2_, clusters: [Anxiety_]}
+    - {practice: A3_, clusters: [Anxiety_]}
+    - {practice: S1_, clusters: [Sleep_]}
+    - {practice: Z1_, clusters: [Grief_]}
+  expected: [A1_, S1_, Z1_]
+
+- name: specific_practice_wins_over_a_broad_one
+  level: L2
+  clusters: [Anxiety_, Sleep_, Stress_]
+  practices:
+    - {practice: Broad_, clusters: [Anxiety_, Sleep_, Stress_]}
+    - {practice: A1_, clusters: [Anxiety_]}
+    - {practice: S1_, clusters: [Sleep_]}
+    - {practice: T1_, clusters: [Stress_]}
+  expected: [A1_, S1_, T1_]
+
+- name: practice_for_several_clusters_comes_first
+  level: L0
+  clusters: [Anxiety_, Sleep_]
+  practices:
+    - {practice: A1_, clusters: [Anxiety_]}
+    - {practice: Both_, clusters: [Anxiety_, Sleep_]}
+    - {practice: S1_, clusters: [Sleep_]}
+  expected: [Both_, A1_, S1_]
+
+- name: practice_with_caution_comes_last
+  level: L0
+  clusters: [Anxiety_]
+  practices:
+    - {practice: A1_, clusters: [Anxiety_], cautions: [BreathingDifficulty_]}
+    - {practice: A2_, clusters: [Anxiety_]}
+  expected: [A2_, A1_]
+
+- name: caution_loses_a_place_at_the_limit
+  level: L2
+  clusters: [Anxiety_]
+  practices:
+    - {practice: A_, clusters: [Anxiety_], cautions: [BreathingDifficulty_]}
+    - {practice: B_, clusters: [Anxiety_]}
+    - {practice: C_, clusters: [Anxiety_]}
+    - {practice: D_, clusters: [Anxiety_]}
+  expected: [B_, C_, D_]

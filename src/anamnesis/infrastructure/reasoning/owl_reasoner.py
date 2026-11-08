@@ -113,13 +113,18 @@ class OwlCaseReasoner(ICaseReasoner):
 
     @classmethod
     def _practice(cls, case: Any, practice: Any) -> PracticeAdvice:
-        """Практика и те её ограничения (`cautionFor`), которые есть в случае."""
+        """Практика, её ограничения (`cautionFor`) в случае и подходящие кластеры."""
         return PracticeAdvice(
             practice=TermId(practice.name),
             cautions=frozenset(
                 TermId(concept.name)
                 for concept in practice.cautionFor
                 if cls._present(case, concept)
+            ),
+            clusters=frozenset(
+                TermId(cluster.name)
+                for cluster in case.indicatesCluster
+                if practice in cluster.recommendsPractice
             ),
         )
 

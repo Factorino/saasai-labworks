@@ -12,10 +12,12 @@ class PracticeAdvice(ValueObject):
         practice: Представитель практики (`BreathingPractice_`), выведенный
             через `suggestsPractice`.
         cautions: Понятия из `cautionFor` практики, которые есть в случае.
+        clusters: Кластеры случая, которым практика подходит.
     """
 
     practice: TermId
     cautions: frozenset[TermId] = frozenset()
+    clusters: frozenset[TermId] = frozenset()
 
     @property
     def needs_caution(self) -> bool:

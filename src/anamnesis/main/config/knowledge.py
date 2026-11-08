@@ -11,5 +11,6 @@ class KnowledgeConfig(BaseConfig):
     locales_dir: Path = Path("locales")
     linguistic_variables_path: Path = Path("knowledge/linguistic_variables.yaml")
     instructions_dir: Path = Path("knowledge/instructions")
+    practice_selection_path: Path = Path("knowledge/practice_selection.yaml")
     reasoner_concurrency: int = Field(default=2, ge=1)
     question_limit: int = Field(default=Questionnaire.DEFAULT_QUESTION_LIMIT, ge=0)

@@ -26,6 +26,7 @@ from anamnesis.infrastructure.extraction.lexicon_estimator import LexiconEstimat
 from anamnesis.infrastructure.extraction.lexicon_extractor import LexiconFactExtractor
 from anamnesis.infrastructure.fuzzy.normalizer import FuzzyFactNormalizer
 from anamnesis.infrastructure.fuzzy.variables import load_linguistic_variables
+from anamnesis.infrastructure.knowledge.practice_selection import load_practice_selection
 from anamnesis.infrastructure.llm.file_instructions import FileInstructions
 from anamnesis.infrastructure.localization.locale import load_locales
 from anamnesis.infrastructure.localization.text_catalog import YamlTextCatalog
@@ -42,6 +43,7 @@ LOCALES = load_locales(ROOT / "locales")
 CATALOG = YamlTextCatalog(LOCALES)
 INSTRUCTIONS = FileInstructions(ROOT / "knowledge" / "instructions")
 VARIABLES = load_linguistic_variables(ROOT / "knowledge" / "linguistic_variables.yaml")
+SELECTION = load_practice_selection(ROOT / "knowledge" / "practice_selection.yaml")
 
 
 class ScriptedModel(ILanguageModel):
@@ -77,7 +79,7 @@ class Service:
 
 
 def build_service(model: ILanguageModel) -> Service:
-    renderer = ViewRenderer(CATALOG)
+    renderer = ViewRenderer(CATALOG, SELECTION)
     repository = InMemoryChatRepository()
     ontology = ROOT / "ontology" / "anamnesis.owl"
     extraction = FactExtraction(

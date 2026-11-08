@@ -18,6 +18,7 @@ from anamnesis.application.services.generation import TextGeneration
 from anamnesis.application.services.rendering import ViewRenderer
 from anamnesis.domain.enums.fact_kind import FactKind
 from anamnesis.domain.services.assessment import AssessmentService
+from anamnesis.domain.services.practice_selection import PracticeSelection
 from anamnesis.domain.services.questionnaire import Questionnaire
 from anamnesis.domain.types import LanguageCode
 from anamnesis.infrastructure.extraction.lexicon_estimator import LexiconEstimateExtractor
@@ -25,6 +26,7 @@ from anamnesis.infrastructure.extraction.lexicon_extractor import LexiconFactExt
 from anamnesis.infrastructure.fuzzy.linguistic_variable import LinguisticVariable
 from anamnesis.infrastructure.fuzzy.normalizer import FuzzyFactNormalizer
 from anamnesis.infrastructure.fuzzy.variables import load_linguistic_variables
+from anamnesis.infrastructure.knowledge.practice_selection import load_practice_selection
 from anamnesis.infrastructure.llm.file_instructions import FileInstructions
 from anamnesis.infrastructure.localization.locale import Locale, load_locales
 from anamnesis.infrastructure.localization.text_catalog import YamlTextCatalog
@@ -97,6 +99,10 @@ class KnowledgeProvider(Provider):
             ontology_path=config.ontology_path,
             max_concurrency=config.reasoner_concurrency,
         )
+
+    @provide
+    def practice_selection(self, config: KnowledgeConfig) -> PracticeSelection:
+        return load_practice_selection(config.practice_selection_path)
 
     @provide
     def questionnaire(self, config: KnowledgeConfig) -> Questionnaire:

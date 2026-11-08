@@ -1,21 +1,30 @@
-"""База практик: документы сходятся с онтологией, в сводке только практики с документом."""
+"""База практик: документы сходятся с онтологией, подбор по `data/selection_cases.yaml`."""
 
+import asyncio
+from pathlib import Path
 from typing import Any
 
 from owlready2 import World
+import pytest
+import yaml
 
 from anamnesis.application.services.rendering import ViewRenderer
 from anamnesis.domain.enums.urgency_level import UrgencyLevel
 from anamnesis.domain.types import TermId
 from anamnesis.domain.value_objects.assessment import Assessment
 from anamnesis.domain.value_objects.case_facts import CaseFacts
+from anamnesis.domain.value_objects.evidence import Evidence
 from anamnesis.domain.value_objects.inference import PracticeAdvice
-from tests.integration.harness import CATALOG, LOCALES, ROOT, RU
+from anamnesis.infrastructure.reasoning.owl_reasoner import OwlCaseReasoner
+from tests.integration.harness import CATALOG, LOCALES, ROOT, RU, SELECTION
 
 
 NOT_DOCUMENTED = {"AssertiveCommunication_", "ValuesBasedAction_"}
 """Рекомендуются онтологией, но источник не удалось прочитать, поэтому не советуются."""
 DOCUMENTS = LOCALES[RU].practices
+CASES: list[dict[str, Any]] = yaml.safe_load(
+    (Path(__file__).parent / "data" / "selection_cases.yaml").read_text(encoding="utf-8"),
+)
 
 
 def recommended_practices() -> set[str]:
@@ -56,8 +65,38 @@ def test_summary_shows_only_documented_practices() -> None:
         ),
     )
 
-    summary = ViewRenderer(CATALOG).summary(assessment, CaseFacts(), RU)
+    summary = ViewRenderer(CATALOG, SELECTION).summary(assessment, CaseFacts(), RU)
 
     assert [practice.term for practice in summary.practices] == ["WorryTime_"]
     assert summary.practices[0].guide.steps
     assert summary.practices[0].guide.sources
+
+
+def advice(item: dict[str, Any]) -> PracticeAdvice:
+    return PracticeAdvice(
+        practice=TermId(item["practice"]),
+        cautions=frozenset(TermId(term) for term in item.get("cautions", ())),
+        clusters=frozenset(TermId(term) for term in item.get("clusters", ())),
+    )
+
+
+@pytest.mark.parametrize("case", CASES, ids=lambda case: case["name"])
+def test_selection(case: dict[str, Any]) -> None:
+    level = UrgencyLevel[case["level"]] if case["level"] is not None else None
+
+    selected = SELECTION.select(
+        [advice(item) for item in case["practices"]],
+        level=level,
+        clusters=[TermId(term) for term in case["clusters"]],
+    )
+
+    assert [item.practice for item in selected] == case["expected"]
+
+
+def test_reasoner_reports_clusters_of_a_practice() -> None:
+    reasoner = OwlCaseReasoner(ontology_path=ROOT / "ontology" / "anamnesis.owl")
+    facts = CaseFacts(manifestations=(Evidence(term=TermId("Anxiety_"), quote=""),))
+
+    result = asyncio.run(reasoner.infer(facts))
+
+    assert any(TermId("AnxietyCluster_") in item.clusters for item in result.practices)
