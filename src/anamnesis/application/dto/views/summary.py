@@ -72,6 +72,8 @@ class CaseView(DTO):
 class SummaryView(DTO):
     level: UrgencyLevel | None
     phrase: str | None
+    description: str
+    specialist_request: str
     specialist: str
     crisis: bool
     referrals: tuple[ReferralView, ...]

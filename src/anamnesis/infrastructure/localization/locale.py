@@ -37,6 +37,13 @@ class Helpline(_File):
     note: str = ""
 
 
+class Fallback(_File):
+    """Безопасные тексты сводки на случай, когда текст модели недоступен или отклонён."""
+
+    description: str
+    request: str
+
+
 class Messages(_File):
     """`messages.yaml`: тексты интерфейса по кодам домена."""
 
@@ -45,6 +52,7 @@ class Messages(_File):
     support_others: str
     helplines: tuple[Helpline, ...]
     disclaimer: str
+    fallback: Fallback
     approximate: Mapping[FactKind, str]
     replies: Mapping[ChatStage, str]
     levels: Mapping[str, str]

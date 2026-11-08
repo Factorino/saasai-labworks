@@ -4,7 +4,6 @@ from anamnesis.application.dto.base import DTO
 from anamnesis.application.dto.views.reply import ReplyView
 from anamnesis.application.errors.chat import ChatNotFoundError
 from anamnesis.application.interfaces.common.interactor import Interactor
-from anamnesis.application.interfaces.localization.text_catalog import ITextCatalog
 from anamnesis.application.interfaces.repositories.chat import IChatRepository
 from anamnesis.application.interfaces.safety.crisis_detector import ICrisisDetector
 from anamnesis.application.services.dialogue import DialogueService
@@ -50,14 +49,12 @@ class PostMessage(Interactor[PostMessageRequest, PostMessageResponse]):
         extraction: FactExtraction,
         detector: ICrisisDetector,
         dialogue: DialogueService,
-        catalog: ITextCatalog,
         renderer: ViewRenderer,
     ) -> None:
         self._chat_repo: IChatRepository = chat_repository
         self._extraction: FactExtraction = extraction
         self._detector: ICrisisDetector = detector
         self._dialogue: DialogueService = dialogue
-        self._catalog: ITextCatalog = catalog
         self._renderer: ViewRenderer = renderer
 
     @override
@@ -103,15 +100,13 @@ class PostMessage(Interactor[PostMessageRequest, PostMessageResponse]):
         return await self._dialogue.advance(chat)
 
     async def _talk(self, chat: Chat, request: PostMessageRequest) -> ReplyView:
-        """Свободная реплика: шаблонный ответ, а при новом кризисе — кризисная сводка."""
+        """Свободная реплика: ответ по сводке, а при новом кризисе — кризисная сводка."""
         was_crisis: bool = chat.is_crisis
         chat.post_message(request.text)
         chat.register_signals(await self._detect(chat, request.text))
         if chat.is_crisis and not was_crisis:
             return await self._dialogue.conclude(chat)
-        message: str = self._catalog.reply(chat.stage, chat.language)
-        chat.record(MessageRole.ASSISTANT, message)
-        return ReplyView(stage=chat.stage, message=message)
+        return await self._dialogue.talk(chat)
 
     async def _detect(self, chat: Chat, text: str) -> tuple[CrisisSignal, ...]:
         """Находки кризисного детектора; проверка идёт до языковой модели."""

@@ -63,6 +63,14 @@ class YamlTextCatalog(ITextCatalog):
         )
 
     @override
+    def fallback_description(self, language: LanguageCode) -> str:
+        return self._messages(language).fallback.description
+
+    @override
+    def fallback_request(self, language: LanguageCode) -> str:
+        return self._messages(language).fallback.request
+
+    @override
     def approximate(self, fact: FactKind, language: LanguageCode) -> str:
         return self._messages(language).approximate[fact]
 

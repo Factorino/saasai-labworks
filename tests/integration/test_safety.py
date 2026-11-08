@@ -22,6 +22,7 @@ from anamnesis.application.errors.llm import LanguageModelUnavailableError
 from anamnesis.application.interfaces.llm.language_model import ILanguageModel, ModelRequest
 from anamnesis.application.services.dialogue import DialogueService
 from anamnesis.application.services.extraction import FactExtraction
+from anamnesis.application.services.generation import TextGeneration
 from anamnesis.application.services.rendering import ViewRenderer
 from anamnesis.domain.enums.urgency_level import UrgencyLevel
 from anamnesis.domain.services.assessment import AssessmentService
@@ -40,6 +41,7 @@ from anamnesis.infrastructure.persistence.chat_repository import InMemoryChatRep
 from anamnesis.infrastructure.reasoning.owl_reasoner import OwlCaseReasoner
 from anamnesis.infrastructure.reasoning.owl_vocabulary import OwlOntologyVocabulary
 from anamnesis.infrastructure.safety.lexicon_detector import LexiconCrisisDetector
+from anamnesis.infrastructure.safety.reply_guard import LexiconReplyGuard
 
 
 pytestmark = [pytest.mark.slow, pytest.mark.timeout(120)]
@@ -82,13 +84,15 @@ def service() -> Service:
     renderer = ViewRenderer(catalog)
     repository = InMemoryChatRepository()
     ontology = ROOT / "ontology" / "anamnesis.owl"
+    instructions = FileInstructions(ROOT / "knowledge" / "instructions")
+    model = OfflineModel()
     extraction = FactExtraction(
         lexicon=LexiconFactExtractor(LOCALES),
         estimator=LexiconEstimateExtractor(LOCALES, VARIABLES),
         normalizer=FuzzyFactNormalizer(VARIABLES),
-        model=OfflineModel(),
+        model=model,
         vocabulary=OwlOntologyVocabulary(ontology_path=ontology),
-        instructions=FileInstructions(ROOT / "knowledge" / "instructions"),
+        instructions=instructions,
         catalog=catalog,
         clock=SystemClock(),
     )
@@ -98,6 +102,11 @@ def service() -> Service:
         reasoner=OwlCaseReasoner(ontology_path=ontology),
         catalog=catalog,
         renderer=renderer,
+        generation=TextGeneration(
+            model=model,
+            guard=LexiconReplyGuard(LOCALES),
+            instructions=instructions,
+        ),
     )
     return Service(
         start=StartChat(
@@ -112,7 +121,6 @@ def service() -> Service:
             extraction=extraction,
             detector=LexiconCrisisDetector(LOCALES),
             dialogue=dialogue,
-            catalog=catalog,
             renderer=renderer,
         ),
         finish=FinishChat(chat_repository=repository, dialogue=dialogue),

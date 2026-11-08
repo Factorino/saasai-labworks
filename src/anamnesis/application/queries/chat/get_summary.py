@@ -30,5 +30,7 @@ class GetSummary(Interactor[GetSummaryRequest, GetSummaryResponse]):
         if chat.assessment is None:
             raise SummaryNotFoundError(value=request.chat_id)
         return GetSummaryResponse(
-            summary=self._renderer.summary(chat.assessment, chat.facts, chat.language),
+            summary=self._renderer.summary(
+                chat.assessment, chat.facts, chat.language, chat.narrative
+            ),
         )

@@ -50,6 +50,8 @@ def locale_texts(locale: Locale) -> Iterator[tuple[str, str, UrgencyLevel | None
         "crisis_message": messages.crisis_message,
         "support_others": messages.support_others,
         "disclaimer": messages.disclaimer,
+        "fallback.description": messages.fallback.description,
+        "fallback.request": messages.fallback.request,
         "refuse": messages.refuse,
         **{f"replies.{stage}": text for stage, text in messages.replies.items()},
         **{f"referrals.{code}": text for code, text in messages.referrals.items()},

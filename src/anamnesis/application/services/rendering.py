@@ -22,6 +22,7 @@ from anamnesis.domain.value_objects.assessment import Assessment
 from anamnesis.domain.value_objects.case_facts import CaseFacts
 from anamnesis.domain.value_objects.evidence import Evidence
 from anamnesis.domain.value_objects.inference import PracticeAdvice
+from anamnesis.domain.value_objects.narrative import Narrative
 from anamnesis.domain.value_objects.question import Answer, Question
 
 
@@ -65,10 +66,22 @@ class ViewRenderer:
         assessment: Assessment,
         facts: CaseFacts,
         language: LanguageCode,
+        narrative: Narrative | None = None,
     ) -> SummaryView:
+        """Сводка; без готового текста описание и запрос берутся из шаблонов."""
         return SummaryView(
             level=assessment.level,
             phrase=self._phrase(assessment, language),
+            description=(
+                narrative.description
+                if narrative is not None
+                else self._catalog.fallback_description(language)
+            ),
+            specialist_request=(
+                narrative.request
+                if narrative is not None
+                else self._catalog.fallback_request(language)
+            ),
             specialist=self._catalog.specialist(assessment.level, language),
             crisis=assessment.crisis,
             referrals=tuple(

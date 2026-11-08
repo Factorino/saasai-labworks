@@ -18,6 +18,7 @@ from anamnesis.domain.value_objects.case_facts import CaseFacts
 from anamnesis.domain.value_objects.crisis_signal import CrisisSignal
 from anamnesis.domain.value_objects.inference import InferenceResult
 from anamnesis.domain.value_objects.message import Message
+from anamnesis.domain.value_objects.narrative import Narrative
 from anamnesis.domain.value_objects.question import Answer, Question
 
 
@@ -39,6 +40,7 @@ class Chat(Entity[ChatId]):
         finished: Пользователь завершил диалог досрочно.
         self_harm_followed_up: Повторный вопрос о самоповреждении уже задан.
         assessment: Выданная оценка.
+        narrative: Текст сводки для человека; `None` — показывается шаблон.
         messages: Последние `HISTORY_LIMIT` реплик.
         signals: Находки кризисного детектора за весь диалог.
     """
@@ -54,6 +56,7 @@ class Chat(Entity[ChatId]):
     finished: bool = False
     self_harm_followed_up: bool = False
     assessment: Assessment | None = None
+    narrative: Narrative | None = None
     messages: tuple[Message, ...] = ()
     signals: tuple[CrisisSignal, ...] = ()
 
@@ -142,6 +145,10 @@ class Chat(Entity[ChatId]):
         if not self.is_crisis:
             self.stage = ChatStage.SUMMARY
         return self.assessment
+
+    def describe(self, narrative: Narrative | None) -> None:
+        """Запоминает текст сводки, чтобы показывать его без повторной генерации."""
+        self.narrative = narrative
 
     def register_signals(self, signals: tuple[CrisisSignal, ...]) -> None:
         """Запоминает находки детектора; кризисная переводит чат в кризис на любом этапе."""

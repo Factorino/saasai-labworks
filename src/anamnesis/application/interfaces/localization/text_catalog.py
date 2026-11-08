@@ -42,6 +42,14 @@ class ITextCatalog(Protocol):
         """Подпись варианта ответа."""
 
     @abstractmethod
+    def fallback_description(self, language: LanguageCode) -> str:
+        """Безопасный текст вместо описания состояния."""
+
+    @abstractmethod
+    def fallback_request(self, language: LanguageCode) -> str:
+        """Безопасный текст вместо запроса к специалисту."""
+
+    @abstractmethod
     def approximate(self, fact: FactKind, language: LanguageCode) -> str:
         """Отметка, что сведение оценено приблизительно, по размытым словам."""
 

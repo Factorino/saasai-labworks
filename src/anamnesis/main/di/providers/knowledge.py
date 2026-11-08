@@ -11,8 +11,10 @@ from anamnesis.application.interfaces.llm.instructions import IInstructions
 from anamnesis.application.interfaces.localization.text_catalog import ITextCatalog
 from anamnesis.application.interfaces.reasoning.case_reasoner import ICaseReasoner
 from anamnesis.application.interfaces.safety.crisis_detector import ICrisisDetector
+from anamnesis.application.interfaces.safety.reply_guard import IReplyGuard
 from anamnesis.application.services.dialogue import DialogueService
 from anamnesis.application.services.extraction import FactExtraction
+from anamnesis.application.services.generation import TextGeneration
 from anamnesis.application.services.rendering import ViewRenderer
 from anamnesis.domain.enums.fact_kind import FactKind
 from anamnesis.domain.services.assessment import AssessmentService
@@ -29,6 +31,7 @@ from anamnesis.infrastructure.localization.text_catalog import YamlTextCatalog
 from anamnesis.infrastructure.reasoning.owl_reasoner import OwlCaseReasoner
 from anamnesis.infrastructure.reasoning.owl_vocabulary import OwlOntologyVocabulary
 from anamnesis.infrastructure.safety.lexicon_detector import LexiconCrisisDetector
+from anamnesis.infrastructure.safety.reply_guard import LexiconReplyGuard
 from anamnesis.main.config.knowledge import KnowledgeConfig
 
 
@@ -38,6 +41,8 @@ class KnowledgeProvider(Provider):
     renderer: CompositeDependencySource = provide(ViewRenderer)
     assessment_service: CompositeDependencySource = provide(AssessmentService)
     extraction: CompositeDependencySource = provide(FactExtraction)
+    generation: CompositeDependencySource = provide(TextGeneration)
+    dialogue: CompositeDependencySource = provide(DialogueService)
 
     @provide
     def locales(self, config: KnowledgeConfig) -> Mapping[LanguageCode, Locale]:
@@ -83,6 +88,10 @@ class KnowledgeProvider(Provider):
         return LexiconCrisisDetector(locales)
 
     @provide
+    def reply_guard(self, locales: Mapping[LanguageCode, Locale]) -> IReplyGuard:
+        return LexiconReplyGuard(locales)
+
+    @provide
     def reasoner(self, config: KnowledgeConfig) -> ICaseReasoner:
         return OwlCaseReasoner(
             ontology_path=config.ontology_path,
@@ -92,20 +101,3 @@ class KnowledgeProvider(Provider):
     @provide
     def questionnaire(self, config: KnowledgeConfig) -> Questionnaire:
         return Questionnaire(question_limit=config.question_limit)
-
-    @provide
-    def dialogue(
-        self,
-        questionnaire: Questionnaire,
-        assessment_service: AssessmentService,
-        reasoner: ICaseReasoner,
-        catalog: ITextCatalog,
-        renderer: ViewRenderer,
-    ) -> DialogueService:
-        return DialogueService(
-            questionnaire=questionnaire,
-            assessment_service=assessment_service,
-            reasoner=reasoner,
-            catalog=catalog,
-            renderer=renderer,
-        )
