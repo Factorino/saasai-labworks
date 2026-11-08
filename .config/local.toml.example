@@ -44,7 +44,9 @@ max_tokens = 2048
 # "none" turns off the thinking phase of reasoning models; remove the line to
 # leave the server default.
 reasoning_effort = "none"
-# Seconds. The first request after idle also loads the model into memory.
-connect_timeout = 5.0
-request_timeout = 120.0
-max_retries = 1
+# Seconds. The first request after idle also loads the model into memory, and
+# an interrupted request may abort the load, so keep request_timeout above it.
+connect_timeout = 2.0
+request_timeout = 60.0
+# The lexicon and templates take over at once, so a retry only delays the reply.
+max_retries = 0

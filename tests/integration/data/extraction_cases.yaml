@@ -1,0 +1,69 @@
+# Реплика и ответ модели → что останется в сведениях.
+# Неуказанные поля ответа пустые; неуказанные ожидания означают «ничего не осталось».
+
+- name: listed_concept_is_kept
+  text: Что-то давит на меня
+  reply:
+    manifestations: [{term: Anxiety_, quote: давит на меня}]
+  manifestations: {Anxiety_: давит на меня}
+
+- name: foreign_concept_is_dropped
+  text: Что-то давит на меня
+  reply:
+    manifestations: [{term: NotAConcept_, quote: давит на меня}]
+
+- name: self_harm_is_not_taken_from_text
+  text: Что-то давит на меня
+  reply:
+    manifestations: [{term: PassiveDeathThoughts_, quote: давит на меня}]
+
+- name: urgent_medical_sign_is_not_taken_from_model
+  text: Что-то давит на меня
+  reply:
+    manifestations: [{term: StrokeLikeSigns_, quote: давит на меня}]
+
+- name: stressor_is_not_a_manifestation
+  text: Что-то давит на меня
+  reply:
+    manifestations: [{term: AcademicPressure_, quote: давит на меня}]
+
+- name: invented_quote_is_cleared
+  text: Что-то давит на меня
+  reply:
+    manifestations: [{term: Anxiety_, quote: этих слов в реплике нет}]
+  manifestations: {Anxiety_: ''}
+
+- name: fragment_goes_to_other
+  text: Что-то давит на меня
+  reply:
+    other: [давит на меня]
+  other: [давит на меня]
+
+- name: invented_other_is_dropped
+  text: Что-то давит на меня
+  reply:
+    other: [этих слов в реплике нет]
+
+- name: other_is_not_taken_from_estimated_answer
+  text: Что-то давит на меня
+  question: duration
+  reply:
+    other: [давит на меня]
+
+- name: impact_is_ignored_in_a_story
+  text: Что-то давит на меня
+  reply:
+    impact: severe
+
+- name: impact_is_taken_from_its_question
+  text: Что-то давит на меня
+  question: impact
+  reply:
+    impact: severe
+  impact: severe
+
+- name: unknown_term_drops_the_reply
+  text: Что-то давит на меня
+  reply:
+    manifestations: [{term: Anxiety_, quote: давит на меня}]
+    duration: forever

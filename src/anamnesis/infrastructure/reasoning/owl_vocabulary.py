@@ -12,7 +12,11 @@ from anamnesis.domain.types import TermId
 _REPRESENTATIVE_SUFFIX: Final[str] = "_"
 """Индивид-представитель понятия называется по классу с `_` на конце."""
 
-_RESERVED_CLASSES: Final[tuple[str, ...]] = ("RiskMarker", "SelfHarmThoughts")
+_RESERVED_CLASSES: Final[tuple[str, ...]] = (
+    "RiskMarker",
+    "SelfHarmThoughts",
+    "UrgentMedicalMarker",
+)
 """Классы, понятия которых утверждает только детерминированный контур."""
 
 

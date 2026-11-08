@@ -39,6 +39,7 @@ markers = [
     "integration: tests against real external dependencies",
     "e2e: end-to-end tests through the external interface of the application",
     "slow: noticeably slow tests; exclude them with -m 'not slow'",
+    "llm: tests that need the language model; skipped when it is unavailable",
 ]
 
 
