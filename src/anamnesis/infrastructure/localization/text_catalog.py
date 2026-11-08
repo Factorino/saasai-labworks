@@ -1,7 +1,11 @@
 from collections.abc import Mapping
 from typing import Final, override
 
-from anamnesis.application.dto.views.summary import HelplineView
+from anamnesis.application.dto.views.summary import (
+    HelplineView,
+    PracticeGuideView,
+    PracticeSourceView,
+)
 from anamnesis.application.interfaces.localization.text_catalog import ITextCatalog
 from anamnesis.domain.enums.chat_stage import ChatStage
 from anamnesis.domain.enums.fact_kind import FactKind
@@ -9,7 +13,12 @@ from anamnesis.domain.enums.referral import Referral
 from anamnesis.domain.enums.urgency_level import UrgencyLevel
 from anamnesis.domain.types import LanguageCode, OptionCode, RuleId, TermId
 from anamnesis.domain.value_objects.question import REFUSE_OPTION_CODE, Question
-from anamnesis.infrastructure.localization.locale import Locale, Messages, QuestionTexts
+from anamnesis.infrastructure.localization.locale import (
+    Locale,
+    Messages,
+    Practice,
+    QuestionTexts,
+)
 
 
 _INSUFFICIENT_DATA_KEY: Final[str] = "insufficient_data"
@@ -103,8 +112,18 @@ class YamlTextCatalog(ITextCatalog):
         return self._locales[language].terms.descriptions.get(term, "")
 
     @override
-    def source(self, term: TermId, language: LanguageCode) -> str | None:
-        return self._locales[language].terms.sources.get(term)
+    def practice_guide(self, term: TermId, language: LanguageCode) -> PracticeGuideView | None:
+        document: Practice | None = self._locales[language].practices.get(term)
+        if document is None:
+            return None
+        return PracticeGuideView(
+            steps=document.steps,
+            limits=document.limits,
+            sources=tuple(
+                PracticeSourceView(title=source.title, url=source.url)
+                for source in document.sources
+            ),
+        )
 
     @override
     def reply(self, stage: ChatStage, language: LanguageCode) -> str:

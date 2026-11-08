@@ -5,6 +5,7 @@ from anamnesis.application.dto.views.summary import (
     CaseView,
     EvidenceView,
     HelplineView,
+    PracticeGuideView,
     PracticeView,
     ReferralView,
     RuleView,
@@ -95,7 +96,9 @@ class ViewRenderer:
             ),
             support_others=self._support_others(assessment, language),
             practices=tuple(
-                self._practice(advice, language) for advice in assessment.advised_practices
+                view
+                for advice in assessment.advised_practices
+                if (view := self._practice(advice, language)) is not None
             ),
             clusters=tuple(self._term(term, language) for term in assessment.clusters),
             explanation=tuple(
@@ -167,12 +170,16 @@ class ViewRenderer:
             refused=tuple(sorted(facts.refused)),
         )
 
-    def _practice(self, advice: PracticeAdvice, language: LanguageCode) -> PracticeView:
+    def _practice(self, advice: PracticeAdvice, language: LanguageCode) -> PracticeView | None:
+        """Практика с документом; без проверенного документа она не советуется."""
+        guide: PracticeGuideView | None = self._catalog.practice_guide(advice.practice, language)
+        if guide is None:
+            return None
         return PracticeView(
             term=advice.practice,
             name=self._catalog.term(advice.practice, language),
             description=self._catalog.description(advice.practice, language),
-            source=self._catalog.source(advice.practice, language),
+            guide=guide,
             cautions=tuple(self._term(term, language) for term in sorted(advice.cautions)),
         )
 

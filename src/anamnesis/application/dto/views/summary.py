@@ -30,9 +30,20 @@ class HelplineView(DTO):
     note: str = ""
 
 
+class PracticeSourceView(DTO):
+    title: str
+    url: str
+
+
+class PracticeGuideView(DTO):
+    steps: tuple[str, ...]
+    limits: tuple[str, ...]
+    sources: tuple[PracticeSourceView, ...]
+
+
 class PracticeView(TermView):
     description: str
-    source: str | None
+    guide: PracticeGuideView
     cautions: tuple[TermView, ...]
 
 

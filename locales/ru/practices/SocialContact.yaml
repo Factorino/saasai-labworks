@@ -1,0 +1,14 @@
+term: SocialContact_
+steps:
+- Подумайте, с кем вам было бы спокойно поговорить или у кого можно попросить практической помощи.
+- 'Решите, что именно вы сделаете: позвоните, встретитесь или напишете.'
+- Выберите день и заранее продумайте, что скажете.
+- 'Если контактов давно не было, начните с малого: короткого сообщения или встречи без личных разговоров.'
+limits:
+- Не обращайтесь к человеку, от которого исходит опасность.
+- Общения только в соцсетях обычно недостаточно.
+sources:
+- title: WHO, Problem Management Plus (PM+), 2018
+  url: https://www.who.int/publications/i/item/WHO-MSD-MER-18.5
+- title: NHS, 5 steps to mental wellbeing
+  url: https://www.nhs.uk/mental-health/self-help/guides-tools-and-activities/five-steps-to-mental-wellbeing/

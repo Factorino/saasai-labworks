@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Protocol
 
-from anamnesis.application.dto.views.summary import HelplineView
+from anamnesis.application.dto.views.summary import HelplineView, PracticeGuideView
 from anamnesis.domain.enums.chat_stage import ChatStage
 from anamnesis.domain.enums.fact_kind import FactKind
 from anamnesis.domain.enums.referral import Referral
@@ -82,8 +82,8 @@ class ITextCatalog(Protocol):
         """Описание понятия онтологии; пустое, если его нет."""
 
     @abstractmethod
-    def source(self, term: TermId, language: LanguageCode) -> str | None:
-        """Источник практики; `None`, если его нет."""
+    def practice_guide(self, term: TermId, language: LanguageCode) -> PracticeGuideView | None:
+        """Документ практики; `None`, если его нет."""
 
     @abstractmethod
     def reply(self, stage: ChatStage, language: LanguageCode) -> str:

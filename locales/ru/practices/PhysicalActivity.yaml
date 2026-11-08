@@ -1,0 +1,13 @@
+term: PhysicalActivity_
+steps:
+- Выберите движение, которое вам подходит. Часами заниматься в зале не нужно, короткая прогулка тоже считается.
+- Назначьте для него постоянное время.
+- Двигайтесь регулярно и постепенно увеличивайте нагрузку, если это приятно.
+limits:
+- 'Будьте осторожны при нарушенном пищевом поведении и проблемах со здоровьем: сначала посоветуйтесь с
+  врачом.'
+sources:
+- title: WHO, Depressive disorder (depression)
+  url: https://www.who.int/news-room/fact-sheets/detail/depression
+- title: NHS, 5 steps to mental wellbeing
+  url: https://www.nhs.uk/mental-health/self-help/guides-tools-and-activities/five-steps-to-mental-wellbeing/

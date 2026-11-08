@@ -61,6 +61,9 @@ def locale_texts(locale: Locale) -> Iterator[tuple[str, str, UrgencyLevel | None
         **{f"terms.{term}": text for term, text in locale.terms.names.items()},
         **{f"descriptions.{term}": text for term, text in locale.terms.descriptions.items()},
     }
+    for term, practice in locale.practices.items():
+        for index, text in enumerate((*practice.steps, *practice.limits)):
+            plain[f"practices.{term}.{index}"] = text
     for fact, question in messages.questions.items():
         plain[f"questions.{fact}"] = question.text
         if question.follow_up is not None:

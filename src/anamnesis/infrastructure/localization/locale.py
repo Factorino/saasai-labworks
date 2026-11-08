@@ -68,7 +68,6 @@ class Terms(_File):
 
     names: Mapping[TermId, str]
     descriptions: Mapping[TermId, str]
-    sources: Mapping[TermId, str] = Field(default_factory=dict)
 
 
 class Lexicon(_File):
@@ -125,6 +124,22 @@ class Fuzzy(_File):
     ]
 
 
+class PracticeSource(_File):
+    """Открытый источник, который пересказывает документ практики."""
+
+    title: str
+    url: str
+
+
+class Practice(_File):
+    """`practices/*.yaml`: как выполнять практику, её ограничения и источники."""
+
+    term: TermId
+    steps: tuple[str, ...] = Field(min_length=1)
+    limits: tuple[str, ...] = ()
+    sources: tuple[PracticeSource, ...] = Field(min_length=1)
+
+
 class Locale(_File):
     """Все тексты одного языка."""
 
@@ -135,6 +150,7 @@ class Locale(_File):
     crisis: Crisis
     guard: Guard
     fuzzy: Fuzzy
+    practices: Mapping[TermId, Practice]
 
 
 _FILES: Final[Mapping[str, str]] = MappingProxyType(
@@ -149,6 +165,8 @@ _FILES: Final[Mapping[str, str]] = MappingProxyType(
 )
 """Файлы, без которых язык не поддерживается."""
 
+_PRACTICES_DIRECTORY: Final[str] = "practices"
+
 
 def load_locales(root: Path) -> Mapping[LanguageCode, Locale]:
     """Загружает языки из подкаталогов `root`, в которых есть все файлы локали."""
@@ -158,8 +176,15 @@ def load_locales(root: Path) -> Mapping[LanguageCode, Locale]:
             continue
         language: LanguageCode = LanguageCode(directory.name)
         data: dict[str, Any] = {key: _read(directory / name) for key, name in _FILES.items()}
+        data["practices"] = _read_practices(directory / _PRACTICES_DIRECTORY)
         locales[language] = Locale.model_validate({"language": language, **data})
     return MappingProxyType(locales)
+
+
+def _read_practices(directory: Path) -> dict[str, Any]:
+    """Документы практик по термину; без каталога у языка нет практик."""
+    documents: list[Any] = [_read(path) for path in sorted(directory.glob("*.yaml"))]
+    return {document["term"]: document for document in documents}
 
 
 def _read(path: Path) -> Any:
