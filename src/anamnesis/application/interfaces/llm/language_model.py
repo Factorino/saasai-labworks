@@ -15,9 +15,6 @@ class ModelRequest(DTO):
 
 class ILanguageModel(Protocol):
     @abstractmethod
-    async def complete(self, request: ModelRequest) -> str: ...
-
-    @abstractmethod
     async def complete_structured[OutputT: DTO](
         self,
         request: ModelRequest,

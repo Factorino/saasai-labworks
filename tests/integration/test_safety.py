@@ -6,125 +6,31 @@
 """
 
 import asyncio
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, override
+from typing import Any
 
 import pytest
 import yaml
 
-from anamnesis.application.commands.chat.finish_chat import FinishChat, FinishChatRequest
-from anamnesis.application.commands.chat.post_message import PostMessage, PostMessageRequest
-from anamnesis.application.commands.chat.start_chat import StartChat, StartChatRequest
-from anamnesis.application.dto.base import DTO
+from anamnesis.application.commands.chat.finish_chat import FinishChatRequest
+from anamnesis.application.commands.chat.start_chat import StartChatRequest
 from anamnesis.application.dto.views.reply import ReplyView
-from anamnesis.application.errors.llm import LanguageModelUnavailableError
-from anamnesis.application.interfaces.llm.language_model import ILanguageModel, ModelRequest
-from anamnesis.application.services.dialogue import DialogueService
-from anamnesis.application.services.extraction import FactExtraction
-from anamnesis.application.services.generation import TextGeneration
-from anamnesis.application.services.rendering import ViewRenderer
 from anamnesis.domain.enums.urgency_level import UrgencyLevel
-from anamnesis.domain.services.assessment import AssessmentService
-from anamnesis.domain.services.questionnaire import Questionnaire
-from anamnesis.domain.types import LanguageCode
-from anamnesis.infrastructure.common.clock import SystemClock
-from anamnesis.infrastructure.common.id_generator import ChatIdGenerator
-from anamnesis.infrastructure.extraction.lexicon_estimator import LexiconEstimateExtractor
-from anamnesis.infrastructure.extraction.lexicon_extractor import LexiconFactExtractor
-from anamnesis.infrastructure.fuzzy.normalizer import FuzzyFactNormalizer
-from anamnesis.infrastructure.fuzzy.variables import load_linguistic_variables
-from anamnesis.infrastructure.llm.file_instructions import FileInstructions
-from anamnesis.infrastructure.localization.locale import load_locales
-from anamnesis.infrastructure.localization.text_catalog import YamlTextCatalog
-from anamnesis.infrastructure.persistence.chat_repository import InMemoryChatRepository
-from anamnesis.infrastructure.reasoning.owl_reasoner import OwlCaseReasoner
-from anamnesis.infrastructure.reasoning.owl_vocabulary import OwlOntologyVocabulary
 from anamnesis.infrastructure.safety.lexicon_detector import LexiconCrisisDetector
-from anamnesis.infrastructure.safety.reply_guard import LexiconReplyGuard
+from tests.integration.harness import LOCALES, RU, ScriptedModel, Service, build_service, post
 
 
 pytestmark = [pytest.mark.slow, pytest.mark.timeout(120)]
 
-ROOT = Path(__file__).parents[2]
-RU = LanguageCode("ru")
-LOCALES = load_locales(ROOT / "locales")
-VARIABLES = load_linguistic_variables(ROOT / "knowledge" / "linguistic_variables.yaml")
 CASES: dict[str, list[dict[str, Any]]] = yaml.safe_load(
     (Path(__file__).parent / "data" / "crisis_cases.yaml").read_text(encoding="utf-8"),
 )
 
 
-class OfflineModel(ILanguageModel):
-    """Языковая модель, которая всегда недоступна: кризисный контур работает без неё."""
-
-    @override
-    async def complete(self, request: ModelRequest) -> str:
-        raise LanguageModelUnavailableError(model="offline", reason="not used in these tests")
-
-    @override
-    async def complete_structured[OutputT: DTO](
-        self,
-        request: ModelRequest,
-        output: type[OutputT],
-    ) -> OutputT:
-        raise LanguageModelUnavailableError(model="offline", reason="not used in these tests")
-
-
-@dataclass(frozen=True)
-class Service:
-    start: StartChat
-    post: PostMessage
-    finish: FinishChat
-
-
 @pytest.fixture
 def service() -> Service:
-    catalog = YamlTextCatalog(LOCALES)
-    renderer = ViewRenderer(catalog)
-    repository = InMemoryChatRepository()
-    ontology = ROOT / "ontology" / "anamnesis.owl"
-    instructions = FileInstructions(ROOT / "knowledge" / "instructions")
-    model = OfflineModel()
-    extraction = FactExtraction(
-        lexicon=LexiconFactExtractor(LOCALES),
-        estimator=LexiconEstimateExtractor(LOCALES, VARIABLES),
-        normalizer=FuzzyFactNormalizer(VARIABLES),
-        model=model,
-        vocabulary=OwlOntologyVocabulary(ontology_path=ontology),
-        instructions=instructions,
-        catalog=catalog,
-        clock=SystemClock(),
-    )
-    dialogue = DialogueService(
-        questionnaire=Questionnaire(),
-        assessment_service=AssessmentService(),
-        reasoner=OwlCaseReasoner(ontology_path=ontology),
-        catalog=catalog,
-        renderer=renderer,
-        generation=TextGeneration(
-            model=model,
-            guard=LexiconReplyGuard(LOCALES),
-            instructions=instructions,
-        ),
-    )
-    return Service(
-        start=StartChat(
-            chat_repository=repository,
-            catalog=catalog,
-            renderer=renderer,
-            id_generator=ChatIdGenerator(),
-            clock=SystemClock(),
-        ),
-        post=PostMessage(
-            chat_repository=repository,
-            extraction=extraction,
-            detector=LexiconCrisisDetector(LOCALES),
-            dialogue=dialogue,
-            renderer=renderer,
-        ),
-        finish=FinishChat(chat_repository=repository, dialogue=dialogue),
-    )
+    """Модель недоступна: кризисный контур работает без неё."""
+    return build_service(ScriptedModel())
 
 
 async def run_dialogue(service: Service, case: dict[str, Any]) -> ReplyView:
@@ -132,14 +38,7 @@ async def run_dialogue(service: Service, case: dict[str, Any]) -> ReplyView:
     chat = (await service.start.execute(StartChatRequest(consent=True, language=RU))).chat
     reply: ReplyView | None = None
     for message in case["messages"]:
-        request = PostMessageRequest.model_validate(
-            {
-                "chat_id": chat.id,
-                "text": message.get("text", ""),
-                "option_codes": message.get("options", ()),
-            },
-        )
-        reply = (await service.post.execute(request)).reply
+        reply = await post(service, chat.id, message.get("text", ""), message.get("options", ()))
     if case.get("finish"):
         reply = (await service.finish.execute(FinishChatRequest(chat_id=chat.id))).reply
     assert reply is not None

@@ -1,5 +1,4 @@
-from collections.abc import Callable, Iterable
-import json
+from collections.abc import Callable, Iterable, Mapping
 import logging
 from typing import Any, Final
 
@@ -13,7 +12,7 @@ from anamnesis.application.errors.llm import (
 from anamnesis.application.interfaces.llm.instructions import IInstructions, Instruction
 from anamnesis.application.interfaces.llm.language_model import ILanguageModel, ModelRequest
 from anamnesis.application.interfaces.safety.reply_guard import IReplyGuard
-from anamnesis.domain.enums.message_role import MessageRole
+from anamnesis.application.services.model_data import data_message
 from anamnesis.domain.enums.urgency_level import UrgencyLevel
 from anamnesis.domain.errors.common import ValidationError
 from anamnesis.domain.types import LanguageCode
@@ -35,6 +34,7 @@ class TextGeneration:
     решает. Каждый ответ проверяется словарём недопустимого содержания. При
     нарушении ответ перегенерируется один раз, затем возвращается `None`, и
     вызывающий показывает безопасный шаблон. То же при недоступности модели.
+    Инструкции всегда фиксированы: отклонённые фрагменты передаются как данные.
     """
 
     def __init__(
@@ -92,7 +92,7 @@ class TextGeneration:
     async def _generate[OutputT: DTO](
         self,
         task: Instruction,
-        data: dict[str, Any],
+        data: Mapping[str, Any],
         output: type[OutputT],
         *,
         texts: Callable[[OutputT], Iterable[str]],
@@ -101,9 +101,9 @@ class TextGeneration:
     ) -> OutputT | None:
         """Ответ, прошедший проверку, или `None`."""
         instruction: str = self._instructions.text(task)
-        content: str = json.dumps(data, ensure_ascii=False)
+        current: Mapping[str, Any] = data
         for _ in range(_ATTEMPTS):
-            reply: OutputT | None = await self._ask(instruction, content, output)
+            reply: OutputT | None = await self._ask(instruction, current, output)
             if reply is None:
                 return None
             violations: list[ReplyViolation] = await self._violations(
@@ -112,19 +112,17 @@ class TextGeneration:
             if not violations:
                 return reply
             _logger.warning("Generation rejected a reply: %s", violations)
-            instruction = self._corrected(task, violations)
+            instruction = self._corrected(task)
+            current = {**data, "rejected_fragments": [item.quote for item in violations]}
         return None
 
     async def _ask[OutputT: DTO](
         self,
         instruction: str,
-        content: str,
+        data: Mapping[str, Any],
         output: type[OutputT],
     ) -> OutputT | None:
-        request = ModelRequest(
-            instruction=instruction,
-            messages=(Message(role=MessageRole.USER, text=content),),
-        )
+        request = ModelRequest(instruction=instruction, messages=(data_message(data),))
         try:
             return await self._model.complete_structured(request, output)
         except (LanguageModelUnavailableError, LanguageModelReplyError) as error:
@@ -142,14 +140,9 @@ class TextGeneration:
             found.extend(await self._guard.check(text, language, level))
         return found
 
-    def _corrected(self, task: Instruction, violations: Iterable[ReplyViolation]) -> str:
-        """Инструкция задачи с указанием отклонённых фрагментов."""
-        fragments: str = "; ".join(f'"{violation.quote}"' for violation in violations)
+    def _corrected(self, task: Instruction) -> str:
         return "\n\n".join(
-            (
-                self._instructions.text(task),
-                f"{self._instructions.text(Instruction.CORRECTION)} {fragments}",
-            ),
+            (self._instructions.text(task), self._instructions.text(Instruction.CORRECTION)),
         )
 
 

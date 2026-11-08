@@ -1,7 +1,6 @@
-from collections.abc import Iterable
-import json
+from collections.abc import Iterable, Mapping
 import logging
-from typing import Final
+from typing import Any, Final
 
 from anamnesis.application.dto.estimate import Estimate, LinguisticTerm
 from anamnesis.application.dto.extraction import ExtractionReply, FoundConcept, reply_model
@@ -17,13 +16,12 @@ from anamnesis.application.interfaces.knowledge.vocabulary import IOntologyVocab
 from anamnesis.application.interfaces.llm.instructions import IInstructions, Instruction
 from anamnesis.application.interfaces.llm.language_model import ILanguageModel, ModelRequest
 from anamnesis.application.interfaces.localization.text_catalog import ITextCatalog
+from anamnesis.application.services.model_data import data_message
 from anamnesis.domain.enums.fact_kind import ESTIMATED_FACTS, FactKind
-from anamnesis.domain.enums.message_role import MessageRole
 from anamnesis.domain.errors.common import ValidationError
 from anamnesis.domain.types import LanguageCode, TermId
 from anamnesis.domain.value_objects.case_facts import CaseFacts
 from anamnesis.domain.value_objects.evidence import Evidence
-from anamnesis.domain.value_objects.message import Message
 
 
 _logger: Final[logging.Logger] = logging.getLogger(__name__)
@@ -38,8 +36,8 @@ class FactExtraction:
     Словарь находит термины-кандидаты, модель получает реплику и кандидатов и
     отвечает по схеме, в которой допустимы только понятия онтологии и термы
     лингвистических переменных. Ответ модели проверяется ещё раз: чужие и
-    зарезервированные понятия отбрасываются, цитата сохраняется, только если
-    она есть в реплике. Скрининг самоповреждения из текста не берётся, а
+    зарезервированные понятия отбрасываются, цитата и цель сохраняются, только
+    если они есть в реплике. Скрининг самоповреждения из текста не берётся, а
     влияние — только из ответа на вопрос о нём. Если
     модель недоступна или ответила неверно, остаётся результат словаря.
     """
@@ -129,7 +127,7 @@ class FactExtraction:
         """Ответ модели или `None`, если она недоступна или ответила неверно."""
         request = ModelRequest(
             instruction=self._system_text(language),
-            messages=(Message(role=MessageRole.USER, text=self._data(text, question, found)),),
+            messages=(data_message(self._data(text, question, found)),),
             temperature=_TEMPERATURE,
         )
         try:
@@ -157,21 +155,23 @@ class FactExtraction:
             lines.append(f"- {term}: {name}" + (f" — {description}" if description else ""))
         return "\n".join(lines)
 
-    def _data(self, text: str, question: FactKind | None, found: CaseFacts) -> str:
-        """Реплика и кандидаты словаря как данные в JSON."""
+    def _data(
+        self,
+        text: str,
+        question: FactKind | None,
+        found: CaseFacts,
+    ) -> Mapping[str, Any]:
+        """Реплика и кандидаты словаря как данные для модели."""
         candidates: list[dict[str, str]] = [
             {"concept": self._concept(evidence.term), "quote": evidence.quote}
             for evidence in (*found.manifestations, *found.stressors)
         ]
-        return json.dumps(
-            {
-                "text": text,
-                "question": question,
-                "today": self._clock.now().date().isoformat(),
-                "candidates": candidates,
-            },
-            ensure_ascii=False,
-        )
+        return {
+            "text": text,
+            "question": question,
+            "today": self._clock.now().date().isoformat(),
+            "candidates": candidates,
+        }
 
     def _facts(
         self,
@@ -183,9 +183,11 @@ class FactExtraction:
         """Сведения из ответа модели после проверки; неверный ответ даёт пустые сведения.
 
         В ответе о длительности, частоте или влиянии «Другое» не берётся: это
-        не жалоба. Влияние берётся только из ответа на вопрос о нём: тяжёлое
-        влияние даёт L3 (R06), а L3 после рассказа переводит чат в кризис,
-        который не должен зависеть от догадки модели.
+        не жалоба. Цель показывается в сводке, поэтому берётся только дословная
+        цитата: иначе текст модели попал бы туда без проверки. Влияние берётся
+        только из ответа на вопрос о нём: тяжёлое влияние даёт L3 (R06), а L3
+        после рассказа переводит чат в кризис, который не должен зависеть от
+        догадки модели.
         """
         known: set[TermId] = {
             self._concept(evidence.term) for evidence in (*found.manifestations, *found.stressors)
@@ -201,7 +203,7 @@ class FactExtraction:
                     for quote in reply.other
                     if question not in ESTIMATED_FACTS and _contains(text, quote)
                 ),
-                goal=reply.goal,
+                goal=reply.goal if reply.goal and _contains(text, reply.goal) else None,
             )
             for fact, term in (
                 (FactKind.DURATION, reply.duration),

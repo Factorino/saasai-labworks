@@ -61,10 +61,6 @@ class OpenAICompatibleModel(ILanguageModel):
         await self._client.close()
 
     @override
-    async def complete(self, request: ModelRequest) -> str:
-        return await self._create(request, omit)
-
-    @override
     async def complete_structured[OutputT: DTO](
         self,
         request: ModelRequest,
@@ -83,7 +79,7 @@ class OpenAICompatibleModel(ILanguageModel):
     async def _create(
         self,
         request: ModelRequest,
-        response_format: ResponseFormatJSONSchema | Omit,
+        response_format: ResponseFormatJSONSchema,
     ) -> str:
         try:
             completion: ChatCompletion = await self._client.chat.completions.create(

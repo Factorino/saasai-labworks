@@ -39,7 +39,7 @@ class ExtractionReply(DTO):
         description="How much it interferes with life, only if the user says so",
     )
     goal: str | None = Field(
-        description="What the user wants from a specialist, in their words, only if stated",
+        description="Exact fragment saying what the user wants from a specialist, only if stated",
     )
 
 
