@@ -4,7 +4,7 @@ from typing import Any, Final
 
 from anamnesis.application.dto.base import DTO
 from anamnesis.application.dto.generation import AnswerReply, NarrativeReply
-from anamnesis.application.dto.views.summary import CaseView, SummaryView
+from anamnesis.application.dto.views.summary import CaseView, PracticeView, SummaryView
 from anamnesis.application.errors.llm import (
     LanguageModelReplyError,
     LanguageModelUnavailableError,
@@ -76,6 +76,7 @@ class TextGeneration:
         data: dict[str, Any] = {
             "language": language,
             "summary": _summary_data(summary, language),
+            "practices": [_practice_data(item) for item in summary.practices],
             "history": [{"role": message.role, "text": message.text} for message in messages[:-1]],
             "message": messages[-1].text,
         }
@@ -144,6 +145,16 @@ class TextGeneration:
         return "\n\n".join(
             (self._instructions.text(task), self._instructions.text(Instruction.CORRECTION)),
         )
+
+
+def _practice_data(practice: PracticeView) -> dict[str, Any]:
+    """Документ подобранной практики: как её выполнять и когда нельзя."""
+    return {
+        "name": practice.name,
+        "description": practice.description,
+        "steps": list(practice.guide.steps),
+        "limits": list(practice.guide.limits),
+    }
 
 
 def _summary_data(summary: SummaryView, language: LanguageCode) -> dict[str, Any]:
