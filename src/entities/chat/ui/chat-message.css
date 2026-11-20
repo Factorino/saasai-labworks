@@ -1,0 +1,97 @@
+.service-mark,
+.message__user-mark {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.7rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+.service-mark svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.service-mark--large {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1.35rem;
+}
+
+.service-mark--large svg {
+    width: 2.2rem;
+    height: 2.2rem;
+}
+
+.message {
+    display: flex;
+    align-items: flex-start;
+    align-self: start;
+    max-width: min(89%, 41rem);
+    min-width: 0;
+    gap: 0.55rem;
+}
+
+.message--user {
+    flex-direction: row-reverse;
+    align-self: end;
+}
+
+.message__user-mark {
+    background: var(--surface);
+    color: var(--muted);
+    border: 1px solid var(--line);
+}
+
+.message__content {
+    display: grid;
+    justify-items: start;
+    min-width: 0;
+    gap: 0.2rem;
+}
+
+.message--user .message__content {
+    justify-items: end;
+}
+
+.message__author {
+    padding-inline: 0.08rem;
+    color: var(--muted);
+    font-size: 0.8125rem;
+    font-weight: 650;
+}
+
+.message__bubble {
+    min-width: 0;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: 0.25rem 1rem 1rem;
+    background: var(--surface);
+}
+
+.message--user .message__bubble {
+    border-color: transparent;
+    border-radius: 1rem 0.25rem 1rem 1rem;
+    background: var(--accent-soft);
+}
+
+.message-text {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 520px) {
+    .message {
+        max-width: 96%;
+        gap: 0.4rem;
+    }
+
+    .message > .service-mark,
+    .message__user-mark {
+        width: 1.7rem;
+        height: 1.7rem;
+    }
+}

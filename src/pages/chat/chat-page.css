@@ -1,0 +1,136 @@
+.app-shell {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+}
+
+.app-header {
+    flex: none;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+}
+
+.app-header__content {
+    display: flex;
+    min-height: 4.5rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: min(100%, 76rem);
+    margin-inline: auto;
+    padding: 0.5rem var(--page-inset);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.0625rem;
+    font-weight: 740;
+    letter-spacing: -0.035em;
+}
+
+.app-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.session-action {
+    white-space: nowrap;
+}
+
+.welcome-page {
+    flex: 1;
+    display: grid;
+    justify-items: center;
+    align-items: safe center;
+    overflow: auto;
+    padding: clamp(1.5rem, 8vh, 6rem) var(--page-inset);
+    background: radial-gradient(ellipse 44rem 27rem at 50% 37%, var(--glow), transparent 92%);
+}
+
+.app-footer {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.85rem var(--page-inset) max(0.85rem, env(safe-area-inset-bottom));
+    color: var(--muted);
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    font-size: 0.8125rem;
+    text-align: center;
+}
+
+.chat {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-input {
+    flex: none;
+    max-height: 52%;
+    overflow-y: auto;
+    border-top: 1px solid var(--line);
+    background: var(--surface);
+    padding: 0.8rem var(--page-inset) max(0.8rem, env(safe-area-inset-bottom));
+    scrollbar-gutter: stable both-edges;
+}
+
+.chat-input__content {
+    display: grid;
+    gap: 0.6rem;
+    width: min(100%, var(--column));
+    margin-inline: auto;
+}
+
+.chat-input__status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-size: 0.875rem;
+}
+
+@media (max-width: 520px) {
+    .app-header__content {
+        min-height: 3.8rem;
+    }
+
+    .brand {
+        gap: 0.44rem;
+        font-size: 1rem;
+    }
+
+    .app-header__actions {
+        gap: 0.3rem;
+    }
+
+    .session-action {
+        padding-inline: 0.55rem;
+    }
+
+    .session-action svg {
+        display: none;
+    }
+}
+
+@media (max-width: 355px) {
+    .app-header__content {
+        gap: 0.35rem;
+    }
+
+    .session-action {
+        padding-inline: 0.45rem;
+        font-size: 0.8125rem;
+    }
+
+    .brand > .service-mark {
+        display: none;
+    }
+}

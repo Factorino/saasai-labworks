@@ -1,0 +1,22 @@
+.thread {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable both-edges;
+    scroll-padding-block-start: 0.85rem;
+}
+
+.thread__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    width: min(100%, calc(var(--column) + var(--page-inset) * 2));
+    margin-inline: auto;
+    padding: clamp(1.1rem, 4vh, 2.25rem) var(--page-inset) 1.3rem;
+}
+
+.thread__summary {
+    min-width: 0;
+    border-radius: 1rem;
+}

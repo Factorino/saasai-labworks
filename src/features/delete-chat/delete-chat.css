@@ -1,0 +1,44 @@
+.delete-button:hover:not(:disabled) {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+.delete-dialog {
+    width: min(calc(100% - 2rem), 25rem);
+    padding: 1.3rem;
+    border-radius: 1rem;
+    border: 1px solid var(--line);
+    color: var(--text);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+}
+
+.delete-dialog::backdrop {
+    background: #10191785;
+}
+
+.delete-dialog h2 {
+    margin-bottom: 0.4rem;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+}
+
+.delete-dialog p {
+    color: var(--muted);
+}
+
+.delete-dialog__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: 1.2rem;
+}
+
+.button--danger {
+    background: var(--danger-button);
+    color: var(--on-danger-button);
+}
+
+.button--danger:hover {
+    opacity: 0.88;
+}

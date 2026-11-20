@@ -1,0 +1,31 @@
+{
+    "name": "anamnesis-web-client",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "engines": {
+        "node": ">=22.12.0"
+    },
+    "scripts": {
+        "dev": "vite",
+        "typecheck": "tsc --noEmit",
+        "format:check": "prettier --check .",
+        "build": "npm run typecheck && vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@fontsource-variable/inter": "^5.2.0",
+        "lucide-react": "^0.577.0",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0"
+    },
+    "devDependencies": {
+        "@types/node": "^24.0.0",
+        "@types/react": "^19.2.0",
+        "@types/react-dom": "^19.2.0",
+        "@vitejs/plugin-react": "^6.0.0",
+        "prettier": "^3.8.0",
+        "typescript": "~5.9.3",
+        "vite": "^8.3.8"
+    }
+}

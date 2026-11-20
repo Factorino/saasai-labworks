@@ -249,3 +249,8 @@ __marimo__/
 
 # Dev data
 /.dev/
+
+# Web client
+/node_modules/
+/.env.local
+/.env.*.local

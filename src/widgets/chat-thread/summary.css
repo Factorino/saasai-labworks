@@ -1,0 +1,170 @@
+.summary-stack {
+    display: grid;
+    gap: 0.85rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.summary,
+.help-card {
+    min-width: 0;
+    padding: clamp(0.85rem, 3vw, 1.35rem);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+}
+
+.summary__heading,
+.help-card h2,
+.summary__section-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.summary__heading svg {
+    color: var(--accent);
+}
+
+.summary h2,
+.help-card h2 {
+    font-size: 1.125rem;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+}
+
+.summary h3 {
+    font-size: 1rem;
+    line-height: 1.35;
+}
+
+.summary__section {
+    display: grid;
+    gap: 0.45rem;
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--line);
+}
+
+.summary__section-heading {
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.summary__phrase {
+    font-weight: 680;
+}
+
+.summary__request {
+    margin: 0;
+    padding: 0.7rem 0.85rem;
+    border-inline-start: 2px solid var(--accent);
+    border-radius: 0 0.6rem 0.6rem 0;
+    background: var(--accent-soft);
+    white-space: pre-wrap;
+}
+
+.copy-button {
+    margin-block: -0.35rem;
+}
+
+.summary__footer {
+    margin-top: 0.95rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.875rem;
+}
+
+.help-card {
+    display: grid;
+    gap: 0.55rem;
+}
+
+.help-card--urgent {
+    border-color: var(--danger-line);
+    color: var(--danger);
+    background: var(--danger-bg);
+}
+
+.help-card h2 svg {
+    flex: none;
+}
+
+.helplines {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.helplines li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0 0.75rem;
+    padding-top: 0.45rem;
+    border-top: 1px solid var(--line);
+}
+
+.help-card--urgent .helplines li {
+    border-color: var(--danger-line);
+}
+
+.helplines li > span {
+    flex: 1 1 17rem;
+}
+
+.helplines small {
+    display: block;
+    font-size: 0.85rem;
+}
+
+.helplines a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    color: inherit;
+    font-weight: 680;
+    white-space: nowrap;
+}
+
+.practice-list {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.practice {
+    padding: 0.45rem 0.6rem;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: 0.6rem;
+}
+
+.practice > summary {
+    min-height: 2.5rem;
+    padding: 0.45rem 0.15rem;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.practice ol,
+.practice ul {
+    padding-inline-start: 1.45rem;
+}
+
+.practice li + li {
+    margin-top: 0.25rem;
+}
+
+.practice__limits {
+    padding: 0.55rem 0.65rem;
+    border-radius: 0.6rem;
+    background: var(--accent-soft);
+}
+
+.practice__limits p + p {
+    margin-top: 0.3rem;
+}
