@@ -2,6 +2,8 @@ import { AlertCircle, Check, ClipboardCopy, FileText, Phone } from "lucide-react
 import { useState } from "react";
 
 import type { Reply, Summary } from "@/entities/chat";
+import { InspectSummary } from "@/features/inspect-summary";
+
 import { specialistText } from "./specialist-text";
 import "./summary.css";
 
@@ -117,6 +119,7 @@ export function SummaryCard({ reply, summary, id }: SummaryCardProps) {
                 <header className="summary__heading">
                     <FileText size={21} aria-hidden />
                     <h2 id={`${id}-title`}>Сводка диалога</h2>
+                    <InspectSummary summary={summary} />
                 </header>
                 <div className="summary__section">
                     {summary.phrase && <p className="summary__phrase">{summary.phrase}</p>}

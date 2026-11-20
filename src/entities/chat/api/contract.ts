@@ -2,6 +2,22 @@
 export type ChatStage = "story" | "clarifying" | "summary" | "crisis" | "finished";
 export type UrgencyLevel = 0 | 1 | 2 | 3;
 export type Referral = "emergency_medical_care" | "crisis_helpline" | "doctor_visit";
+export type FactKind =
+    | "manifestations"
+    | "duration"
+    | "frequency"
+    | "impact"
+    | "affected_domains"
+    | "self_harm"
+    | "sleep"
+    | "appetite"
+    | "energy"
+    | "substance_use"
+    | "goal";
+
+type Scale = 0 | 1 | 2 | 3;
+type SelfHarmScreening = "none" | "passive" | "active" | "plan" | "unknown";
+type ChangeDirection = "unchanged" | "decreased" | "increased";
 
 export interface Option {
     readonly code: string;
@@ -9,7 +25,7 @@ export interface Option {
 }
 
 export interface Question {
-    readonly fact: string;
+    readonly fact: FactKind;
     readonly text: string;
     readonly options: readonly Option[];
     readonly multiple: boolean;
@@ -27,18 +43,41 @@ interface ReferralAdvice {
     readonly text: string;
 }
 
-interface Term {
+export interface Term {
     readonly term: string;
     readonly name: string;
 }
 
+interface Evidence extends Term {
+    readonly quote: string;
+}
+
 interface CaseDetails {
-    readonly manifestations: readonly Term[];
-    readonly stressors: readonly Term[];
+    readonly manifestations: readonly Evidence[];
+    readonly stressors: readonly Evidence[];
     readonly unrecognized: readonly string[];
     readonly duration_weeks: number | null;
+    readonly frequency: Scale | null;
+    readonly impact: Scale | null;
     readonly affected_domains: readonly Term[];
+    readonly self_harm: SelfHarmScreening | null;
+    readonly sleep: ChangeDirection | null;
+    readonly appetite: ChangeDirection | null;
+    readonly energy: ChangeDirection | null;
+    readonly substance_use: boolean | null;
     readonly goal: string | null;
+    readonly refused: readonly FactKind[];
+}
+
+interface Rule {
+    readonly rule: string;
+    readonly explanation: string;
+}
+
+interface Approximation {
+    readonly fact: FactKind;
+    readonly confidence: number;
+    readonly text: string;
 }
 
 interface Practice {
@@ -64,6 +103,10 @@ export interface Summary {
     readonly helplines: readonly Helpline[];
     readonly support_others: string | null;
     readonly practices: readonly Practice[];
+    readonly clusters: readonly Term[];
+    readonly explanation: readonly Rule[];
+    readonly missing: readonly FactKind[];
+    readonly approximations: readonly Approximation[];
     readonly case: CaseDetails;
     readonly disclaimer: string;
 }

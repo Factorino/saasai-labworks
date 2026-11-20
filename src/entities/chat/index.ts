@@ -1,4 +1,4 @@
-export type { MessageBody, Question, Reply, Summary } from "./api/contract";
+export type { FactKind, MessageBody, Question, Reply, Summary, Term } from "./api/contract";
 export {
     latestSummaryIndex,
     type ChatEntry,
