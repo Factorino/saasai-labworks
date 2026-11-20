@@ -1,9 +1,44 @@
 from abc import abstractmethod
-from typing import Protocol
+from enum import StrEnum, auto
+from typing import Annotated, Protocol
 
-from anamnesis.domain.enums.urgency_level import UrgencyLevel
+from pydantic import StringConstraints
+
+from anamnesis.application.dto.base import DTO
+from anamnesis.domain.enums.recommendation import UrgencyLevel
 from anamnesis.domain.types import LanguageCode
-from anamnesis.domain.value_objects.reply_violation import ReplyViolation
+
+
+class ViolationKind(StrEnum):
+    """Что недопустимо в ответе системы.
+
+    Attributes:
+        DIAGNOSIS: Утверждение диагноза или код МКБ.
+        MEDICATION: Название лекарства или совет по медикаментам.
+        PROMISE: Обещание результата.
+        DEVALUATION: Обесценивание переживаний.
+        STOP_TREATMENT: Совет прекратить лечение.
+        LEVEL_MISMATCH: Уровень срочности, отличный от вычисленного правилами.
+    """
+
+    DIAGNOSIS = auto()
+    MEDICATION = auto()
+    PROMISE = auto()
+    DEVALUATION = auto()
+    STOP_TREATMENT = auto()
+    LEVEL_MISMATCH = auto()
+
+
+class ReplyViolation(DTO):
+    """Недопустимый фрагмент ответа системы.
+
+    Attributes:
+        kind: Вид нарушения.
+        quote: Фрагмент ответа; пробелы по краям обрезаются, пустой недопустим.
+    """
+
+    kind: ViolationKind
+    quote: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 
 
 class IReplyGuard(Protocol):

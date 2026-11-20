@@ -3,15 +3,14 @@ from types import MappingProxyType
 from typing import Final
 
 from anamnesis.domain.enums.change_direction import ChangeDirection
+from anamnesis.domain.enums.crisis import SelfHarmScreening
 from anamnesis.domain.enums.fact_kind import FactKind
-from anamnesis.domain.enums.frequency import Frequency
-from anamnesis.domain.enums.impact_degree import ImpactDegree
-from anamnesis.domain.enums.self_harm_screening import SelfHarmScreening
+from anamnesis.domain.enums.scales import Frequency, ImpactDegree
 from anamnesis.domain.errors.common import ValidationError
 from anamnesis.domain.types import OptionCode, TermId
 from anamnesis.domain.value_objects.case_facts import CaseFacts
+from anamnesis.domain.value_objects.clarification import REFUSE_OPTION_CODE, Answer, Question
 from anamnesis.domain.value_objects.duration import Duration
-from anamnesis.domain.value_objects.question import REFUSE_OPTION_CODE, Answer, Question
 
 
 type _Choices = Mapping[OptionCode, CaseFacts]
@@ -34,10 +33,10 @@ _DURATION: Final[_Choices] = _choices(
 """Длительность записывается по нижней границе интервала."""
 
 _FREQUENCY: Final[_Choices] = _choices(
-    rarely=CaseFacts(frequency=Frequency.RARELY),
-    several_times_a_week=CaseFacts(frequency=Frequency.SEVERAL_TIMES_A_WEEK),
-    most_days=CaseFacts(frequency=Frequency.MOST_DAYS),
-    constantly=CaseFacts(frequency=Frequency.CONSTANTLY),
+    rare=CaseFacts(frequency=Frequency.RARE),
+    intermittent=CaseFacts(frequency=Frequency.INTERMITTENT),
+    frequent=CaseFacts(frequency=Frequency.FREQUENT),
+    constant=CaseFacts(frequency=Frequency.CONSTANT),
 )
 """Частота — шкала свойства `frequency` онтологии."""
 
@@ -124,18 +123,6 @@ _MULTIPLE: Final[frozenset[FactKind]] = frozenset({FactKind.AFFECTED_DOMAINS})
 """Вопросы, в которых можно выбрать несколько вариантов."""
 
 
-def _build_question(kind: FactKind, *, follow_up: bool = False) -> Question:
-    """Вопрос о сведении: его варианты и в конце вариант отказа."""
-    choices: _Choices = _CHOICES.get(kind, MappingProxyType({}))
-    return Question(
-        fact=kind,
-        options=(*choices, REFUSE_OPTION_CODE),
-        multiple=kind in _MULTIPLE,
-        free_text=kind in _FREE_TEXT,
-        follow_up=follow_up,
-    )
-
-
 class Questionnaire:
     """Шаблонные уточняющие вопросы и разбор ответов на них.
 
@@ -174,6 +161,85 @@ class Questionnaire:
             follow_up=True,
         )
 
+    @classmethod
+    def _validate_answer(cls, question: Question, answer: Answer) -> None:
+        """Проверяет ответ по виду: отказ, свой текст или выбор вариантов."""
+        if answer.is_refusal:
+            cls._validate_refusal(question, answer)
+        elif answer.text is not None:
+            cls._validate_text_answer(question, answer)
+        else:
+            cls._validate_choice(question, answer)
+
+    @staticmethod
+    def _applies(kind: FactKind, facts: CaseFacts) -> bool:
+        """Уместен ли вопрос: о сферах жизни — только если проявления мешают жить."""
+        if kind is FactKind.AFFECTED_DOMAINS:
+            return facts.impact is not None and facts.impact >= ImpactDegree.MILD
+        return True
+
+    @staticmethod
+    def _validate_question_limit(question_limit: int) -> None:
+        if question_limit < 0:
+            raise ValidationError(subject="Question limit", reason="must not be negative")
+
+    @staticmethod
+    def _validate_refusal(question: Question, answer: Answer) -> None:
+        """Отказ нельзя совмещать с другим вариантом или текстом."""
+        if len(answer.option_codes) > 1 or answer.text is not None:
+            raise ValidationError(
+                subject=question.fact,
+                reason="a refusal cannot be combined with another answer",
+            )
+
+    @staticmethod
+    def _validate_text_answer(question: Question, answer: Answer) -> None:
+        """Своими словами — только где можно и без вариантов вместе с текстом."""
+        if not question.free_text:
+            raise ValidationError(subject=question.fact, reason="expects one of the options")
+        if answer.option_codes:
+            raise ValidationError(
+                subject=question.fact,
+                reason="expects either an option or a text, not both",
+            )
+
+    @staticmethod
+    def _validate_choice(question: Question, answer: Answer) -> None:
+        """Нужен хотя бы один известный вариант; несколько — только где можно."""
+        codes: tuple[OptionCode, ...] = answer.option_codes
+
+        if question.fact not in _CHOICES:
+            raise ValidationError(subject=question.fact, reason="expects a text answer")
+        if not codes:
+            raise ValidationError(subject=question.fact, reason="expects one of the options")
+        if len(codes) > 1 and not question.multiple:
+            raise ValidationError(subject=question.fact, reason="expects a single option")
+
+        choices: _Choices = _CHOICES[question.fact]
+        for code in codes:
+            if code not in choices:
+                raise ValidationError(subject=question.fact, reason=f"unknown option '{code}'")
+
+    @staticmethod
+    def _apply_text(facts: CaseFacts, kind: FactKind, text: str, found: CaseFacts) -> CaseFacts:
+        """Текст становится целью, добавляется к проявлениям или даёт оценку сведения."""
+        if kind is FactKind.GOAL:
+            return facts.merge(found).merge(CaseFacts(goal=text))
+        if kind is FactKind.MANIFESTATIONS:
+            return facts.absorb(text, found)
+        return facts.merge(found)
+
+    @staticmethod
+    def _apply_choice(kind: FactKind, codes: tuple[OptionCode, ...]) -> CaseFacts:
+        """Сведения из выбранных вариантов."""
+        choices: _Choices = _CHOICES[kind]
+        result: CaseFacts = CaseFacts()
+
+        for code in codes:
+            result = result.merge(choices[code])
+
+        return result
+
     @property
     def question_limit(self) -> int:
         """Сколько вопросов задать."""
@@ -207,11 +273,13 @@ class Questionnaire:
             Вопрос или `None`, если спрашивать больше нечего.
         """
         within_limit: bool = len(asked) < self._question_limit
+
         for kind in self.ORDER:
             if kind in asked or facts.is_settled(kind) or not self._applies(kind, facts):
                 continue
             if within_limit or kind is FactKind.SELF_HARM:
                 return self._questions[kind]
+
         return None
 
     def apply(
@@ -242,84 +310,25 @@ class Questionnaire:
             ValidationError: Ответ не подходит к вопросу.
         """
         self._validate_answer(question, answer)
+
         found: CaseFacts = extracted if extracted is not None else CaseFacts()
         if answer.is_refusal:
             return facts.merge(found).refuse(question.fact)
         if answer.text is not None:
             return self._apply_text(facts, question.fact, answer.text, found)
-        return facts.merge(found).merge(self._apply_choice(question.fact, answer.option_codes))
 
-    @staticmethod
-    def _applies(kind: FactKind, facts: CaseFacts) -> bool:
-        """Уместен ли вопрос: о сферах жизни — только если проявления мешают жить."""
-        if kind is FactKind.AFFECTED_DOMAINS:
-            return facts.impact is not None and facts.impact >= ImpactDegree.MILD
-        return True
+        chosen: CaseFacts = self._apply_choice(question.fact, answer.option_codes)
+        updated: CaseFacts = facts.merge(found).merge(chosen)
+        return updated
 
-    @staticmethod
-    def _validate_question_limit(question_limit: int) -> None:
-        if question_limit < 0:
-            raise ValidationError(field="Question limit", reason="must not be negative")
 
-    @classmethod
-    def _validate_answer(cls, question: Question, answer: Answer) -> None:
-        """Проверяет ответ по виду: отказ, свой текст или выбор вариантов."""
-        if answer.is_refusal:
-            cls._validate_refusal(question, answer)
-        elif answer.text is not None:
-            cls._validate_text_answer(question, answer)
-        else:
-            cls._validate_choice(question, answer)
-
-    @staticmethod
-    def _validate_refusal(question: Question, answer: Answer) -> None:
-        """Отказ нельзя совмещать с другим вариантом или текстом."""
-        if len(answer.option_codes) > 1 or answer.text is not None:
-            raise ValidationError(
-                field=question.fact,
-                reason="a refusal cannot be combined with another answer",
-            )
-
-    @staticmethod
-    def _validate_text_answer(question: Question, answer: Answer) -> None:
-        """Своими словами — только где можно и без вариантов вместе с текстом."""
-        if not question.free_text:
-            raise ValidationError(field=question.fact, reason="expects one of the options")
-        if answer.option_codes:
-            raise ValidationError(
-                field=question.fact,
-                reason="expects either an option or a text, not both",
-            )
-
-    @staticmethod
-    def _validate_choice(question: Question, answer: Answer) -> None:
-        """Нужен хотя бы один известный вариант; несколько — только где можно."""
-        codes: tuple[OptionCode, ...] = answer.option_codes
-        if question.fact not in _CHOICES:
-            raise ValidationError(field=question.fact, reason="expects a text answer")
-        if not codes:
-            raise ValidationError(field=question.fact, reason="expects one of the options")
-        if len(codes) > 1 and not question.multiple:
-            raise ValidationError(field=question.fact, reason="expects a single option")
-        choices: _Choices = _CHOICES[question.fact]
-        for code in codes:
-            if code not in choices:
-                raise ValidationError(field=question.fact, reason=f"unknown option '{code}'")
-
-    @staticmethod
-    def _apply_text(facts: CaseFacts, kind: FactKind, text: str, found: CaseFacts) -> CaseFacts:
-        """Текст становится целью, добавляется к проявлениям или даёт оценку сведения."""
-        if kind is FactKind.GOAL:
-            return facts.merge(found).merge(CaseFacts(goal=text))
-        if kind is FactKind.MANIFESTATIONS:
-            return facts.absorb(text, found)
-        return facts.merge(found)
-
-    @staticmethod
-    def _apply_choice(kind: FactKind, codes: tuple[OptionCode, ...]) -> CaseFacts:
-        """Сведения из выбранных вариантов."""
-        choices: _Choices = _CHOICES[kind]
-        result: CaseFacts = CaseFacts()
-        for code in codes:
-            result = result.merge(choices[code])
-        return result
+def _build_question(kind: FactKind, *, follow_up: bool = False) -> Question:
+    """Вопрос о сведении: его варианты и в конце вариант отказа."""
+    choices: _Choices = _CHOICES.get(kind, MappingProxyType({}))
+    return Question(
+        fact=kind,
+        options=(*choices, REFUSE_OPTION_CODE),
+        multiple=kind in _MULTIPLE,
+        free_text=kind in _FREE_TEXT,
+        follow_up=follow_up,
+    )

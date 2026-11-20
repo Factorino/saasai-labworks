@@ -43,7 +43,12 @@ async def post_message(
     body: PostMessageBody,
     interactor: FromDishka[PostMessage],
 ) -> PostMessageResponse:
-    return await interactor.execute(PostMessageRequest(chat_id=chat_id, **body.model_dump()))
+    request: PostMessageRequest = PostMessageRequest(
+        chat_id=chat_id,
+        text=body.text,
+        option_codes=body.option_codes,
+    )
+    return await interactor.execute(request)
 
 
 @router.post("/{chat_id}/finish")

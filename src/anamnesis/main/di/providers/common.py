@@ -5,7 +5,7 @@ from anamnesis.application.interfaces.common.id_generator import IIdGenerator
 from anamnesis.application.interfaces.repositories.chat import IChatRepository
 from anamnesis.domain.entities.chat import ChatId
 from anamnesis.infrastructure.common.clock import SystemClock
-from anamnesis.infrastructure.common.id_generator import ChatIdGenerator
+from anamnesis.infrastructure.common.id_generator import UUIDv7Generator
 from anamnesis.infrastructure.persistence.chat_repository import InMemoryChatRepository
 
 
@@ -18,7 +18,7 @@ class CommonProvider(Provider):
 
     @provide
     def chat_id_generator(self) -> IIdGenerator[ChatId]:
-        return ChatIdGenerator()
+        return UUIDv7Generator[ChatId]()
 
     @provide
     def chat_repository(self) -> IChatRepository:

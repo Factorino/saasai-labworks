@@ -9,19 +9,29 @@ from anamnesis.main.config.server import ServerConfig
 from anamnesis.main.config.service import ServiceConfig
 from anamnesis.main.di.providers.common import CommonProvider
 from anamnesis.main.di.providers.config import ConfigProvider
+from anamnesis.main.di.providers.extraction import ExtractionProvider
 from anamnesis.main.di.providers.interactors import InteractorsProvider
 from anamnesis.main.di.providers.knowledge import KnowledgeProvider
 from anamnesis.main.di.providers.llm import LLMProvider
+from anamnesis.main.di.providers.localization import LocalizationProvider
+from anamnesis.main.di.providers.safety import SafetyProvider
+from anamnesis.main.di.providers.services import ServicesProvider
 
 
-def create_container(config: Config) -> AsyncContainer:
+def create_container(config: Config, *overrides: Provider) -> AsyncContainer:
+    """Контейнер приложения; `overrides` подменяют зависимости стандартных провайдеров."""
     providers: list[Provider] = [
         FastapiProvider(),
         ConfigProvider(),
         CommonProvider(),
+        LocalizationProvider(),
         KnowledgeProvider(),
+        ExtractionProvider(),
+        SafetyProvider(),
         LLMProvider(),
+        ServicesProvider(),
         InteractorsProvider(),
+        *overrides,
     ]
 
     context: dict[type, object] = {

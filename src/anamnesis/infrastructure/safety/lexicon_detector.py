@@ -1,24 +1,47 @@
 from collections.abc import Mapping
 from dataclasses import dataclass
+from pathlib import Path
 from types import MappingProxyType
-from typing import override
+from typing import Final, override
 
+from anamnesis.application.errors.knowledge import UnsupportedLanguageError
 from anamnesis.application.interfaces.safety.crisis_detector import ICrisisDetector
-from anamnesis.domain.enums.crisis_category import CrisisCategory
+from anamnesis.domain.enums.crisis import CrisisCategory
 from anamnesis.domain.types import LanguageCode
 from anamnesis.domain.value_objects.crisis_signal import CrisisSignal
-from anamnesis.infrastructure.localization.locale import Crisis, Locale
-from anamnesis.infrastructure.text.patterns import PatternMatch, PatternMatcher
-from anamnesis.infrastructure.text.tokens import Token, make_stemmer, tokenize
+from anamnesis.infrastructure.filesystem.yaml_reader import read_yaml
+from anamnesis.infrastructure.text.language import LanguageProfile, LanguageProfiles, Token
+from anamnesis.infrastructure.text.patterns import PatternFile, PatternMatch, PatternMatcher
+
+
+_CRISIS_FILE: Final[str] = "crisis.yaml"
+
+
+class CrisisFile(PatternFile):
+    """`resources/<язык>/crisis.yaml`: шаблоны кризисного детектора.
+
+    Attributes:
+        first_person: Слова о самом пользователе: «я», «мне».
+        others: Слова о другом человеке: «подруга», «он»; сравниваются по основам.
+        not_others: Слова с основой из `others`, которые не о людях: «другой».
+        patterns: Шаблоны по категориям находок.
+    """
+
+    first_person: tuple[str, ...]
+    others: tuple[str, ...]
+    not_others: tuple[str, ...]
+    patterns: Mapping[CrisisCategory, tuple[str, ...]]
 
 
 @dataclass(frozen=True, slots=True)
-class _Index:
+class _Patterns:
     """Шаблоны одного языка и слова, по которым видно, о ком речь."""
 
+    profile: LanguageProfile
     matcher: PatternMatcher[CrisisCategory]
     first_person: frozenset[str]
     others: frozenset[str]
+    not_others: frozenset[str]
 
 
 class LexiconCrisisDetector(ICrisisDetector):
@@ -30,50 +53,66 @@ class LexiconCrisisDetector(ICrisisDetector):
     ложного срабатывания.
     """
 
-    def __init__(self, locales: Mapping[LanguageCode, Locale]) -> None:
-        self._indexes: Mapping[LanguageCode, _Index] = MappingProxyType(
-            {language: _build_index(locale.crisis) for language, locale in locales.items()},
-        )
+    def __init__(self, patterns: Mapping[LanguageCode, _Patterns]) -> None:
+        self._patterns: Mapping[LanguageCode, _Patterns] = MappingProxyType(dict(patterns))
+
+    @classmethod
+    def load(cls, root: Path, profiles: LanguageProfiles) -> "LexiconCrisisDetector":
+        patterns: dict[LanguageCode, _Patterns] = {}
+
+        for language in profiles.languages:
+            profile: LanguageProfile = profiles.get(language)
+            document: CrisisFile = read_yaml(root / language / _CRISIS_FILE, CrisisFile)
+            patterns[language] = _Patterns(
+                profile=profile,
+                matcher=PatternMatcher(
+                    document.patterns,
+                    profile=profile,
+                    negations=document.negations,
+                    negation_window=document.negation_window,
+                ),
+                first_person=frozenset(profile.normalize(word) for word in document.first_person),
+                others=frozenset(profile.stem(word) for word in document.others),
+                not_others=frozenset(profile.normalize(word) for word in document.not_others),
+            )
+
+        return cls(patterns)
+
+    @staticmethod
+    def _about_other(
+        tokens: tuple[Token, ...],
+        match: PatternMatch[CrisisCategory],
+        patterns: _Patterns,
+    ) -> bool:
+        """Ближайшее действующее лицо перед находкой в том же предложении — другой человек."""
+        position: int = match.first
+
+        while position > 0 and not tokens[position].sentence_break:
+            position -= 1
+            token: Token = tokens[position]
+            if token.word in patterns.first_person:
+                return False
+            if token.stem in patterns.others and token.word not in patterns.not_others:
+                return True
+
+        return False
 
     @override
     async def detect(self, text: str, language: LanguageCode) -> tuple[CrisisSignal, ...]:
-        index: _Index = self._indexes[language]
-        tokens: tuple[Token, ...] = tokenize(text, index.matcher.stemmer)
+        patterns: _Patterns | None = self._patterns.get(language)
+        if patterns is None:
+            raise UnsupportedLanguageError(language=language)
+
+        tokens: tuple[Token, ...] = patterns.profile.tokenize(text)
+
         signals: dict[CrisisSignal, None] = {}
-        for match in index.matcher.find(tokens):
+        for match in patterns.matcher.find(tokens):
             category: CrisisCategory = (
-                CrisisCategory.OTHER_PERSON if _about_other(tokens, match, index) else match.key
+                CrisisCategory.OTHER_PERSON
+                if self._about_other(tokens, match, patterns)
+                else match.key
             )
             quote: str = text[tokens[match.first].start : tokens[match.last].end]
             signals.setdefault(CrisisSignal(category=category, quote=quote))
+
         return tuple(signals)
-
-
-def _build_index(crisis: Crisis) -> _Index:
-    matcher: PatternMatcher[CrisisCategory] = PatternMatcher(
-        crisis.patterns,
-        stemmer=make_stemmer(crisis.stemmer),
-        negations=crisis.negations,
-    )
-    return _Index(
-        matcher=matcher,
-        first_person=frozenset(crisis.first_person),
-        others=frozenset(matcher.stemmer.stemWord(word) for word in crisis.others),
-    )
-
-
-def _about_other(
-    tokens: tuple[Token, ...],
-    match: PatternMatch[CrisisCategory],
-    index: _Index,
-) -> bool:
-    """Ближайшее действующее лицо перед находкой в предложении — другой человек."""
-    position: int = match.first
-    while position > 0 and not tokens[position].sentence_break:
-        position -= 1
-        token: Token = tokens[position]
-        if token.word in index.first_person:
-            return False
-        if token.stem in index.others:
-            return True
-    return False

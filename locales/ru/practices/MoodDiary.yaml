@@ -1,4 +1,5 @@
 term: MoodDiary_
+
 steps:
 - 'Когда происходит что-то заметное, хорошее или трудное, запишите ситуацию: кто был рядом, когда и где
   это случилось.'
@@ -6,8 +7,10 @@ steps:
 - Оцените телесные ощущения от 0 до 10.
 - Запишите мысли и образы, которые приходили, и что вы сделали.
 - 'Через несколько дней перечитайте записи: что помогало, а что вы могли бы попробовать иначе.'
+
 limits:
 - Если записи усиливают зацикленность на переживаниях, сделайте перерыв.
+
 sources:
 - title: 'University of Huddersfield, SHARP: Daily Diary'
   url: https://research.hud.ac.uk/media/assets/document/research/sharp/monitoringyoursymptoms/DailyDiaryLite.pdf

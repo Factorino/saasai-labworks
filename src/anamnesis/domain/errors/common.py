@@ -7,7 +7,7 @@ from anamnesis.domain.errors.status_code import StatusCode
 @error
 class ValidationError(DomainError, ValueError, TypeError):
     code: ClassVar[str] = StatusCode.VALIDATION_ERROR
-    msg: str = "Field '{field}' validation error: {reason}"
+    msg: str = "Invalid {subject}: {reason}"
 
-    field: str
+    subject: str
     reason: str = "invalid value"

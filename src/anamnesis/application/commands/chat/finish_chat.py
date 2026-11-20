@@ -10,14 +10,28 @@ from anamnesis.domain.entities.chat import Chat, ChatId
 
 
 class FinishChatRequest(DTO):
+    """Досрочное завершение диалога.
+
+    Attributes:
+        chat_id: Идентификатор чата.
+    """
+
     chat_id: ChatId
 
 
 class FinishChatResponse(DTO):
+    """Итог после досрочного завершения.
+
+    Attributes:
+        reply: Сводка; в кризисе — с кризисным сообщением.
+    """
+
     reply: ReplyView
 
 
 class FinishChat(Interactor[FinishChatRequest, FinishChatResponse]):
+    """Завершает диалог, не дожидаясь конца вопросов, и подводит итог."""
+
     def __init__(self, *, chat_repository: IChatRepository, dialogue: DialogueService) -> None:
         self._chat_repo: IChatRepository = chat_repository
         self._dialogue: DialogueService = dialogue
@@ -30,5 +44,7 @@ class FinishChat(Interactor[FinishChatRequest, FinishChatResponse]):
 
         chat.finish()
         reply: ReplyView = await self._dialogue.advance(chat)
+
         await self._chat_repo.save(chat)
+
         return FinishChatResponse(reply=reply)

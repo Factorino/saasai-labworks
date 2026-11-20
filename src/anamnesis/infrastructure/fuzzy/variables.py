@@ -1,52 +1,59 @@
 from collections.abc import Mapping
 from pathlib import Path
 from types import MappingProxyType
-from typing import ClassVar
-
-from pydantic import BaseModel, ConfigDict
-import yaml
 
 from anamnesis.application.dto.estimate import LinguisticTerm
 from anamnesis.domain.enums.fact_kind import ESTIMATED_FACTS, FactKind
+from anamnesis.infrastructure.filesystem.yaml_reader import YamlFile, read_yaml
 from anamnesis.infrastructure.fuzzy.linguistic_variable import LinguisticVariable
 from anamnesis.infrastructure.fuzzy.membership import Trapezoid
 
 
-class _Variable(BaseModel):
-    """Переменная в файле: универсум `[low, high]` и трапеции `[a, b, c, d]`."""
+type LinguisticVariables = Mapping[FactKind, LinguisticVariable]
+"""Лингвистические переменные оцениваемых сведений."""
 
-    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True, extra="forbid")
+
+class VariableEntry(YamlFile):
+    """Переменная в файле: универсум `[low, high]` и трапеции `[a, b, c, d]` термов.
+
+    Attributes:
+        universe: Границы универсума.
+        terms: Термы по возрастанию значения и их трапеции.
+    """
 
     universe: tuple[float, float]
     terms: Mapping[LinguisticTerm, tuple[float, float, float, float]]
 
-
-def load_linguistic_variables(path: Path) -> Mapping[FactKind, LinguisticVariable]:
-    """Лингвистические переменные из файла знаний.
-
-    Raises:
-        ValueError: Переменных не хватает, есть лишние или параметры неверны.
-    """
-    with path.open(encoding="utf-8") as file:
-        data: Mapping[str, object] = yaml.safe_load(file)
-    variables: dict[FactKind, LinguisticVariable] = {}
-    for key, raw in data.items():
-        fact: FactKind = FactKind(key)
-        parsed: _Variable = _Variable.model_validate(raw)
-        variables[fact] = LinguisticVariable(
-            low=parsed.universe[0],
-            high=parsed.universe[1],
+    def to_variable(self) -> LinguisticVariable:
+        """Лингвистическая переменная по записи файла."""
+        low, high = self.universe
+        variable: LinguisticVariable = LinguisticVariable(
+            low=low,
+            high=high,
             terms={
-                term: Trapezoid(a=a, b=b, c=c, d=d) for term, (a, b, c, d) in parsed.terms.items()
+                term: Trapezoid(a=a, b=b, c=c, d=d) for term, (a, b, c, d) in self.terms.items()
             },
         )
-    _validate_facts(frozenset(variables))
-    return MappingProxyType(variables)
+        return variable
 
 
-def _validate_facts(facts: frozenset[FactKind]) -> None:
-    if facts != ESTIMATED_FACTS:
-        raise ValueError(
-            f"Linguistic variables must cover exactly {sorted(ESTIMATED_FACTS)}, "
-            f"got {sorted(facts)}",
-        )
+class LinguisticVariablesFile(YamlFile):
+    """`knowledge/linguistic_variables.yaml`: переменные длительности, частоты и влияния."""
+
+    duration: VariableEntry
+    frequency: VariableEntry
+    impact: VariableEntry
+
+
+def load_linguistic_variables(path: Path) -> LinguisticVariables:
+    document: LinguisticVariablesFile = read_yaml(path, LinguisticVariablesFile)
+    variables: LinguisticVariables = MappingProxyType(
+        {
+            FactKind.DURATION: document.duration.to_variable(),
+            FactKind.FREQUENCY: document.frequency.to_variable(),
+            FactKind.IMPACT: document.impact.to_variable(),
+        },
+    )
+    if frozenset(variables) != ESTIMATED_FACTS:
+        raise ValueError(f"Linguistic variables must cover exactly {sorted(ESTIMATED_FACTS)}")
+    return variables

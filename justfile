@@ -40,8 +40,8 @@ hooks:
 
 
 # --- Run ---------------------------------------------------------------------
-# Settings come from .config/local.toml when it exists, then from APP__*
-# environment variables; see .config/local.toml.example.
+# Settings come from .config/local.toml (see .config/local.toml.example) and
+# APP__* environment variables.
 
 # Start the HTTP API; the OpenAPI docs are served at /docs.
 [group('run')]

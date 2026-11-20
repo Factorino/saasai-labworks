@@ -1,4 +1,4 @@
-from typing import ClassVar
+from typing import ClassVar, override
 
 from anamnesis.domain.errors.common import ValidationError
 from anamnesis.domain.value_objects.base import ValueObject, value_object
@@ -8,18 +8,14 @@ from anamnesis.domain.value_objects.base import ValueObject, value_object
 class Duration(ValueObject):
     """Сколько длятся проявления."""
 
-    _FIELD_NAME: ClassVar[str] = "Duration"
-
     MAX_WEEKS: ClassVar[int] = 520
 
     weeks: int
 
-    def __post_init__(self) -> None:
-        self._validate()
-
+    @override
     def _validate(self) -> None:
         if not 0 <= self.weeks <= self.MAX_WEEKS:
             raise ValidationError(
-                field=self._FIELD_NAME,
+                subject=self._type_name,
                 reason=f"must be between 0 and {self.MAX_WEEKS} weeks",
             )

@@ -1,9 +1,14 @@
-from anamnesis.domain.enums.referral import Referral
-from anamnesis.domain.enums.urgency_level import UrgencyLevel
+from typing import TYPE_CHECKING
+
+from anamnesis.domain.enums.recommendation import Referral, UrgencyLevel
 from anamnesis.domain.value_objects.assessment import Assessment
 from anamnesis.domain.value_objects.case_facts import CaseFacts
 from anamnesis.domain.value_objects.crisis_signal import CrisisSignal
 from anamnesis.domain.value_objects.inference import InferenceResult
+
+
+if TYPE_CHECKING:
+    from anamnesis.domain.types import RuleId, TermId
 
 
 class AssessmentService:
@@ -13,37 +18,6 @@ class AssessmentService:
     «правило не сработало — срочности нет», ни выбор максимума. Поэтому
     итоговый уровень выбирается здесь.
     """
-
-    def assess(
-        self,
-        facts: CaseFacts,
-        inference: InferenceResult,
-        *,
-        crisis: bool = False,
-        signals: tuple[CrisisSignal, ...] = (),
-    ) -> Assessment:
-        """Собирает оценку случая.
-
-        Args:
-            facts: Что известно о случае.
-            inference: Что утвердила машина вывода.
-            crisis: Чат в кризисном сценарии.
-            signals: Находки кризисного детектора за диалог.
-
-        Returns:
-            Оценка с уровнем, объяснением, практиками и направлениями.
-        """
-        level: UrgencyLevel | None = self._level(facts, inference, crisis=crisis)
-        return Assessment(
-            level=level,
-            crisis=crisis,
-            fired_rules=tuple(sorted(inference.fired_rules)),
-            clusters=tuple(sorted(inference.clusters)),
-            practices=inference.practices,
-            referrals=self._referrals(inference, level, signals),
-            signals=signals,
-            missing=facts.missing_required,
-        )
 
     @staticmethod
     def _level(
@@ -81,4 +55,39 @@ class AssessmentService:
         referrals: set[Referral] = set(inference.referrals)
         if level is UrgencyLevel.L3 or signals:
             referrals.add(Referral.CRISIS_HELPLINE)
-        return tuple(referral for referral in Referral if referral in referrals)
+        ordered: tuple[Referral, ...] = tuple(r for r in Referral if r in referrals)
+        return ordered
+
+    def assess(
+        self,
+        facts: CaseFacts,
+        inference: InferenceResult,
+        *,
+        crisis: bool = False,
+        signals: tuple[CrisisSignal, ...] = (),
+    ) -> Assessment:
+        """Собирает оценку случая.
+
+        Args:
+            facts: Что известно о случае.
+            inference: Что утвердила машина вывода.
+            crisis: Чат в кризисном сценарии.
+            signals: Находки кризисного детектора за диалог.
+
+        Returns:
+            Оценка с уровнем, объяснением, практиками и направлениями.
+        """
+        level: UrgencyLevel | None = self._level(facts, inference, crisis=crisis)
+        fired_rules: tuple[RuleId, ...] = tuple(sorted(inference.fired_rules))
+        clusters: tuple[TermId, ...] = tuple(sorted(inference.clusters))
+        refferals: tuple[Referral, ...] = self._referrals(inference, level, signals)
+        return Assessment(
+            level=level,
+            crisis=crisis,
+            fired_rules=fired_rules,
+            clusters=clusters,
+            practices=inference.practices,
+            referrals=refferals,
+            signals=signals,
+            missing=facts.missing_required,
+        )

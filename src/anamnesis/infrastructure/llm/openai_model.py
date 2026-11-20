@@ -1,32 +1,31 @@
-from typing import TYPE_CHECKING, override
+import json
+from typing import TYPE_CHECKING, Final, override
 
-from openai import (
-    APIConnectionError,
-    APIStatusError,
-    AsyncOpenAI,
-    Omit,
-    Timeout,
-    omit,
-)
+from openai import APIConnectionError, APIStatusError, AsyncOpenAI, Omit, Timeout, omit
 from openai.types.chat import ChatCompletion, ChatCompletionMessageParam
 from openai.types.shared import ReasoningEffort
 from openai.types.shared_params import ResponseFormatJSONSchema
 import pydantic
 
 from anamnesis.application.dto.base import DTO
-from anamnesis.application.errors.llm import (
-    LanguageModelReplyError,
-    LanguageModelUnavailableError,
-)
+from anamnesis.application.errors.llm import LanguageModelReplyError, LanguageModelUnavailableError
 from anamnesis.application.interfaces.llm.language_model import ILanguageModel, ModelRequest
-from anamnesis.domain.enums.message_role import MessageRole
 
 
 if TYPE_CHECKING:
     from openai.types.chat.chat_completion import Choice
 
 
+_DATA_OPEN: Final[str] = "<data>"
+_DATA_CLOSE: Final[str] = "</data>"
+
+_REJECTED_KEY: Final[str] = "rejected_fragments"
+"""Ключ отклонённых фрагментов в данных; на него ссылается инструкция исправления."""
+
+
 class OpenAICompatibleModel(ILanguageModel):
+    """Языковая модель за OpenAI-совместимым API."""
+
     def __init__(
         self,
         *,
@@ -53,11 +52,39 @@ class OpenAICompatibleModel(ILanguageModel):
             omit if reasoning_effort is None else reasoning_effort
         )
 
+    @staticmethod
+    def _messages(request: ModelRequest) -> list[ChatCompletionMessageParam]:
+        """Системное сообщение с инструкцией и сообщение с данными."""
+        data: dict[str, object] = request.data.model_dump(mode="json")
+        if request.rejected_fragments:
+            data[_REJECTED_KEY] = list(request.rejected_fragments)
+        content: str = json.dumps(data, ensure_ascii=False).replace("<", "\\u003c")
+
+        messages: list[ChatCompletionMessageParam] = [
+            {"role": "system", "content": request.instruction},
+            {"role": "user", "content": f"{_DATA_OPEN}\n{content}\n{_DATA_CLOSE}"},
+        ]
+        return messages
+
+    @staticmethod
+    def _response_format(output: type[DTO]) -> ResponseFormatJSONSchema:
+        response_format: ResponseFormatJSONSchema = {
+            "type": "json_schema",
+            "json_schema": {
+                "name": output.__name__,
+                "schema": output.model_json_schema(),
+                "strict": True,
+            },
+        }
+        return response_format
+
     @property
     def model(self) -> str:
+        """Имя модели на сервере."""
         return self._model
 
     async def close(self) -> None:
+        """Закрывает соединения клиента."""
         await self._client.close()
 
     @override
@@ -67,20 +94,23 @@ class OpenAICompatibleModel(ILanguageModel):
         output: type[OutputT],
     ) -> OutputT:
         content: str = await self._create(request, self._response_format(output))
+
         try:
-            return output.model_validate_json(content)
+            reply: OutputT = output.model_validate_json(content)
         except pydantic.ValidationError as error:
             first: str = error.errors()[0]["msg"]
             raise LanguageModelReplyError(
                 model=self._model,
                 reason=f"does not match {output.__name__} ({error.error_count()} errors): {first}",
             ) from error
+        return reply
 
     async def _create(
         self,
         request: ModelRequest,
         response_format: ResponseFormatJSONSchema,
     ) -> str:
+        """Текст ответа модели."""
         try:
             completion: ChatCompletion = await self._client.chat.completions.create(
                 model=self._model,
@@ -96,40 +126,21 @@ class OpenAICompatibleModel(ILanguageModel):
             raise LanguageModelUnavailableError(model=self._model, reason=str(error)) from error
         except APIStatusError as error:
             raise LanguageModelUnavailableError(model=self._model, reason=error.message) from error
+
         return self._content(completion)
 
-    @staticmethod
-    def _messages(request: ModelRequest) -> list[ChatCompletionMessageParam]:
-        messages: list[ChatCompletionMessageParam] = [
-            {"role": "system", "content": request.instruction},
-        ]
-        for message in request.messages:
-            if message.role is MessageRole.USER:
-                messages.append({"role": "user", "content": message.text})
-            else:
-                messages.append({"role": "assistant", "content": message.text})
-        return messages
-
-    @staticmethod
-    def _response_format(output: type[DTO]) -> ResponseFormatJSONSchema:
-        return {
-            "type": "json_schema",
-            "json_schema": {
-                "name": output.__name__,
-                "schema": output.model_json_schema(),
-                "strict": True,
-            },
-        }
-
     def _content(self, completion: ChatCompletion) -> str:
+        """Непустой текст первого варианта ответа."""
         if not completion.choices:
             raise LanguageModelReplyError(model=self._model, reason="no choices")
+
         choice: Choice = completion.choices[0]
         if choice.finish_reason == "length":
             raise LanguageModelReplyError(
                 model=self._model,
                 reason=f"cut off at {self._max_tokens} tokens",
             )
+
         content: str = (choice.message.content or "").strip()
         if not content:
             raise LanguageModelReplyError(model=self._model, reason="empty content")

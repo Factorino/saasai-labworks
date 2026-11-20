@@ -1,28 +1,9 @@
-from anamnesis.domain.enums.referral import Referral
-from anamnesis.domain.enums.urgency_level import UrgencyLevel
+from typing import override
+
+from anamnesis.domain.enums.recommendation import Referral, UrgencyLevel
 from anamnesis.domain.types import RuleId, TermId
 from anamnesis.domain.value_objects.base import ValueObject, value_object
-
-
-@value_object
-class PracticeAdvice(ValueObject):
-    """Практика, которую правила предложили случаю, и её ограничения.
-
-    Attributes:
-        practice: Представитель практики (`BreathingPractice_`), выведенный
-            через `suggestsPractice`.
-        cautions: Понятия из `cautionFor` практики, которые есть в случае.
-        clusters: Кластеры случая, которым практика подходит.
-    """
-
-    practice: TermId
-    cautions: frozenset[TermId] = frozenset()
-    clusters: frozenset[TermId] = frozenset()
-
-    @property
-    def needs_caution(self) -> bool:
-        """Показывать ли практику только с предупреждением."""
-        return bool(self.cautions)
+from anamnesis.domain.value_objects.practice import PracticeAdvice
 
 
 @value_object
@@ -40,16 +21,20 @@ class InferenceResult(ValueObject):
     """
 
     levels: frozenset[UrgencyLevel] = frozenset()
+
     fired_rules: frozenset[RuleId] = frozenset()
     clusters: frozenset[TermId] = frozenset()
+
     practices: tuple[PracticeAdvice, ...] = ()
     referrals: frozenset[Referral] = frozenset()
 
-    def __post_init__(self) -> None:
-        self._normalize()
-
+    @override
     def _normalize(self) -> None:
         unique: dict[TermId, PracticeAdvice] = {}
         for advice in self.practices:
             unique.setdefault(advice.practice, advice)
-        self._set("practices", tuple(sorted(unique.values(), key=lambda a: a.practice)))
+
+        practices: tuple[PracticeAdvice, ...] = tuple(
+            sorted(unique.values(), key=lambda a: a.practice)
+        )
+        self._set("practices", practices)

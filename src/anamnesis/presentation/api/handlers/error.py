@@ -1,5 +1,4 @@
 from collections.abc import Mapping
-import logging
 from types import MappingProxyType
 from typing import Any, Final
 
@@ -9,16 +8,11 @@ from pydantic import BaseModel, Field
 
 from anamnesis.application.errors.common import NotFoundError
 from anamnesis.application.errors.knowledge import UnknownTermError, UnsupportedLanguageError
-from anamnesis.application.errors.llm import (
-    LanguageModelReplyError,
-    LanguageModelUnavailableError,
-)
+from anamnesis.application.errors.llm import LanguageModelReplyError, LanguageModelUnavailableError
 from anamnesis.domain.errors.base import AppError, DomainError
 from anamnesis.domain.errors.chat import ChatStageError, ConsentRequiredError
 from anamnesis.domain.errors.common import ValidationError
 
-
-_logger: Final[logging.Logger] = logging.getLogger(__name__)
 
 _ERROR_STATUS_CODE: Final[Mapping[type[AppError], int]] = MappingProxyType(
     {
@@ -48,18 +42,13 @@ async def error_handler(_request: Request, exception: Exception) -> JSONResponse
         raise exception
 
     status_code: int = _status_code(exception)
-
-    response: dict[str, Any] = ErrorResponse(
+    response: ErrorResponse = ErrorResponse(
         status_code=status_code,
         code=exception.code,
         message=str(exception),
         detail=exception.context,
-    ).model_dump(mode="json")
-
-    if status_code >= status.HTTP_500_INTERNAL_SERVER_ERROR:
-        _logger.error("Request failed: %s", response, exc_info=exception)
-
-    return JSONResponse(status_code=status_code, content=response)
+    )
+    return JSONResponse(status_code=status_code, content=response.model_dump(mode="json"))
 
 
 def _status_code(exception: AppError) -> int:

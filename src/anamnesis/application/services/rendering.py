@@ -1,4 +1,3 @@
-from anamnesis.application.dto.views.chat import ChatView
 from anamnesis.application.dto.views.question import OptionView, QuestionView
 from anamnesis.application.dto.views.summary import (
     ApproximationView,
@@ -13,151 +12,211 @@ from anamnesis.application.dto.views.summary import (
     SummaryView,
     TermView,
 )
-from anamnesis.application.interfaces.localization.text_catalog import ITextCatalog
-from anamnesis.domain.entities.chat import Chat
-from anamnesis.domain.enums.crisis_category import CrisisCategory
-from anamnesis.domain.enums.referral import Referral
-from anamnesis.domain.enums.urgency_level import UrgencyLevel
+from anamnesis.application.interfaces.knowledge.knowledge_base import (
+    IKnowledgeBase,
+    PracticeGuide,
+)
+from anamnesis.application.interfaces.localization.concept_texts import IConceptTexts
+from anamnesis.application.interfaces.localization.dialogue_texts import IDialogueTexts
+from anamnesis.application.interfaces.localization.summary_texts import ISummaryTexts
+from anamnesis.domain.enums.crisis import CrisisCategory
+from anamnesis.domain.enums.recommendation import Referral, UrgencyLevel
 from anamnesis.domain.services.practice_selection import PracticeSelection
 from anamnesis.domain.types import LanguageCode, TermId
 from anamnesis.domain.value_objects.assessment import Assessment
 from anamnesis.domain.value_objects.case_facts import CaseFacts
+from anamnesis.domain.value_objects.clarification import Answer, Question
 from anamnesis.domain.value_objects.evidence import Evidence
-from anamnesis.domain.value_objects.inference import PracticeAdvice
 from anamnesis.domain.value_objects.narrative import Narrative
-from anamnesis.domain.value_objects.question import Answer, Question
+from anamnesis.domain.value_objects.practice import PracticeAdvice
 
 
 class ViewRenderer:
-    """Собирает представления из доменных объектов с текстами на языке чата."""
+    """Собирает представления для клиента из объектов домена с текстами на языке чата."""
 
-    def __init__(self, catalog: ITextCatalog, selection: PracticeSelection) -> None:
-        self._catalog: ITextCatalog = catalog
+    def __init__(
+        self,
+        *,
+        dialogue_texts: IDialogueTexts,
+        summary_texts: ISummaryTexts,
+        concept_texts: IConceptTexts,
+        knowledge: IKnowledgeBase,
+        selection: PracticeSelection,
+    ) -> None:
+        self._dialogue_texts: IDialogueTexts = dialogue_texts
+        self._summary_texts: ISummaryTexts = summary_texts
+        self._concept_texts: IConceptTexts = concept_texts
+        self._knowledge: IKnowledgeBase = knowledge
         self._selection: PracticeSelection = selection
 
-    @staticmethod
-    def chat(chat: Chat) -> ChatView:
-        return ChatView(
-            id=chat.id,
-            language=chat.language,
-            stage=chat.stage,
-            created_at=chat.created_at,
+    def question(self, language: LanguageCode, question: Question) -> QuestionView:
+        """Вопрос с вариантами ответа."""
+        options: tuple[OptionView, ...] = tuple(
+            OptionView(
+                code=code,
+                label=self._dialogue_texts.option(language, question.fact, code),
+            )
+            for code in question.options
         )
 
-    def question(self, question: Question, language: LanguageCode) -> QuestionView:
-        return QuestionView(
+        view: QuestionView = QuestionView(
             fact=question.fact,
-            text=self._catalog.question(question, language),
-            options=tuple(
-                OptionView(code=code, label=self._catalog.option(question.fact, code, language))
-                for code in question.options
-            ),
+            text=self._dialogue_texts.question(language, question),
+            options=options,
             multiple=question.multiple,
             free_text=question.free_text,
         )
+        return view
 
-    def answer(self, question: Question, answer: Answer, language: LanguageCode) -> str:
+    def answer(self, language: LanguageCode, question: Question, answer: Answer) -> str:
         """Ответ для истории: свой текст или подписи выбранных вариантов."""
         if answer.text is not None:
             return answer.text
-        return ", ".join(
-            self._catalog.option(question.fact, code, language) for code in answer.option_codes
+
+        labels: str = ", ".join(
+            self._dialogue_texts.option(language, question.fact, code)
+            for code in answer.option_codes
         )
+        return labels
 
     def summary(
         self,
+        language: LanguageCode,
         assessment: Assessment,
         facts: CaseFacts,
-        language: LanguageCode,
         narrative: Narrative | None = None,
     ) -> SummaryView:
         """Сводка; без готового текста описание и запрос берутся из шаблонов."""
-        return SummaryView(
+        texts: ISummaryTexts = self._summary_texts
+        description: str = (
+            narrative.description
+            if narrative is not None
+            else texts.fallback_description(language)
+        )
+        request: str = (
+            narrative.request if narrative is not None else texts.fallback_request(language)
+        )
+
+        summary: SummaryView = SummaryView(
             level=assessment.level,
-            phrase=self._phrase(assessment, language),
-            description=(
-                narrative.description
-                if narrative is not None
-                else self._catalog.fallback_description(language)
-            ),
-            specialist_request=(
-                narrative.request
-                if narrative is not None
-                else self._catalog.fallback_request(language)
-            ),
-            specialist=self._catalog.specialist(assessment.level, language),
+            phrase=self._phrase(language, assessment),
+            description=description,
+            specialist_request=request,
+            specialist=texts.specialist(language, assessment.level),
             crisis=assessment.crisis,
             referrals=tuple(
-                ReferralView(referral=referral, text=self._catalog.referral(referral, language))
+                ReferralView(referral=referral, text=texts.referral(language, referral))
                 for referral in assessment.referrals
             ),
-            helplines=self._helplines(assessment, language),
-            signals=tuple(
-                SignalView(category=signal.category, quote=signal.quote)
-                for signal in assessment.signals
-            ),
-            support_others=self._support_others(assessment, language),
-            practices=self._practices(assessment, language),
-            clusters=tuple(self._term(term, language) for term in assessment.clusters),
+            helplines=self._helplines(language, assessment),
+            signals=tuple(SignalView.from_domain(signal) for signal in assessment.signals),
+            support_others=self._support_others(language, assessment),
+            practices=self._practices(language, assessment),
+            clusters=tuple(self._term(language, term) for term in assessment.clusters),
             explanation=tuple(
-                RuleView(rule=rule, explanation=self._catalog.rule(rule, language))
+                RuleView(rule=rule, explanation=texts.rule(language, rule))
                 for rule in assessment.fired_rules
             ),
             missing=tuple(sorted(assessment.missing)),
-            approximations=self._approximations(facts, language),
-            case=self._case(facts, language),
-            disclaimer=self._catalog.disclaimer(language),
+            approximations=self._approximations(language, facts),
+            case=self._case(language, facts),
+            disclaimer=texts.disclaimer(language),
         )
+        return summary
 
-    def _approximations(
-        self,
-        facts: CaseFacts,
-        language: LanguageCode,
-    ) -> tuple[ApproximationView, ...]:
-        """Сведения, оценённые по размытым словам, с уверенностью."""
-        return tuple(
-            ApproximationView(
-                fact=fact,
-                confidence=confidence,
-                text=self._catalog.approximate(fact, language),
-            )
-            for fact, confidence in sorted(facts.confidence.items())
-        )
+    def _phrase(self, language: LanguageCode, assessment: Assessment) -> str | None:
+        """Формулировка уровня; L0 о самопомощи не показывается, если она запрещена."""
+        if assessment.level is UrgencyLevel.L0 and not assessment.self_help:
+            return None
+        return self._summary_texts.level(language, assessment.level)
 
     def _helplines(
         self,
-        assessment: Assessment,
         language: LanguageCode,
+        assessment: Assessment,
     ) -> tuple[HelplineView, ...]:
         """Контакты помощи — при любом срочном направлении."""
         urgent: set[Referral] = {Referral.CRISIS_HELPLINE, Referral.EMERGENCY_MEDICAL_CARE}
         if urgent.isdisjoint(assessment.referrals):
             return ()
-        return self._catalog.helplines(language)
 
-    def _support_others(self, assessment: Assessment, language: LanguageCode) -> str | None:
+        helplines: tuple[HelplineView, ...] = tuple(
+            HelplineView.from_helpline(helpline)
+            for helpline in self._knowledge.helplines(language)
+        )
+        return helplines
+
+    def _support_others(self, language: LanguageCode, assessment: Assessment) -> str | None:
         """Совет поддержать близкого, если пользователь тревожится за другого человека."""
         categories: set[CrisisCategory] = {signal.category for signal in assessment.signals}
         if CrisisCategory.OTHER_PERSON not in categories:
             return None
-        return self._catalog.support_others(language)
+        return self._summary_texts.support_others(language)
 
-    def _phrase(self, assessment: Assessment, language: LanguageCode) -> str | None:
-        """Формулировка уровня; L0 о самопомощи не показывается, если она запрещена."""
-        if assessment.level is UrgencyLevel.L0 and not assessment.self_help:
-            return None
-        return self._catalog.level(assessment.level, language)
+    def _practices(
+        self,
+        language: LanguageCode,
+        assessment: Assessment,
+    ) -> tuple[PracticeView, ...]:
+        """Практики для сводки; без проверенного документа практика не советуется."""
+        guides: dict[TermId, PracticeGuide] = {
+            advice.practice: guide
+            for advice in assessment.advised_practices
+            if (guide := self._knowledge.practice_guide(language, advice.practice)) is not None
+        }
 
-    def _case(self, facts: CaseFacts, language: LanguageCode) -> CaseView:
-        return CaseView(
-            manifestations=tuple(self._evidence(item, language) for item in facts.manifestations),
-            stressors=tuple(self._evidence(item, language) for item in facts.stressors),
+        selected: tuple[PracticeAdvice, ...] = self._selection.select(
+            (advice for advice in assessment.advised_practices if advice.practice in guides),
+            level=assessment.level,
+            clusters=assessment.clusters,
+        )
+
+        practices: tuple[PracticeView, ...] = tuple(
+            self._practice(language, advice, guides[advice.practice]) for advice in selected
+        )
+        return practices
+
+    def _practice(
+        self,
+        language: LanguageCode,
+        advice: PracticeAdvice,
+        guide: PracticeGuide,
+    ) -> PracticeView:
+        view: PracticeView = PracticeView(
+            term=advice.practice,
+            name=self._concept_texts.name(language, advice.practice),
+            description=self._concept_texts.description(language, advice.practice),
+            guide=PracticeGuideView.from_guide(guide),
+            cautions=tuple(self._term(language, term) for term in sorted(advice.cautions)),
+        )
+        return view
+
+    def _approximations(
+        self,
+        language: LanguageCode,
+        facts: CaseFacts,
+    ) -> tuple[ApproximationView, ...]:
+        """Сведения, оценённые по размытым словам, с уверенностью."""
+        approximations: tuple[ApproximationView, ...] = tuple(
+            ApproximationView(
+                fact=fact,
+                confidence=confidence,
+                text=self._summary_texts.approximate(language, fact),
+            )
+            for fact, confidence in sorted(facts.confidence.items())
+        )
+        return approximations
+
+    def _case(self, language: LanguageCode, facts: CaseFacts) -> CaseView:
+        view: CaseView = CaseView(
+            manifestations=tuple(self._evidence(language, item) for item in facts.manifestations),
+            stressors=tuple(self._evidence(language, item) for item in facts.stressors),
             unrecognized=facts.unrecognized,
             duration_weeks=facts.duration.weeks if facts.duration is not None else None,
             frequency=facts.frequency,
             impact=facts.impact,
             affected_domains=tuple(
-                self._term(term, language) for term in sorted(facts.affected_domains)
+                self._term(language, term) for term in sorted(facts.affected_domains)
             ),
             self_harm=facts.self_harm,
             sleep=facts.sleep,
@@ -167,47 +226,14 @@ class ViewRenderer:
             goal=facts.goal,
             refused=tuple(sorted(facts.refused)),
         )
+        return view
 
-    def _practices(
-        self,
-        assessment: Assessment,
-        language: LanguageCode,
-    ) -> tuple[PracticeView, ...]:
-        """Практики для сводки; без проверенного документа практика не советуется."""
-        guides: dict[TermId, PracticeGuideView] = {
-            advice.practice: guide
-            for advice in assessment.advised_practices
-            if (guide := self._catalog.practice_guide(advice.practice, language)) is not None
-        }
-        selected: tuple[PracticeAdvice, ...] = self._selection.select(
-            (advice for advice in assessment.advised_practices if advice.practice in guides),
-            level=assessment.level,
-            clusters=assessment.clusters,
-        )
-        return tuple(
-            self._practice(advice, guides[advice.practice], language) for advice in selected
-        )
-
-    def _practice(
-        self,
-        advice: PracticeAdvice,
-        guide: PracticeGuideView,
-        language: LanguageCode,
-    ) -> PracticeView:
-        return PracticeView(
-            term=advice.practice,
-            name=self._catalog.term(advice.practice, language),
-            description=self._catalog.description(advice.practice, language),
-            guide=guide,
-            cautions=tuple(self._term(term, language) for term in sorted(advice.cautions)),
-        )
-
-    def _evidence(self, evidence: Evidence, language: LanguageCode) -> EvidenceView:
+    def _evidence(self, language: LanguageCode, evidence: Evidence) -> EvidenceView:
         return EvidenceView(
             term=evidence.term,
-            name=self._catalog.term(evidence.term, language),
+            name=self._concept_texts.name(language, evidence.term),
             quote=evidence.quote,
         )
 
-    def _term(self, term: TermId, language: LanguageCode) -> TermView:
-        return TermView(term=term, name=self._catalog.term(term, language))
+    def _term(self, language: LanguageCode, term: TermId) -> TermView:
+        return TermView(term=term, name=self._concept_texts.name(language, term))

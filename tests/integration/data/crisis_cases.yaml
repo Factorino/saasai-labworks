@@ -85,6 +85,7 @@ replies:
 
 dialogues:
   - name: crisis_in_story
+    stage_before_crisis: story
     messages:
       - text: Последнее время всё плохо, хочу покончить с собой
     stage: crisis
@@ -95,6 +96,7 @@ dialogues:
     categories: [suicide]
 
   - name: crisis_in_answer_about_manifestations
+    stage_before_crisis: clarifying
     messages:
       - text: Сложно сказать, что со мной
       - text: Мне кажется, я хочу умереть
@@ -106,6 +108,7 @@ dialogues:
     categories: [suicide]
 
   - name: crisis_after_summary
+    stage_before_crisis: summary
     messages:
       - text: Мне грустно
       - options: [refuse]

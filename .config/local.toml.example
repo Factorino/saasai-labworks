@@ -21,8 +21,12 @@ docs_enabled = true
 allow_origins = ["*"]
 
 [knowledge]
-ontology_path = "ontology/anamnesis.owl"
+# Every language needs texts in locales/<language>/ and resources in
+# resources/<language>/; a missing file stops the service at startup.
+languages = ["ru"]
 locales_dir = "locales"
+resources_dir = "resources"
+ontology_path = "ontology/anamnesis.owl"
 # Membership functions of the fuzzy normalization; language independent.
 linguistic_variables_path = "knowledge/linguistic_variables.yaml"
 # Fixed instructions for the language model, one file per task.

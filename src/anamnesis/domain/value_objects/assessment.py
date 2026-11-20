@@ -1,13 +1,12 @@
-from typing import ClassVar
+from typing import override
 
 from anamnesis.domain.enums.fact_kind import FactKind
-from anamnesis.domain.enums.referral import Referral
-from anamnesis.domain.enums.urgency_level import UrgencyLevel
+from anamnesis.domain.enums.recommendation import Referral, UrgencyLevel
 from anamnesis.domain.errors.common import ValidationError
 from anamnesis.domain.types import RuleId, TermId
 from anamnesis.domain.value_objects.base import ValueObject, value_object
 from anamnesis.domain.value_objects.crisis_signal import CrisisSignal
-from anamnesis.domain.value_objects.inference import PracticeAdvice
+from anamnesis.domain.value_objects.practice import PracticeAdvice
 
 
 @value_object
@@ -29,23 +28,18 @@ class Assessment(ValueObject):
         missing: Обязательные сведения, которых не хватило.
     """
 
-    _FIELD_NAME: ClassVar[str] = "Assessment"
-
     level: UrgencyLevel | None
     crisis: bool = False
+
     fired_rules: tuple[RuleId, ...] = ()
     clusters: tuple[TermId, ...] = ()
+
     practices: tuple[PracticeAdvice, ...] = ()
     referrals: tuple[Referral, ...] = ()
+
     signals: tuple[CrisisSignal, ...] = ()
+
     missing: frozenset[FactKind] = frozenset()
-
-    def __post_init__(self) -> None:
-        self._validate()
-
-    def _validate(self) -> None:
-        if self.crisis and self.level is not UrgencyLevel.L3:
-            raise ValidationError(field=self._FIELD_NAME, reason="a crisis must have level L3")
 
     @property
     def insufficient_data(self) -> bool:
@@ -74,3 +68,8 @@ class Assessment(ValueObject):
     def advised_practices(self) -> tuple[PracticeAdvice, ...]:
         """Практики для сводки: все выведенные или ни одной."""
         return self.practices if self.self_help else ()
+
+    @override
+    def _validate(self) -> None:
+        if self.crisis and self.level is not UrgencyLevel.L3:
+            raise ValidationError(subject=self._type_name, reason="a crisis must have level L3")

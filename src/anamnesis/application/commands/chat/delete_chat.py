@@ -8,10 +8,18 @@ from anamnesis.domain.entities.chat import ChatId
 
 
 class DeleteChatRequest(DTO):
+    """Удаление чата по запросу пользователя.
+
+    Attributes:
+        chat_id: Идентификатор чата.
+    """
+
     chat_id: ChatId
 
 
 class DeleteChat(Interactor[DeleteChatRequest, None]):
+    """Удаляет чат со всеми сведениями."""
+
     def __init__(self, *, chat_repository: IChatRepository) -> None:
         self._chat_repo: IChatRepository = chat_repository
 

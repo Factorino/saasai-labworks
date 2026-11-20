@@ -1,30 +1,39 @@
-from collections.abc import Callable, Iterable, Mapping
-import logging
-from typing import Any, Final
+from collections.abc import Callable, Iterable
+from typing import Final
 
 from anamnesis.application.dto.base import DTO
-from anamnesis.application.dto.generation import AnswerReply, NarrativeReply
-from anamnesis.application.dto.views.summary import CaseView, PracticeView, SummaryView
+from anamnesis.application.dto.generation import (
+    AnswerData,
+    AnswerReply,
+    HistoryData,
+    NarrativeReply,
+    PracticeData,
+    SummaryData,
+)
+from anamnesis.application.dto.views.summary import SummaryView
 from anamnesis.application.errors.llm import (
     LanguageModelReplyError,
     LanguageModelUnavailableError,
 )
 from anamnesis.application.interfaces.llm.instructions import IInstructions, Instruction
-from anamnesis.application.interfaces.llm.language_model import ILanguageModel, ModelRequest
-from anamnesis.application.interfaces.safety.reply_guard import IReplyGuard
-from anamnesis.application.services.model_data import data_message
-from anamnesis.domain.enums.urgency_level import UrgencyLevel
+from anamnesis.application.interfaces.llm.language_model import (
+    ILanguageModel,
+    ModelData,
+    ModelRequest,
+)
+from anamnesis.application.interfaces.safety.reply_guard import IReplyGuard, ReplyViolation
+from anamnesis.domain.enums.recommendation import UrgencyLevel
 from anamnesis.domain.errors.common import ValidationError
 from anamnesis.domain.types import LanguageCode
 from anamnesis.domain.value_objects.message import Message
 from anamnesis.domain.value_objects.narrative import Narrative
-from anamnesis.domain.value_objects.reply_violation import ReplyViolation
 
-
-_logger: Final[logging.Logger] = logging.getLogger(__name__)
 
 _ATTEMPTS: Final[int] = 2
 """Первый ответ и одна перегенерация при нарушении."""
+
+type _ReplyTexts[OutputT] = Callable[[OutputT], Iterable[str]]
+"""Тексты ответа модели, которые проверяет `IReplyGuard`."""
 
 
 class TextGeneration:
@@ -48,11 +57,11 @@ class TextGeneration:
         self._guard: IReplyGuard = guard
         self._instructions: IInstructions = instructions
 
-    async def narrative(self, summary: SummaryView, language: LanguageCode) -> Narrative | None:
+    async def narrative(self, language: LanguageCode, summary: SummaryView) -> Narrative | None:
         """Описание состояния и запрос к специалисту или `None`."""
         reply: NarrativeReply | None = await self._generate(
             Instruction.SUMMARY,
-            _summary_data(summary, language),
+            SummaryData.from_summary(language, summary),
             NarrativeReply,
             texts=lambda item: (item.description, item.request),
             level=summary.level,
@@ -60,26 +69,28 @@ class TextGeneration:
         )
         if reply is None:
             return None
+
         try:
-            return Narrative(description=reply.description, request=reply.request)
-        except ValidationError as error:
-            _logger.warning("Generation ignores an invalid narrative: %s", error)
+            narrative: Narrative = Narrative(description=reply.description, request=reply.request)
+        except ValidationError:
             return None
+        return narrative
 
     async def reply(
         self,
+        language: LanguageCode,
         summary: SummaryView,
         messages: tuple[Message, ...],
-        language: LanguageCode,
     ) -> str | None:
         """Ответ на реплику после сводки или `None`; последняя реплика — вопрос."""
-        data: dict[str, Any] = {
-            "language": language,
-            "summary": _summary_data(summary, language),
-            "practices": [_practice_data(item) for item in summary.practices],
-            "history": [{"role": message.role, "text": message.text} for message in messages[:-1]],
-            "message": messages[-1].text,
-        }
+        data: AnswerData = AnswerData(
+            language=language,
+            summary=SummaryData.from_summary(language, summary),
+            practices=tuple(PracticeData.from_practice(item) for item in summary.practices),
+            history=tuple(HistoryData.from_domain(message) for message in messages[:-1]),
+            message=messages[-1].text,
+        )
+
         reply: AnswerReply | None = await self._generate(
             Instruction.REPLY,
             data,
@@ -88,47 +99,55 @@ class TextGeneration:
             level=summary.level,
             language=language,
         )
-        return reply.text.strip() or None if reply is not None else None
+        if reply is None:
+            return None
+
+        text: str = reply.text.strip()
+        return text or None
 
     async def _generate[OutputT: DTO](
         self,
         task: Instruction,
-        data: Mapping[str, Any],
+        data: ModelData,
         output: type[OutputT],
         *,
-        texts: Callable[[OutputT], Iterable[str]],
+        texts: _ReplyTexts[OutputT],
         level: UrgencyLevel | None,
         language: LanguageCode,
     ) -> OutputT | None:
         """Ответ, прошедший проверку, или `None`."""
-        instruction: str = self._instructions.text(task)
-        current: Mapping[str, Any] = data
+        request: ModelRequest = ModelRequest(instruction=self._instructions.text(task), data=data)
+
         for _ in range(_ATTEMPTS):
-            reply: OutputT | None = await self._ask(instruction, current, output)
+            reply: OutputT | None = await self._ask(request, output)
             if reply is None:
                 return None
+
             violations: list[ReplyViolation] = await self._violations(
                 texts(reply), language, level
             )
             if not violations:
                 return reply
-            _logger.warning("Generation rejected a reply: %s", violations)
-            instruction = self._corrected(task)
-            current = {**data, "rejected_fragments": [item.quote for item in violations]}
+
+            request = ModelRequest(
+                instruction=self._corrected(task),
+                data=data,
+                rejected_fragments=tuple(item.quote for item in violations),
+            )
+
         return None
 
     async def _ask[OutputT: DTO](
         self,
-        instruction: str,
-        data: Mapping[str, Any],
+        request: ModelRequest,
         output: type[OutputT],
     ) -> OutputT | None:
-        request = ModelRequest(instruction=instruction, messages=(data_message(data),))
+        """Ответ модели или `None`, если она недоступна или ответила не по схеме."""
         try:
-            return await self._model.complete_structured(request, output)
-        except (LanguageModelUnavailableError, LanguageModelReplyError) as error:
-            _logger.warning("Generation falls back to a template: %s", error)
+            reply: OutputT = await self._model.complete_structured(request, output)
+        except (LanguageModelUnavailableError, LanguageModelReplyError):
             return None
+        return reply
 
     async def _violations(
         self,
@@ -136,47 +155,14 @@ class TextGeneration:
         language: LanguageCode,
         level: UrgencyLevel | None,
     ) -> list[ReplyViolation]:
+        """Нарушения во всех текстах ответа."""
         found: list[ReplyViolation] = []
         for text in texts:
             found.extend(await self._guard.check(text, language, level))
         return found
 
     def _corrected(self, task: Instruction) -> str:
+        """Инструкция задачи с дополнением об исправлении отклонённых фрагментов."""
         return "\n\n".join(
             (self._instructions.text(task), self._instructions.text(Instruction.CORRECTION)),
         )
-
-
-def _practice_data(practice: PracticeView) -> dict[str, Any]:
-    """Документ подобранной практики: как её выполнять и когда нельзя."""
-    return {
-        "name": practice.name,
-        "description": practice.description,
-        "steps": list(practice.guide.steps),
-        "limits": list(practice.guide.limits),
-    }
-
-
-def _summary_data(summary: SummaryView, language: LanguageCode) -> dict[str, Any]:
-    """Результаты вывода и сведения для модели: только то, что описывает состояние."""
-    case: CaseView = summary.case
-    return {
-        "language": language,
-        "urgency": summary.phrase,
-        "reasons": [rule.explanation for rule in summary.explanation],
-        "manifestations": [
-            {"name": item.name, "quote": item.quote} for item in case.manifestations
-        ],
-        "stressors": [{"name": item.name, "quote": item.quote} for item in case.stressors],
-        "other": list(case.unrecognized),
-        "duration_weeks": case.duration_weeks,
-        "frequency": case.frequency.name.lower() if case.frequency is not None else None,
-        "impact": case.impact.name.lower() if case.impact is not None else None,
-        "affected_domains": [item.name for item in case.affected_domains],
-        "sleep": case.sleep,
-        "appetite": case.appetite,
-        "energy": case.energy,
-        "goal": case.goal,
-        "approximate": [item.fact for item in summary.approximations],
-        "not_reported": list(summary.missing),
-    }

@@ -1,3 +1,5 @@
+from typing import Final
+
 from dishka import BaseScope, Provider, Scope, provide_all
 from dishka.dependency_source import CompositeDependencySource
 
@@ -9,14 +11,18 @@ from anamnesis.application.queries.assessment.assess_case import AssessCase
 from anamnesis.application.queries.chat.get_summary import GetSummary
 
 
+INTERACTORS: Final[tuple[type, ...]] = (
+    StartChat,
+    PostMessage,
+    FinishChat,
+    DeleteChat,
+    GetSummary,
+    AssessCase,
+)
+"""Сценарии, доступные снаружи; при запуске собираются все, чтобы загрузить данные."""
+
+
 class InteractorsProvider(Provider):
     scope: BaseScope | None = Scope.REQUEST
 
-    interactors: CompositeDependencySource = provide_all(
-        StartChat,
-        PostMessage,
-        FinishChat,
-        DeleteChat,
-        GetSummary,
-        AssessCase,
-    )
+    interactors: CompositeDependencySource = provide_all(*INTERACTORS)

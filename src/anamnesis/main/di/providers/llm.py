@@ -12,7 +12,7 @@ class LLMProvider(Provider):
 
     @provide
     async def language_model(self, config: LLMConfig) -> AsyncIterator[ILanguageModel]:
-        model = OpenAICompatibleModel(
+        model: OpenAICompatibleModel = OpenAICompatibleModel(
             base_url=config.base_url,
             api_key=config.api_key.get_secret_value(),
             model=config.model,

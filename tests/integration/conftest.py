@@ -1,30 +1,35 @@
-"""Общее для интеграционных тестов: пропуск тестов с пометкой `llm` без модели."""
+from collections.abc import AsyncIterator
 
-from functools import cache
-
-from openai import APIError, OpenAI
+from dishka import AsyncContainer
 import pytest
 
 from anamnesis.main.config.config import Config
+from anamnesis.main.config.knowledge import KnowledgeConfig
+from anamnesis.main.di.container import create_container
+from anamnesis.main.startup import prepare
+from tests.integration.support.model import ScriptedModel, model_provider
+from tests.integration.support.service import Service
 
 
-@cache
-def _llm_available() -> bool:
-    """Отвечает ли сервер из настроек и есть ли на нём нужная модель."""
-    settings = Config.load().llm
-    with OpenAI(
-        base_url=settings.base_url,
-        api_key=settings.api_key.get_secret_value(),
-        timeout=settings.connect_timeout,
-        max_retries=0,
-    ) as client:
-        try:
-            return settings.model in {model.id for model in client.models.list()}
-        except APIError:
-            return False
+@pytest.fixture(scope="session")
+def scripted_model() -> ScriptedModel:
+    return ScriptedModel()
 
 
-@pytest.fixture(autouse=True)
-def require_llm(request: pytest.FixtureRequest) -> None:
-    if request.node.get_closest_marker("llm") is not None and not _llm_available():
-        pytest.skip("language model is unavailable")
+@pytest.fixture
+def model(scripted_model: ScriptedModel) -> ScriptedModel:
+    scripted_model.reset()
+    return scripted_model
+
+
+@pytest.fixture(scope="session")
+async def container(scripted_model: ScriptedModel) -> AsyncIterator[AsyncContainer]:
+    config: Config = Config.model_construct(knowledge=KnowledgeConfig())
+    async with create_container(config, model_provider(scripted_model)) as app:
+        await prepare(app)
+        yield app
+
+
+@pytest.fixture
+def service(container: AsyncContainer, model: ScriptedModel) -> Service:
+    return Service(container)

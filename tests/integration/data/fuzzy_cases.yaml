@@ -29,14 +29,14 @@ duration:
   - {text: не помню, value: null, confidence: null}
 
 frequency:
-  - {text: почти каждый день, value: most_days, confidence: 1.0}
-  - {text: каждый день, value: constantly, confidence: 1.0}
-  - {text: "постоянно, не проходит", value: constantly, confidence: 1.0}
-  - {text: иногда, value: rarely, confidence: 1.0}
-  - {text: пару раз в неделю, value: several_times_a_week, confidence: 1.0}
-  - {text: часто, value: most_days, confidence: 0.75}
-  - {text: 3 раза в неделю, value: several_times_a_week, confidence: null}
-  - {text: 4 дня в неделю, value: most_days, confidence: null}
+  - {text: почти каждый день, value: frequent, confidence: 1.0}
+  - {text: каждый день, value: constant, confidence: 1.0}
+  - {text: "постоянно, не проходит", value: constant, confidence: 1.0}
+  - {text: иногда, value: rare, confidence: 1.0}
+  - {text: пару раз в неделю, value: intermittent, confidence: 1.0}
+  - {text: часто, value: frequent, confidence: 0.75}
+  - {text: 3 раза в неделю, value: intermittent, confidence: null}
+  - {text: 4 дня в неделю, value: frequent, confidence: null}
   - {text: по-разному, value: null, confidence: null}
 
 impact:

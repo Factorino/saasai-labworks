@@ -19,19 +19,13 @@ from anamnesis.main.config.service import ServiceConfig
 
 
 CONFIG_FILE_VARIABLE: Final[str] = "CONFIG_FILE"
+"""Переменная окружения с путём к файлу настроек."""
 
 DEFAULT_CONFIG_FILE: Final[str] = "./.config/local.toml"
+"""Файл настроек по умолчанию; его может не быть."""
 
 _PATH: Final[ContextVar[str | None]] = ContextVar("config_path")
-
-
-def _resolve_path(path: str | None) -> str | None:
-    requested: str | None = path or os.environ.get(CONFIG_FILE_VARIABLE)
-    if requested is None:
-        return DEFAULT_CONFIG_FILE if Path(DEFAULT_CONFIG_FILE).is_file() else None
-    if not Path(requested).is_file():
-        raise ValueError(f"Configuration file not found at {requested}")
-    return requested
+"""Файл настроек текущей загрузки: `settings_customise_sources` не принимает аргументов."""
 
 
 class Config(BaseSettings):
@@ -76,3 +70,12 @@ class Config(BaseSettings):
         if path is not None:
             sources.append(TomlConfigSettingsSource(settings_cls, toml_file=path))
         return tuple(sources)
+
+
+def _resolve_path(path: str | None) -> str | None:
+    requested: str | None = path or os.environ.get(CONFIG_FILE_VARIABLE)
+    if requested is None:
+        return DEFAULT_CONFIG_FILE if Path(DEFAULT_CONFIG_FILE).is_file() else None
+    if not Path(requested).is_file():
+        raise ValueError(f"Configuration file not found at {requested}")
+    return requested

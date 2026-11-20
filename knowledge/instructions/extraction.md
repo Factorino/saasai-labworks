@@ -13,8 +13,14 @@ Rules:
 4. Put complaints about the person's state that fit no listed concept into "other" as exact fragments. Answers about time, frequency or impact are not complaints.
 5. Choose a duration, frequency or impact term only when the text states it for the person's own complaints, not for outside events such as deadlines; never guess, never convert to numbers. For a starting point, count the time from it to "today".
    - duration: recently (less than two weeks), few_weeks (two or three weeks), about_month (about a month), long_time (two months or more).
-   - frequency: rarely, several_times_a_week, most_days, constantly.
+   - frequency: rare (now and then), intermittent (several times a week), frequent (most days), constant (almost all the time).
    - impact on work, relationships and daily tasks: none, mild, moderate, severe (cannot cope with ordinary tasks).
 6. Fill "goal" only if the person says what they want from a specialist, with an exact fragment copied from the text.
 7. Thoughts of death, suicide or self-harm are handled by a separate procedure: do not report them in any field.
 8. Reply with the JSON object only.
+
+Manifestation concepts:
+$manifestations
+
+Stressor concepts:
+$stressors

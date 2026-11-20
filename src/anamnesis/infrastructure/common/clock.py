@@ -7,4 +7,4 @@ from anamnesis.application.interfaces.common.clock import IClock
 class SystemClock(IClock):
     @override
     def now(self) -> datetime:
-        return datetime.now(UTC)
+        return datetime.now(tz=UTC)

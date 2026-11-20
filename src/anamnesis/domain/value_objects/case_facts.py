@@ -1,13 +1,12 @@
 from collections.abc import Iterable, Mapping
 from dataclasses import field
 from types import MappingProxyType
-from typing import Any, ClassVar, Final
+from typing import Any, ClassVar, Final, override
 
 from anamnesis.domain.enums.change_direction import ChangeDirection
+from anamnesis.domain.enums.crisis import SelfHarmScreening
 from anamnesis.domain.enums.fact_kind import ESTIMATED_FACTS, REQUIRED_FACTS, FactKind
-from anamnesis.domain.enums.frequency import Frequency
-from anamnesis.domain.enums.impact_degree import ImpactDegree
-from anamnesis.domain.enums.self_harm_screening import SelfHarmScreening
+from anamnesis.domain.enums.scales import Frequency, ImpactDegree
 from anamnesis.domain.errors.common import ValidationError
 from anamnesis.domain.types import TermId
 from anamnesis.domain.value_objects.base import ValueObject, value_object
@@ -60,7 +59,6 @@ class CaseFacts(ValueObject):
         refused: От каких вопросов человек отказался; их не задают повторно.
     """
 
-    _FIELD_NAME: ClassVar[str] = "CaseFacts"
     _MAX_GOAL_LENGTH: ClassVar[int] = 1000
     """Предел длины цели обращения в символах."""
 
@@ -84,10 +82,6 @@ class CaseFacts(ValueObject):
 
     goal: str | None = None
     refused: frozenset[FactKind] = frozenset()
-
-    def __post_init__(self) -> None:
-        self._normalize()
-        self._validate()
 
     @property
     def manifestation_terms(self) -> tuple[TermId, ...]:
@@ -194,7 +188,8 @@ class CaseFacts(ValueObject):
         """
         recognized: bool = bool(extracted.manifestations or extracted.unrecognized)
         unrecognized: tuple[str, ...] = () if recognized else (text,)
-        return self.merge(extracted).merge(CaseFacts(unrecognized=unrecognized))
+        absorbed: CaseFacts = self.merge(extracted).merge(CaseFacts(unrecognized=unrecognized))
+        return absorbed
 
     def _merge_confidence(self, newer: "CaseFacts") -> Mapping[FactKind, float]:
         """Уверенность берётся вместе со значением: новое значение приносит свою."""
@@ -211,6 +206,7 @@ class CaseFacts(ValueObject):
             return newer
         return self.self_harm if self.self_harm is not None else newer
 
+    @override
     def _normalize(self) -> None:
         self._normalize_evidence()
         self._normalize_goal()
@@ -243,6 +239,7 @@ class CaseFacts(ValueObject):
             ),
         )
 
+    @override
     def _validate(self) -> None:
         self._validate_goal()
         self._validate_confidence()
@@ -250,7 +247,7 @@ class CaseFacts(ValueObject):
     def _validate_goal(self) -> None:
         if self.goal is not None and len(self.goal) > self._MAX_GOAL_LENGTH:
             raise ValidationError(
-                field=self._FIELD_NAME,
+                subject=self._type_name,
                 reason=f"goal must not exceed {self._MAX_GOAL_LENGTH} characters",
             )
 
@@ -258,12 +255,12 @@ class CaseFacts(ValueObject):
         for kind, value in self.confidence.items():
             if kind not in ESTIMATED_FACTS:
                 raise ValidationError(
-                    field=self._FIELD_NAME,
+                    subject=self._type_name,
                     reason=f"'{kind}' cannot have a confidence",
                 )
             if not 0 < value <= 1:
                 raise ValidationError(
-                    field=self._FIELD_NAME,
+                    subject=self._type_name,
                     reason=f"confidence of '{kind}' must be in (0, 1]",
                 )
 
@@ -284,4 +281,5 @@ def _unique_by_term(items: Iterable[Evidence]) -> tuple[Evidence, ...]:
 def _unique_quotes(quotes: Iterable[str]) -> tuple[str, ...]:
     """Цитаты без повторов и пустых, в исходном порядке."""
     unique: dict[str, Any] = dict.fromkeys(quote.strip() for quote in quotes)
-    return tuple(quote for quote in unique if quote)
+    non_empty: tuple[str, ...] = tuple(quote for quote in unique if quote)
+    return non_empty

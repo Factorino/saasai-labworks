@@ -1,6 +1,6 @@
-from typing import ClassVar
+from typing import override
 
-from anamnesis.domain.enums.crisis_category import CrisisCategory
+from anamnesis.domain.enums.crisis import CrisisCategory
 from anamnesis.domain.errors.common import ValidationError
 from anamnesis.domain.value_objects.base import ValueObject, value_object
 
@@ -14,18 +14,14 @@ class CrisisSignal(ValueObject):
         quote: Фрагмент реплики.
     """
 
-    _FIELD_NAME: ClassVar[str] = "CrisisSignal"
-
     category: CrisisCategory
     quote: str
 
-    def __post_init__(self) -> None:
-        self._normalize()
-        self._validate()
-
+    @override
     def _normalize(self) -> None:
         self._set("quote", self.quote.strip())
 
+    @override
     def _validate(self) -> None:
         if not self.quote:
-            raise ValidationError(field=self._FIELD_NAME, reason="quote must not be empty")
+            raise ValidationError(subject=self._type_name, reason="quote must not be empty")

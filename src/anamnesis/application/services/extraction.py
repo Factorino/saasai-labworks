@@ -1,9 +1,14 @@
-from collections.abc import Iterable, Mapping
-import logging
-from typing import Any, Final
+from collections.abc import Iterable
+from typing import Final
 
 from anamnesis.application.dto.estimate import Estimate, LinguisticTerm
-from anamnesis.application.dto.extraction import ExtractionReply, FoundConcept, reply_model
+from anamnesis.application.dto.extraction import (
+    CandidateData,
+    ExtractionData,
+    ExtractionReply,
+    FoundConcept,
+    reply_model,
+)
 from anamnesis.application.errors.llm import (
     LanguageModelReplyError,
     LanguageModelUnavailableError,
@@ -13,10 +18,9 @@ from anamnesis.application.interfaces.extraction.estimate_extractor import IEsti
 from anamnesis.application.interfaces.extraction.fact_extractor import IFactExtractor
 from anamnesis.application.interfaces.extraction.fact_normalizer import IFactNormalizer
 from anamnesis.application.interfaces.knowledge.vocabulary import IOntologyVocabulary, Vocabulary
-from anamnesis.application.interfaces.llm.instructions import IInstructions, Instruction
+from anamnesis.application.interfaces.llm.instructions import ConceptEntry, IInstructions
 from anamnesis.application.interfaces.llm.language_model import ILanguageModel, ModelRequest
-from anamnesis.application.interfaces.localization.text_catalog import ITextCatalog
-from anamnesis.application.services.model_data import data_message
+from anamnesis.application.interfaces.localization.concept_texts import IConceptTexts
 from anamnesis.domain.enums.fact_kind import ESTIMATED_FACTS, FactKind
 from anamnesis.domain.errors.common import ValidationError
 from anamnesis.domain.types import LanguageCode, TermId
@@ -24,10 +28,11 @@ from anamnesis.domain.value_objects.case_facts import CaseFacts
 from anamnesis.domain.value_objects.evidence import Evidence
 
 
-_logger: Final[logging.Logger] = logging.getLogger(__name__)
-
 _TEMPERATURE: Final[float] = 0.0
 """Извлечение должно быть воспроизводимым."""
+
+type _TermAnswer = tuple[FactKind, LinguisticTerm | None]
+"""Терм, который модель назвала для оцениваемого сведения; `None` — не назвала."""
 
 
 class FactExtraction:
@@ -38,8 +43,8 @@ class FactExtraction:
     лингвистических переменных. Ответ модели проверяется ещё раз: чужие и
     зарезервированные понятия отбрасываются, цитата и цель сохраняются, только
     если они есть в реплике. Скрининг самоповреждения из текста не берётся, а
-    влияние — только из ответа на вопрос о нём. Если
-    модель недоступна или ответила неверно, остаётся результат словаря.
+    влияние — только из ответа на вопрос о нём. Если модель недоступна или
+    ответила неверно, остаётся результат словаря.
     """
 
     def __init__(
@@ -51,7 +56,7 @@ class FactExtraction:
         model: ILanguageModel,
         vocabulary: IOntologyVocabulary,
         instructions: IInstructions,
-        catalog: ITextCatalog,
+        concept_texts: IConceptTexts,
         clock: IClock,
     ) -> None:
         self._lexicon: IFactExtractor = lexicon
@@ -60,8 +65,9 @@ class FactExtraction:
         self._model: ILanguageModel = model
         self._vocabulary: Vocabulary = vocabulary.vocabulary()
         self._instructions: IInstructions = instructions
-        self._catalog: ITextCatalog = catalog
+        self._concept_texts: IConceptTexts = concept_texts
         self._clock: IClock = clock
+
         self._manifestations: frozenset[TermId] = (
             self._vocabulary.manifestations - self._vocabulary.reserved
         )
@@ -73,12 +79,27 @@ class FactExtraction:
             frequencies=normalizer.terms(FactKind.FREQUENCY),
             impacts=normalizer.terms(FactKind.IMPACT),
         )
-        self._system_texts: dict[LanguageCode, str] = {}
+        self._instruction_texts: dict[LanguageCode, str] = {}
+
+    @staticmethod
+    def _evidence(
+        items: Iterable[FoundConcept],
+        allowed: frozenset[TermId],
+        known: set[TermId],
+        text: str,
+    ) -> tuple[Evidence, ...]:
+        """Допустимые понятия, которых ещё нет у словаря; цитата — только из реплики."""
+        evidence: tuple[Evidence, ...] = tuple(
+            Evidence(term=item.term, quote=item.quote if _contains(text, item.quote) else "")
+            for item in items
+            if item.term in allowed and item.term not in known
+        )
+        return evidence
 
     async def extract(
         self,
-        text: str,
         language: LanguageCode,
+        text: str,
         question: FactKind | None = None,
         *,
         with_model: bool = True,
@@ -86,92 +107,107 @@ class FactExtraction:
         """Сведения из реплики.
 
         Args:
-            text: Рассказ или свой ответ на вопрос.
             language: Язык реплики.
+            text: Рассказ или свой ответ на вопрос.
             question: На какой вопрос ответ; `None` — свободный рассказ. В ответе
                 о длительности, частоте или влиянии число или выражение из
                 словаря важнее терма модели, а если оно нашлось, модель не нужна.
             with_model: Звать ли модель; в кризисе работает только словарь.
+
+        Returns:
+            Сведения из словаря, дополненные ответом модели.
         """
         found: CaseFacts = await self._lexicon.extract(text, language)
-        estimated: CaseFacts | None = await self._estimate(text, language, question)
+
+        estimated: CaseFacts | None = await self._estimate(language, text, question)
         if estimated is not None:
             return found.merge(estimated)
         if not with_model:
             return found
-        reply: ExtractionReply | None = await self._ask_model(text, language, question, found)
+
+        reply: ExtractionReply | None = await self._ask_model(language, text, question, found)
         modelled: CaseFacts = (
             self._facts(reply, text, found, question) if reply is not None else CaseFacts()
         )
-        return found.merge(modelled)
+
+        extracted: CaseFacts = found.merge(modelled)
+        return extracted
 
     async def _estimate(
         self,
-        text: str,
         language: LanguageCode,
+        text: str,
         question: FactKind | None,
     ) -> CaseFacts | None:
         """Оценка по словарю — только в ответе на вопрос об оцениваемом сведении."""
-        if question not in ESTIMATED_FACTS:
+        if question is None or question not in ESTIMATED_FACTS:
             return None
+
         estimate: Estimate | None = await self._estimator.extract(text, question, language)
         return self._normalizer.normalize(estimate) if estimate is not None else None
 
     async def _ask_model(
         self,
-        text: str,
         language: LanguageCode,
+        text: str,
         question: FactKind | None,
         found: CaseFacts,
     ) -> ExtractionReply | None:
         """Ответ модели или `None`, если она недоступна или ответила неверно."""
-        request = ModelRequest(
-            instruction=self._system_text(language),
-            messages=(data_message(self._data(text, question, found)),),
+        request: ModelRequest = ModelRequest(
+            instruction=self._instruction(language),
+            data=self._data(text, question, found),
             temperature=_TEMPERATURE,
         )
+
         try:
-            return await self._model.complete_structured(request, self._reply_model)
-        except (LanguageModelUnavailableError, LanguageModelReplyError) as error:
-            _logger.warning("Extraction falls back to the lexicon: %s", error)
+            reply: ExtractionReply = await self._model.complete_structured(
+                request, self._reply_model
+            )
+        except (LanguageModelUnavailableError, LanguageModelReplyError):
             return None
+        return reply
 
-    def _system_text(self, language: LanguageCode) -> str:
-        """Инструкция и перечень понятий с названиями на языке реплики."""
-        if language not in self._system_texts:
-            sections: list[str] = [
-                self._instructions.text(Instruction.EXTRACTION),
-                "Manifestation concepts:\n" + self._concept_list(self._manifestations, language),
-                "Stressor concepts:\n" + self._concept_list(self._stressors, language),
-            ]
-            self._system_texts[language] = "\n\n".join(sections)
-        return self._system_texts[language]
+    def _instruction(self, language: LanguageCode) -> str:
+        """Инструкция с перечнями понятий на языке реплики; строится один раз на язык."""
+        if language not in self._instruction_texts:
+            self._instruction_texts[language] = self._instructions.extraction(
+                manifestations=self._concept_entries(language, self._manifestations),
+                stressors=self._concept_entries(language, self._stressors),
+            )
 
-    def _concept_list(self, terms: Iterable[TermId], language: LanguageCode) -> str:
-        lines: list[str] = []
-        for term in sorted(terms):
-            description: str = self._catalog.description(term, language)
-            name: str = self._catalog.term(term, language)
-            lines.append(f"- {term}: {name}" + (f" — {description}" if description else ""))
-        return "\n".join(lines)
+        return self._instruction_texts[language]
 
-    def _data(
+    def _concept_entries(
         self,
-        text: str,
-        question: FactKind | None,
-        found: CaseFacts,
-    ) -> Mapping[str, Any]:
+        language: LanguageCode,
+        terms: Iterable[TermId],
+    ) -> tuple[ConceptEntry, ...]:
+        """Понятия перечня по идентификатору: с названием и описанием на языке реплики."""
+        entries: tuple[ConceptEntry, ...] = tuple(
+            ConceptEntry(
+                term=term,
+                name=self._concept_texts.name(language, term),
+                description=self._concept_texts.description(language, term),
+            )
+            for term in sorted(terms)
+        )
+        return entries
+
+    def _data(self, text: str, question: FactKind | None, found: CaseFacts) -> ExtractionData:
         """Реплика и кандидаты словаря как данные для модели."""
-        candidates: list[dict[str, str]] = [
-            {"concept": self._concept(evidence.term), "quote": evidence.quote}
+        candidates: tuple[CandidateData, ...] = tuple(
+            CandidateData(concept=self._concept(evidence.term), quote=evidence.quote)
             for evidence in (*found.manifestations, *found.stressors)
-        ]
-        return {
-            "text": text,
-            "question": question,
-            "today": self._clock.now().date().isoformat(),
-            "candidates": candidates,
-        }
+        )
+
+        data: ExtractionData = ExtractionData(
+            text=text,
+            question=question,
+            today=self._clock.now().date(),
+            candidates=candidates,
+        )
+        return data
 
     def _facts(
         self,
@@ -192,8 +228,14 @@ class FactExtraction:
         known: set[TermId] = {
             self._concept(evidence.term) for evidence in (*found.manifestations, *found.stressors)
         }
+        terms: tuple[_TermAnswer, ...] = (
+            (FactKind.DURATION, reply.duration),
+            (FactKind.FREQUENCY, reply.frequency),
+            (FactKind.IMPACT, reply.impact if question is FactKind.IMPACT else None),
+        )
+
         try:
-            facts = CaseFacts(
+            facts: CaseFacts = CaseFacts(
                 manifestations=self._evidence(
                     reply.manifestations, self._manifestations, known, text
                 ),
@@ -205,37 +247,21 @@ class FactExtraction:
                 ),
                 goal=reply.goal if reply.goal and _contains(text, reply.goal) else None,
             )
-            for fact, term in (
-                (FactKind.DURATION, reply.duration),
-                (FactKind.FREQUENCY, reply.frequency),
-                (FactKind.IMPACT, reply.impact if question is FactKind.IMPACT else None),
-            ):
+            for fact, term in terms:
                 facts = facts.merge(self._term_facts(fact, term))
-        except (ValidationError, ValueError) as error:
-            _logger.warning("Extraction ignores an invalid model reply: %s", error)
+        except (ValidationError, ValueError):
             return CaseFacts()
+
         return facts
 
-    @staticmethod
-    def _evidence(
-        items: Iterable[FoundConcept],
-        allowed: frozenset[TermId],
-        known: set[TermId],
-        text: str,
-    ) -> tuple[Evidence, ...]:
-        """Допустимые понятия, которых ещё нет у словаря; цитата — только из реплики."""
-        return tuple(
-            Evidence(term=item.term, quote=item.quote if _contains(text, item.quote) else "")
-            for item in items
-            if item.term in allowed and item.term not in known
-        )
-
     def _term_facts(self, fact: FactKind, term: LinguisticTerm | None) -> CaseFacts:
+        """Сведения из терма модели: размытая оценка с единственным термом степени 1."""
         if term is None:
             return CaseFacts()
         return self._normalizer.normalize(Estimate(fact=fact, terms={term: 1.0}))
 
     def _concept(self, term: TermId) -> TermId:
+        """Понятие, к которому относится термин словаря."""
         return self._vocabulary.concepts.get(term, term)
 
 

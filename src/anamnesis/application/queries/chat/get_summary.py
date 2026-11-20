@@ -10,14 +10,28 @@ from anamnesis.domain.entities.chat import Chat, ChatId
 
 
 class GetSummaryRequest(DTO):
+    """Запрос выданной сводки.
+
+    Attributes:
+        chat_id: Идентификатор чата.
+    """
+
     chat_id: ChatId
 
 
 class GetSummaryResponse(DTO):
+    """Выданная сводка.
+
+    Attributes:
+        summary: Сводка с сохранённым текстом, без повторной генерации.
+    """
+
     summary: SummaryView
 
 
 class GetSummary(Interactor[GetSummaryRequest, GetSummaryResponse]):
+    """Отдаёт выданную сводку чата."""
+
     def __init__(self, *, chat_repository: IChatRepository, renderer: ViewRenderer) -> None:
         self._chat_repo: IChatRepository = chat_repository
         self._renderer: ViewRenderer = renderer
@@ -29,8 +43,8 @@ class GetSummary(Interactor[GetSummaryRequest, GetSummaryResponse]):
             raise ChatNotFoundError(value=request.chat_id)
         if chat.assessment is None:
             raise SummaryNotFoundError(value=request.chat_id)
-        return GetSummaryResponse(
-            summary=self._renderer.summary(
-                chat.assessment, chat.facts, chat.language, chat.narrative
-            ),
+
+        summary: SummaryView = self._renderer.summary(
+            chat.language, chat.assessment, chat.facts, chat.narrative
         )
+        return GetSummaryResponse(summary=summary)

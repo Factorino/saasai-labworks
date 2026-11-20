@@ -1,24 +1,27 @@
-from typing import ClassVar
+from typing import override
 
-from anamnesis.domain.enums.message_role import MessageRole
+from anamnesis.domain.enums.chat import MessageRole
 from anamnesis.domain.errors.common import ValidationError
 from anamnesis.domain.value_objects.base import ValueObject, value_object
 
 
 @value_object
 class Message(ValueObject):
-    _FIELD_NAME: ClassVar[str] = "Message"
+    """Реплика в истории диалога.
+
+    Attributes:
+        role: Автор реплики.
+        text: Текст на языке диалога.
+    """
 
     role: MessageRole
     text: str
 
-    def __post_init__(self) -> None:
-        self._normalize()
-        self._validate()
-
+    @override
     def _normalize(self) -> None:
         self._set("text", self.text.strip())
 
+    @override
     def _validate(self) -> None:
         if not self.text:
-            raise ValidationError(field=self._FIELD_NAME, reason="text must not be empty")
+            raise ValidationError(subject=self._type_name, reason="text must not be empty")

@@ -8,7 +8,7 @@ from anamnesis.domain.enums.fact_kind import ESTIMATED_FACTS, FactKind
 
 
 LinguisticTerm = NewType("LinguisticTerm", str)
-"""Терм лингвистической переменной: `few_weeks`, `most_days`, `moderate`."""
+"""Терм лингвистической переменной: `few_weeks`, `frequent`, `moderate`."""
 
 
 class Estimate(DTO):
@@ -29,17 +29,17 @@ class Estimate(DTO):
     )
     value: float | None = Field(default=None, ge=0)
 
-    @property
-    def is_exact(self) -> bool:
-        """Оценка — число, а не размытые слова."""
-        return self.value is not None
-
     @field_validator("fact")
     @classmethod
     def _validate_fact(cls, fact: FactKind) -> FactKind:
         if fact not in ESTIMATED_FACTS:
             raise ValueError(f"'{fact}' is not an estimated fact")
         return fact
+
+    @property
+    def is_exact(self) -> bool:
+        """Оценка — число, а не размытые слова."""
+        return self.value is not None
 
     @model_validator(mode="after")
     def _validate_source(self) -> Self:

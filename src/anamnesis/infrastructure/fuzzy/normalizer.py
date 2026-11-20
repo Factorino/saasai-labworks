@@ -7,11 +7,11 @@ from typing import Final, override
 from anamnesis.application.dto.estimate import Estimate, LinguisticTerm
 from anamnesis.application.interfaces.extraction.fact_normalizer import IFactNormalizer
 from anamnesis.domain.enums.fact_kind import FactKind
-from anamnesis.domain.enums.frequency import Frequency
-from anamnesis.domain.enums.impact_degree import ImpactDegree
+from anamnesis.domain.enums.scales import Frequency, ImpactDegree
 from anamnesis.domain.value_objects.case_facts import CaseFacts
 from anamnesis.domain.value_objects.duration import Duration
 from anamnesis.infrastructure.fuzzy.linguistic_variable import LinguisticVariable
+from anamnesis.infrastructure.fuzzy.variables import LinguisticVariables
 
 
 _PRECISION: Final[int] = 2
@@ -28,8 +28,8 @@ class FuzzyFactNormalizer(IFactNormalizer):
     получает.
     """
 
-    def __init__(self, variables: Mapping[FactKind, LinguisticVariable]) -> None:
-        self._variables: Mapping[FactKind, LinguisticVariable] = variables
+    def __init__(self, variables: LinguisticVariables) -> None:
+        self._variables: LinguisticVariables = variables
         self._frequencies: Mapping[LinguisticTerm, Frequency] = _scale(
             variables[FactKind.FREQUENCY], Frequency
         )

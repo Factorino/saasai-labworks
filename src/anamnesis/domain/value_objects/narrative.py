@@ -1,4 +1,4 @@
-from typing import ClassVar
+from typing import override
 
 from anamnesis.domain.errors.common import ValidationError
 from anamnesis.domain.value_objects.base import ValueObject, value_object
@@ -13,19 +13,15 @@ class Narrative(ValueObject):
         request: Запрос к специалисту от первого лица.
     """
 
-    _FIELD_NAME: ClassVar[str] = "Narrative"
-
     description: str
     request: str
 
-    def __post_init__(self) -> None:
-        self._normalize()
-        self._validate()
-
+    @override
     def _normalize(self) -> None:
         self._set("description", self.description.strip())
         self._set("request", self.request.strip())
 
+    @override
     def _validate(self) -> None:
         if not self.description or not self.request:
-            raise ValidationError(field=self._FIELD_NAME, reason="texts must not be empty")
+            raise ValidationError(subject=self._type_name, reason="texts must not be empty")

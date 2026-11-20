@@ -1,12 +1,11 @@
 from collections.abc import Collection, Iterable, Mapping
 from types import MappingProxyType
-from typing import ClassVar, Final
+from typing import Final
 
-from anamnesis.domain.enums.urgency_level import UrgencyLevel
+from anamnesis.domain.enums.recommendation import UrgencyLevel
 from anamnesis.domain.errors.common import ValidationError
 from anamnesis.domain.types import TermId
-from anamnesis.domain.value_objects.base import ValueObject, value_object
-from anamnesis.domain.value_objects.inference import PracticeAdvice
+from anamnesis.domain.value_objects.practice import LevelSelection, PracticeAdvice
 
 
 _SELF_HELP_LEVELS: Final[frozenset[UrgencyLevel | None]] = frozenset(
@@ -14,27 +13,8 @@ _SELF_HELP_LEVELS: Final[frozenset[UrgencyLevel | None]] = frozenset(
 )
 """Уровни, на которых советуется самопомощь; `None` — уровень не определён."""
 
-
-@value_object
-class LevelSelection(ValueObject):
-    """Подбор практик на одном уровне срочности.
-
-    Attributes:
-        limit: Сколько практик показать.
-        excluded: Практики, которые на этом уровне не советуются.
-    """
-
-    _FIELD_NAME: ClassVar[str] = "LevelSelection"
-
-    limit: int
-    excluded: frozenset[TermId] = frozenset()
-
-    def __post_init__(self) -> None:
-        self._validate()
-
-    def _validate(self) -> None:
-        if self.limit < 1:
-            raise ValidationError(field=self._FIELD_NAME, reason="limit must be positive")
+type LevelSelections = Mapping[UrgencyLevel | None, LevelSelection]
+"""Правила подбора практик по уровням; `None` — уровень не определён."""
 
 
 class PracticeSelection:
@@ -46,9 +26,9 @@ class PracticeSelection:
     большему числу кластеров. Практика с ограничением идёт после остальных.
     """
 
-    def __init__(self, levels: Mapping[UrgencyLevel | None, LevelSelection]) -> None:
+    def __init__(self, levels: LevelSelections) -> None:
         self._validate(levels)
-        self._levels: Mapping[UrgencyLevel | None, LevelSelection] = MappingProxyType(dict(levels))
+        self._levels: LevelSelections = MappingProxyType(dict(levels))
 
     def select(
         self,
@@ -61,25 +41,31 @@ class PracticeSelection:
         rule: LevelSelection | None = self._levels.get(level)
         if rule is None:
             return ()
+
         candidates: list[PracticeAdvice] = sorted(
             (advice for advice in advices if advice.practice not in rule.excluded),
             key=_priority,
         )
+
         chosen: dict[TermId, PracticeAdvice] = {}
         for cluster in clusters:
             for advice in sorted(candidates, key=_specificity):
                 if cluster in advice.clusters and advice.practice not in chosen:
                     chosen[advice.practice] = advice
                     break
+
         for advice in candidates:
             chosen.setdefault(advice.practice, advice)
-        return tuple(sorted(list(chosen.values())[: rule.limit], key=_priority))
 
-    @staticmethod
-    def _validate(levels: Mapping[UrgencyLevel | None, LevelSelection]) -> None:
+        practices: tuple[PracticeAdvice, ...] = tuple(
+            sorted(list(chosen.values())[: rule.limit], key=_priority)
+        )
+        return practices
+
+    def _validate(self, levels: LevelSelections) -> None:
         if frozenset(levels) != _SELF_HELP_LEVELS:
             raise ValidationError(
-                field="PracticeSelection",
+                subject=type(self).__name__,
                 reason="levels must cover L0, L1, L2 and an undefined level",
             )
 

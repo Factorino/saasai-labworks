@@ -9,6 +9,7 @@ from starlette.middleware.cors import CORSMiddleware
 from anamnesis.domain.errors.base import AppError
 from anamnesis.main.config.config import Config
 from anamnesis.main.di.container import create_container
+from anamnesis.main.startup import prepare
 from anamnesis.presentation.api.handlers.error import error_handler
 from anamnesis.presentation.api.routes import router
 
@@ -17,21 +18,12 @@ if TYPE_CHECKING:
     from dishka import AsyncContainer
 
 
-@asynccontextmanager
-async def _lifespan(app: FastAPI) -> AsyncGenerator[None]:
-    container: AsyncContainer = app.state.dishka_container
-    try:
-        yield
-    finally:
-        await container.close()
-
-
 def app_factory() -> FastAPI:
     return create_app(Config.load())
 
 
 def create_app(config: Config) -> FastAPI:
-    app = FastAPI(
+    app: FastAPI = FastAPI(
         title=config.service.title,
         version=config.service.version,
         debug=config.service.debug,
@@ -55,3 +47,13 @@ def create_app(config: Config) -> FastAPI:
     app.include_router(router)
     app.add_exception_handler(AppError, error_handler)
     return app
+
+
+@asynccontextmanager
+async def _lifespan(app: FastAPI) -> AsyncGenerator[None]:
+    container: AsyncContainer = app.state.dishka_container
+    try:
+        await prepare(container)
+        yield
+    finally:
+        await container.close()

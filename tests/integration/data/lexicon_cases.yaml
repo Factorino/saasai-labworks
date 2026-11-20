@@ -1,0 +1,27 @@
+# Термин онтологии и дословная цитата, которую увидит специалист.
+cases:
+  - text: Живу с тревогой
+    manifestations: {Anxiety_: тревогой}
+  - text: Сегодня чувствую усталость
+    manifestations: {Fatigue_: усталость}
+  - text: Борюсь с постоянной усталостью
+    manifestations: {always_tired: постоянной усталостью, Fatigue_: усталостью}
+  - text: Испытываю тяжёлые чувства
+    manifestations: {hard_feelings: тяжёлые чувства}
+  - text: Испытываю тяжелые чувства
+    manifestations: {hard_feelings: тяжелые чувства}
+  - text: Последнее время плохо сплю
+    manifestations: {bad_sleep: плохо сплю}
+  - text: Нет сил
+    manifestations: {no_energy: Нет сил}
+  - text: Мне не грустно
+  - text: В последнее время не устаю
+  - text: Мне не тревожно, но плохо сплю
+    manifestations: {bad_sleep: плохо сплю}
+  - text: Переживаю перед экзаменом
+    stressors: {exam_stress: экзаменом}
+  - text: На учебе накопились большие долги
+    stressors: {in_debt: большие долги}
+  - text: После экзамена мне грустно
+    manifestations: {feel_sad: грустно}
+    stressors: {exam_stress: экзамена}
