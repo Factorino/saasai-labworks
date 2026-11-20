@@ -47,15 +47,18 @@ classifiers = [
 # Runtime dependencies. Everything the service needs, and nothing else —
 # development tooling belongs in the groups at the bottom of this file.
 dependencies = [
-    "dishka>=1.10.1",
-    "fastapi>=0.141.1",
-    "openai>=3.46.0",
+    "dishka>=0",
+    "fastapi>=0",
+    "numpy>=2.5.4",
+    "onnxruntime>=1.32.0",
+    "openai>=3.51.0",
     "owlready2>=0.51",
     "pydantic>=2.13.5",
-    "pydantic-settings>=2.15.0",
+    "pydantic-settings>=0",
     "pyyaml>=6.0.3",
     "snowballstemmer>=3.1.1",
-    "uvicorn>=0.40.0",
+    "tokenizers>=0.23.3",
+    "uvicorn>=0",
 ]
 
 
