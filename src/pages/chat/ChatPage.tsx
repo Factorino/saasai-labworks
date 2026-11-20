@@ -7,6 +7,7 @@ import { FinishChatButton } from "@/features/finish-chat";
 import { Composer } from "@/features/send-message";
 import { StartChat } from "@/features/start-chat";
 import { ThemeToggle } from "@/features/toggle-theme";
+import { SERVICE_NAME } from "@/shared/config";
 import { ErrorMessage, Spinner } from "@/shared/ui";
 import { ChatThread, showSummary } from "@/widgets/chat-thread";
 import "./chat-page.css";
@@ -22,6 +23,8 @@ export function ChatPage() {
     const question = latest?.kind === "reply" ? latest.reply.question : null;
     const summaryIndex = session ? latestSummaryIndex(session.entries) : -1;
     const busy = pending !== null;
+    const pendingKind = pending?.kind;
+    const showComposer = stage !== "finished" && !question;
 
     useEffect(() => {
         if (chatId || previouslyActive.current) {
@@ -41,13 +44,13 @@ export function ChatPage() {
                 <div className="app-header__content">
                     <div className="brand">
                         <ServiceMark />
-                        <span>Анамнез</span>
+                        <span>{SERVICE_NAME}</span>
                     </div>
                     <div className="app-header__actions">
                         {(stage === "story" || stage === "clarifying") && (
                             <FinishChatButton
                                 disabled={busy}
-                                loading={pending === "finish"}
+                                loading={pendingKind === "finish"}
                                 onFinish={finish}
                             />
                         )}
@@ -56,9 +59,10 @@ export function ChatPage() {
                                 className="button button--quiet session-action"
                                 type="button"
                                 disabled={busy}
+                                title="Сводка"
                                 onClick={openSummary}
                             >
-                                {pending === "summary" ? (
+                                {pendingKind === "summary" ? (
                                     <Spinner size={17} />
                                 ) : (
                                     <FileText size={17} aria-hidden />
@@ -69,7 +73,7 @@ export function ChatPage() {
                         {session && (
                             <DeleteChatButton
                                 disabled={busy}
-                                loading={pending === "delete"}
+                                loading={pendingKind === "delete"}
                                 onDelete={remove}
                             />
                         )}
@@ -80,28 +84,24 @@ export function ChatPage() {
             {session ? (
                 <main className="chat" ref={main} tabIndex={-1} aria-labelledby="chat-heading">
                     <h1 id="chat-heading" className="visually-hidden">
-                        Диалог с Анамнезом
+                        Диалог с {SERVICE_NAME}
                     </h1>
-                    <ChatThread entries={session.entries} />
-                    <div className="chat-input">
-                        <div className="chat-input__content">
-                            {error && <ErrorMessage message={error} />}
-                            {(pending === "send" || pending === "finish") && (
-                                <p className="chat-input__status" role="status">
-                                    <Spinner size={15} />
-                                    {pending === "finish" ? "Собираем сводку…" : "Готовим ответ…"}
-                                </p>
-                            )}
-                            {stage !== "finished" && (
-                                <Composer
-                                    question={question}
-                                    disabled={busy}
-                                    sending={pending === "send"}
-                                    onSend={send}
-                                />
-                            )}
+                    <ChatThread entries={session.entries} pending={pending} onSend={send} />
+                    {(error || showComposer) && (
+                        <div className="chat-input">
+                            <div className="chat-input__content">
+                                {error && <ErrorMessage message={error} />}
+                                {showComposer && (
+                                    <Composer
+                                        question={null}
+                                        disabled={busy}
+                                        sending={pendingKind === "send"}
+                                        onSend={send}
+                                    />
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </main>
             ) : (
                 <main
@@ -110,7 +110,7 @@ export function ChatPage() {
                     tabIndex={-1}
                     aria-labelledby="welcome-title"
                 >
-                    <StartChat loading={pending === "start"} error={error} onStart={start} />
+                    <StartChat loading={pendingKind === "start"} error={error} onStart={start} />
                 </main>
             )}
             {!session && (

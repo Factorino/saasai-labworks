@@ -53,6 +53,16 @@
     gap: 0.2rem;
 }
 
+.message--wide {
+    width: min(100%, 37rem);
+    max-width: 100%;
+}
+
+.message--wide .message__content {
+    flex: 1;
+    justify-items: stretch;
+}
+
 .message--user .message__content {
     justify-items: end;
 }
@@ -87,6 +97,10 @@
     .message {
         max-width: 96%;
         gap: 0.4rem;
+    }
+
+    .message--wide {
+        max-width: 100%;
     }
 
     .message > .service-mark,

@@ -2,6 +2,7 @@ import { ShieldCheck } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
 import { ServiceMark } from "@/entities/chat";
+import { SERVICE_NAME } from "@/shared/config";
 import { ErrorMessage, Spinner } from "@/shared/ui";
 import "./start-chat.css";
 
@@ -27,8 +28,8 @@ export function StartChat({ loading, error, onStart }: StartChatProps) {
                 <ServiceMark large />
                 <h1 id="welcome-title">Расскажите, что вас беспокоит</h1>
                 <p>
-                    Анамнез задаст несколько вопросов и соберёт сводку, с которой можно обратиться
-                    к психологу.
+                    {SERVICE_NAME} задаст несколько вопросов и соберёт сводку, с которой можно
+                    обратиться к психологу.
                 </p>
             </div>
             <form className="welcome__form" onSubmit={submit}>

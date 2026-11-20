@@ -12,6 +12,7 @@ export function FinishChatButton({ disabled, loading, onFinish }: FinishChatButt
     return (
         <button
             className="button button--quiet session-action"
+            title="Получить сводку"
             disabled={disabled}
             onClick={() => void onFinish()}
         >

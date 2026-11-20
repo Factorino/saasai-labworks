@@ -4,7 +4,13 @@ import { HttpError } from "@/shared/api";
 
 import { deleteChat, finishChat, getSummary, postMessage, startChat } from "../api/chat";
 import type { MessageBody } from "../api/contract";
-import { chatReducer, INITIAL_CHAT_STATE, type ChatAction, type ChatOperation } from "./session";
+import {
+    chatReducer,
+    INITIAL_CHAT_STATE,
+    type ChatAction,
+    type ChatOperation,
+    type PendingChatOperation,
+} from "./session";
 
 function isMissingChat(error: unknown): boolean {
     return (
@@ -44,7 +50,7 @@ export function useChatSession() {
     useEffect(() => () => currentRequest.current?.abort(), []);
 
     async function run(
-        operation: ChatOperation,
+        operation: PendingChatOperation,
         task: (signal: AbortSignal) => Promise<ChatAction>,
     ): Promise<boolean> {
         if (currentRequest.current) {
@@ -64,7 +70,7 @@ export function useChatSession() {
             return true;
         } catch (error) {
             if (!controller.signal.aborted) {
-                dispatch({ type: "failure", message: describeError(error, operation) });
+                dispatch({ type: "failure", message: describeError(error, operation.kind) });
             }
             return false;
         } finally {
@@ -73,7 +79,7 @@ export function useChatSession() {
     }
 
     function start(): Promise<boolean> {
-        return run("start", async (signal) => ({
+        return run({ kind: "start" }, async (signal) => ({
             type: "started",
             response: await startChat(signal),
         }));
@@ -83,9 +89,9 @@ export function useChatSession() {
         if (!chatId) {
             return Promise.resolve(false);
         }
-        return run("send", async (signal) => {
+        return run({ kind: "send", text: userText }, async (signal) => {
             const { reply } = await postMessage(chatId, body, signal);
-            return { type: "replied", reply, userText };
+            return { type: "replied", reply };
         });
     }
 
@@ -93,7 +99,7 @@ export function useChatSession() {
         if (!chatId) {
             return Promise.resolve(false);
         }
-        return run("finish", async (signal) => {
+        return run({ kind: "finish" }, async (signal) => {
             const { reply } = await finishChat(chatId, signal);
             return { type: "replied", reply };
         });
@@ -103,7 +109,7 @@ export function useChatSession() {
         if (!chatId) {
             return Promise.resolve(false);
         }
-        return run("summary", async (signal) => {
+        return run({ kind: "summary" }, async (signal) => {
             const { summary } = await getSummary(chatId, signal);
             return { type: "summary", summary };
         });
@@ -113,7 +119,7 @@ export function useChatSession() {
         if (!chatId) {
             return Promise.resolve(false);
         }
-        return run("delete", async (signal) => {
+        return run({ kind: "delete" }, async (signal) => {
             try {
                 await deleteChat(chatId, signal);
             } catch (error) {

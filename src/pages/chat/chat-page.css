@@ -26,9 +26,20 @@
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    font-size: 1.0625rem;
+    font-size: 1.1875rem;
     font-weight: 740;
     letter-spacing: -0.035em;
+}
+
+.brand > .service-mark {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.82rem;
+}
+
+.brand > .service-mark svg {
+    width: 1.55rem;
+    height: 1.55rem;
 }
 
 .app-header__actions {
@@ -89,14 +100,6 @@
     margin-inline: auto;
 }
 
-.chat-input__status {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--muted);
-    font-size: 0.875rem;
-}
-
 @media (max-width: 520px) {
     .app-header__content {
         min-height: 3.8rem;
@@ -104,7 +107,17 @@
 
     .brand {
         gap: 0.44rem;
-        font-size: 1rem;
+        font-size: 1.0625rem;
+    }
+
+    .brand > .service-mark {
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+
+    .brand > .service-mark svg {
+        width: 1.4rem;
+        height: 1.4rem;
     }
 
     .app-header__actions {
@@ -120,17 +133,22 @@
     }
 }
 
-@media (max-width: 355px) {
-    .app-header__content {
-        gap: 0.35rem;
-    }
-
+@media (max-width: 420px) {
     .session-action {
-        padding-inline: 0.45rem;
-        font-size: 0.8125rem;
+        width: 2.75rem;
+        padding: 0;
     }
 
-    .brand > .service-mark {
-        display: none;
+    .session-action > svg {
+        display: block;
+    }
+
+    .session-action > span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
     }
 }

@@ -20,3 +20,27 @@
     min-width: 0;
     border-radius: 1rem;
 }
+
+.pending-reply {
+    display: inline-block;
+    min-width: 11rem;
+    color: var(--muted);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .pending-reply {
+        animation: pending-reply-in 260ms ease-out both;
+    }
+
+    @keyframes pending-reply-in {
+        from {
+            opacity: 0.35;
+            transform: translateY(0.15rem);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}

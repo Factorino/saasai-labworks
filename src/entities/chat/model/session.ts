@@ -11,17 +11,21 @@ export interface ChatSession {
 
 export type ChatOperation = "start" | "send" | "finish" | "summary" | "delete";
 
+export type PendingChatOperation =
+    | { readonly kind: Exclude<ChatOperation, "send"> }
+    | { readonly kind: "send"; readonly text: string };
+
 export interface ChatState {
     readonly session: ChatSession | null;
-    readonly pending: ChatOperation | null;
+    readonly pending: PendingChatOperation | null;
     readonly error: string | null;
 }
 
 export type ChatAction =
-    | { readonly type: "request"; readonly operation: ChatOperation }
+    | { readonly type: "request"; readonly operation: PendingChatOperation }
     | { readonly type: "failure"; readonly message: string }
     | { readonly type: "started"; readonly response: StartChatResponse }
-    | { readonly type: "replied"; readonly reply: Reply; readonly userText?: string }
+    | { readonly type: "replied"; readonly reply: Reply }
     | { readonly type: "summary"; readonly summary: Summary }
     | { readonly type: "deleted" };
 
@@ -48,8 +52,8 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
                 return state;
             }
             const entries: ChatEntry[] = [...state.session.entries];
-            if (action.userText !== undefined) {
-                entries.push({ kind: "message", role: "user", text: action.userText });
+            if (state.pending?.kind === "send") {
+                entries.push({ kind: "message", role: "user", text: state.pending.text });
             }
             entries.push({ kind: "reply", reply: action.reply });
             return {

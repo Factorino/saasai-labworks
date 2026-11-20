@@ -2,25 +2,21 @@ import { Check, Circle, Send } from "lucide-react";
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 
 import type { MessageBody, Question } from "@/entities/chat";
-import { Spinner } from "@/shared/ui";
 import "./composer.css";
 
 interface ComposerProps {
     readonly question: Question | null;
     readonly disabled: boolean;
     readonly sending: boolean;
+    readonly questionLabelId?: string;
     readonly onSend: (body: MessageBody, label: string) => Promise<boolean>;
 }
 
 const REFUSE_CODE = "refuse";
 
-export function Composer({ question, disabled, sending, onSend }: ComposerProps) {
+export function Composer({ question, disabled, sending, questionLabelId, onSend }: ComposerProps) {
     const [draft, setDraft] = useState("");
-    const [selection, setSelection] = useState<{
-        question: Question;
-        codes: readonly string[];
-    } | null>(null);
-    const selected = selection?.question === question ? selection.codes : [];
+    const [selected, setSelected] = useState<readonly string[]>([]);
     const textarea = useRef<HTMLTextAreaElement>(null);
     const form = useRef<HTMLFormElement>(null);
     const canWrite = !question || question.free_text;
@@ -36,24 +32,22 @@ export function Composer({ question, disabled, sending, onSend }: ComposerProps)
             input.style.height = "auto";
             input.style.height = `${input.scrollHeight}px`;
         }
-    }, [canWrite, draft, selected.length]);
+    }, [canWrite, draft, selected.length, sending]);
 
     function toggle(code: string) {
-        if (!question) {
-            return;
-        }
-        const codes = selected.includes(code)
-            ? selected.filter((item) => item !== code)
-            : multiple
-              ? [...selected, code]
-              : [code];
-        setSelection({ question, codes });
+        setSelected((current) =>
+            current.includes(code)
+                ? current.filter((item) => item !== code)
+                : multiple
+                  ? [...current, code]
+                  : [code],
+        );
     }
 
     async function send(body: MessageBody, label: string) {
         if (!disabled && (await onSend(body, label))) {
             setDraft("");
-            setSelection(null);
+            setSelected([]);
         }
     }
 
@@ -63,7 +57,7 @@ export function Composer({ question, disabled, sending, onSend }: ComposerProps)
             const labels = options.filter((option) => selected.includes(option.code));
             void send(
                 { option_codes: labels.map((option) => option.code) },
-                labels.map((option) => option.label).join(", "),
+                labels.map((option) => option.label).join("\n"),
             );
         } else if (text) {
             void send({ text }, text);
@@ -81,11 +75,11 @@ export function Composer({ question, disabled, sending, onSend }: ComposerProps)
 
     return (
         <form
-            className="composer"
+            className={question ? "composer composer--question" : "composer"}
             ref={form}
             onSubmit={submit}
             aria-label="Ответ в диалоге"
-            aria-describedby={question ? "current-chat-question" : undefined}
+            aria-describedby={questionLabelId}
         >
             {options.length > 0 && (
                 <fieldset className="composer__fieldset" disabled={disabled}>
@@ -124,11 +118,11 @@ export function Composer({ question, disabled, sending, onSend }: ComposerProps)
                         placeholder={
                             options.length ? "Или ответьте своими словами…" : "Напишите сообщение…"
                         }
-                        value={selected.length ? "" : draft}
+                        value={sending || selected.length ? "" : draft}
                         readOnly={disabled}
                         onChange={(event) => {
                             setDraft(event.currentTarget.value);
-                            setSelection(null);
+                            setSelected([]);
                         }}
                         onKeyDown={handleKey}
                     />
@@ -142,7 +136,7 @@ export function Composer({ question, disabled, sending, onSend }: ComposerProps)
                     type="submit"
                     disabled={disabled || !valid}
                 >
-                    {sending ? <Spinner /> : <Send size={17} aria-hidden />}
+                    <Send size={17} aria-hidden />
                     <span className={canWrite ? "visually-hidden" : undefined}>Отправить</span>
                 </button>
             </div>
