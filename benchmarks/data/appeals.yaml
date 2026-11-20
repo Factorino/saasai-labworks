@@ -1,0 +1,498 @@
+# Эталонные обращения для ноутбука 01: синтетические, разговорный стиль.
+#
+# story            — рассказ пользователя.
+# answers          — свои слова на вопросы о длительности, частоте и влиянии;
+#                    используются, только если сведения нет в рассказе.
+# self_harm        — вариант ответа на скрининговый вопрос: none, passive, active, plan.
+# manifestations, stressors — понятия онтологии, которые есть в рассказе.
+# optional         — спорные понятия: найти их можно, пропустить тоже.
+# duration_weeks, frequency (0–3), impact (0–3) — значения шкал.
+# level            — уровень срочности по определениям L0–L3, без запуска правил.
+
+# --- L0: можно попробовать самопомощь и понаблюдать ---------------------------
+
+- id: a01
+  story: Скоро сессия, и я прям нервничаю, вдруг завалю матан. Как сажусь готовиться, сразу внутри всё сжимается.
+  answers: {duration: "где-то неделю", frequency: "пару раз в неделю накатывает", impact: "да особо не мешает"}
+  self_harm: none
+  manifestations: [Anxiety_]
+  optional: [ExcessiveWorry_, AcademicPressure_, StudyStressor_]
+  stressors: [ExamStress_]
+  duration_weeks: 1
+  frequency: 1
+  impact: 0
+  level: L0
+
+- id: a02
+  story: Мы на днях переехали в новую квартиру, и я никак не могу нормально уснуть на новом месте, ворочаюсь полночи.
+  answers: {duration: "дня три", frequency: "через ночь примерно", impact: "нет, всё успеваю"}
+  self_harm: none
+  manifestations: [Insomnia_]
+  optional: [SleepDisturbance_, LifeTransition_]
+  stressors: [Relocation_]
+  duration_weeks: 0
+  frequency: 1
+  impact: 0
+  level: L0
+
+- id: a03
+  story: Позавчера поссорилась с лучшей подругой из-за ерунды, теперь немного грустно и неприятно.
+  answers: {duration: "второй день", frequency: "редко", impact: "нет"}
+  self_harm: none
+  manifestations: [LowMood_]
+  optional: [RelationshipStressor_, InterpersonalDifficulties_]
+  stressors: []
+  duration_weeks: 0
+  frequency: 0
+  impact: 0
+  level: L0
+
+- id: a04
+  story: К вечеру на работе иногда болит голова, думаю может от монитора или просто устаю.
+  answers: {duration: "с месяц наверное", frequency: "редко, раз в пару недель", impact: "не мешает"}
+  self_harm: none
+  manifestations: [Headache_]
+  optional: [Fatigue_, WorkStressor_]
+  stressors: []
+  duration_weeks: 4
+  frequency: 0
+  impact: 0
+  level: L0
+
+- id: a05
+  story: Сын в этом месяце пошёл в первый класс, ловлю себя на том что волнуюсь как он там без меня.
+  answers: {duration: "неделю", frequency: "иногда", impact: "нет, жить не мешает"}
+  self_harm: none
+  manifestations: [Anxiety_]
+  optional: [ExcessiveWorry_, LifeTransition_]
+  stressors: [ParentingStress_]
+  duration_weeks: 1
+  frequency: 0
+  impact: 0
+  level: L0
+
+- id: a06
+  story: На этой неделе аврал, отчёт за квартал горит, к вечеру прихожу вообще без сил и сразу падаю.
+  answers: {duration: "неделю", frequency: "почти каждый день", impact: "нет, справляюсь"}
+  self_harm: none
+  manifestations: [Fatigue_]
+  optional: [WorkStressor_]
+  stressors: [Workload_]
+  duration_weeks: 1
+  frequency: 2
+  impact: 0
+  level: L0
+
+- id: a07
+  story: У соседей ремонт, дрель с утра, и я заметил что срываюсь на всех по мелочам, раздражает буквально всё.
+  answers: {duration: "дней пять", frequency: "несколько раз в неделю", impact: "нет"}
+  self_harm: none
+  manifestations: [Irritability_]
+  optional: [AngerOutbursts_]
+  stressors: []
+  duration_weeks: 0
+  frequency: 1
+  impact: 0
+  level: L0
+
+- id: a08
+  story: Через неделю выступаю на конференции перед кучей людей, боюсь что опозорюсь и все будут надо мной смеяться.
+  answers: {duration: "дней шесть", frequency: "редко", impact: "не мешает"}
+  self_harm: none
+  manifestations: [SocialFear_]
+  optional: [Anxiety_, FearOfRejection_, WorkStressor_]
+  stressors: []
+  duration_weeks: 0
+  frequency: 0
+  impact: 0
+  level: L0
+
+- id: a09
+  story: Недавно перебрался в другой город по работе, друзей тут пока нет, вечерами бывает одиноко и тоскливо.
+  answers: {duration: "полторы недели", frequency: "редко", impact: "нет, не сказал бы"}
+  self_harm: none
+  manifestations: [LowMood_]
+  optional: [SocialWithdrawal_, JobChange_, LifeTransition_]
+  stressors: [Relocation_, Loneliness_]
+  duration_weeks: 1
+  frequency: 0
+  impact: 0
+  level: L0
+
+- id: a10
+  story: Третий день не могу собраться и сосредоточиться на курсовой, читаю абзац и через минуту не помню о чём он.
+  answers: {duration: "три дня", frequency: "несколько раз в неделю", impact: "особо нет"}
+  self_harm: none
+  manifestations: [ConcentrationProblems_]
+  optional: [MemoryProblems_, ThinkingDifficulties_, Procrastination_, AcademicPressure_, StudyStressor_]
+  stressors: []
+  duration_weeks: 0
+  frequency: 1
+  impact: 0
+  level: L0
+
+# --- L1: желательно рассмотреть консультацию --------------------------------
+
+- id: a11
+  story: Вот уже месяц просыпаюсь в четыре утра и всё, лежу смотрю в потолок, заснуть обратно не получается.
+  answers: {duration: "месяц", frequency: "почти каждую ночь", impact: "немного, днём хожу вареная"}
+  self_harm: none
+  manifestations: [Insomnia_]
+  optional: [SleepDisturbance_, Fatigue_]
+  stressors: []
+  duration_weeks: 4
+  frequency: 2
+  impact: 1
+  level: L1
+
+- id: a12
+  story: Работа перестала вообще радовать, делаю всё на автомате, задолбался, пахать приходится за троих, домой приползаю выжатый.
+  answers: {duration: "полтора месяца", frequency: "большинство дней", impact: "немного мешает"}
+  self_harm: none
+  manifestations: [WorkDisengagement_, Fatigue_]
+  optional: [WorkStressor_, LowMood_]
+  stressors: [Workload_]
+  duration_weeks: 6
+  frequency: 2
+  impact: 1
+  level: L1
+
+- id: a13
+  story: Денег впритык, кредит висит, постоянно прикидываю как дотянуть до зарплаты и переживаю из-за этого.
+  answers: {duration: "недели три", frequency: "несколько раз в неделю", impact: "немного"}
+  self_harm: none
+  manifestations: [Anxiety_]
+  optional: [ExcessiveWorry_, Rumination_, FinancialAndLegalStressor_]
+  stressors: [FinancialHardship_]
+  duration_weeks: 3
+  frequency: 1
+  impact: 1
+  level: L1
+
+- id: a14
+  story: Двое маленьких детей, я с ними одна целыми днями, устаю дико и кричу на них по пустякам, потом стыдно.
+  answers: {duration: "месяца два", frequency: "почти каждый день", impact: "немного мешает"}
+  self_harm: none
+  manifestations: [Fatigue_, Irritability_]
+  optional: [AngerOutbursts_, ExcessiveGuilt_, Shame_, EmotionalOverwhelm_]
+  stressors: [ParentingStress_]
+  duration_weeks: 8
+  frequency: 2
+  impact: 1
+  level: L1
+
+- id: a15
+  story: Месяц назад не стало бабушки. Очень по ней скучаю, всё время вспоминаю как мы с ней пекли пироги.
+  answers: {duration: "месяц", frequency: "несколько раз в неделю", impact: "немного"}
+  self_harm: none
+  manifestations: [LongingForDeceased_]
+  optional: [LowMood_, LossStressor_]
+  stressors: [Bereavement_]
+  duration_weeks: 4
+  frequency: 1
+  impact: 1
+  level: L1
+
+- id: a16
+  story: Расстались с парнем, и я прокручиваю в голове наши разговоры снова и снова, что надо было сказать по-другому.
+  answers: {duration: "недели три", frequency: "почти каждый день", impact: "немного, отвлекаюсь на работе"}
+  self_harm: none
+  manifestations: [Rumination_]
+  optional: [LowMood_, RelationshipStressor_]
+  stressors: [BreakupOrDivorce_]
+  duration_weeks: 3
+  frequency: 2
+  impact: 1
+  level: L1
+
+- id: a17
+  story: Пару раз в метро внезапно сердце заколотилось, в глазах потемнело от страха, думала что сейчас умру прямо там. Потом отпустило.
+  answers: {duration: "недели три", frequency: "редко", impact: "немного, метро теперь стараюсь объезжать"}
+  self_harm: none
+  manifestations: [PanicEpisode_]
+  optional: [Anxiety_, Avoidance_, HeartSensations_, BodilyArousalSigns_, FearOfBeingTrapped_]
+  stressors: []
+  duration_weeks: 3
+  frequency: 0
+  impact: 1
+  level: L1
+
+- id: a18
+  story: Диплом надо писать, а я всё откладываю на завтра, сижу в телефоне и ненавижу себя за это. Научник уже ругается.
+  answers: {duration: "больше месяца", frequency: "большинство дней", impact: "немного"}
+  self_harm: none
+  manifestations: [Procrastination_]
+  optional: [HarshSelfCriticism_, ExcessiveGaming_, ExcessiveGuilt_, StudyStressor_, ExamStress_]
+  stressors: [AcademicPressure_]
+  duration_weeks: 5
+  frequency: 2
+  impact: 1
+  level: L1
+
+- id: a19
+  story: Стараюсь не ходить туда, где много незнакомых, на корпоративы не хожу, боюсь что подумают что я странный и будут обсуждать.
+  answers: {duration: "месяца три", frequency: "несколько раз в неделю", impact: "немного мешает"}
+  self_harm: none
+  manifestations: [SocialFear_, Avoidance_]
+  optional: [Anxiety_, SocialWithdrawal_, FearOfRejection_]
+  stressors: []
+  duration_weeks: 12
+  frequency: 1
+  impact: 1
+  level: L1
+
+- id: a20
+  story: Шея и плечи как каменные, зажато всё, массаж помогает на день. На работе начальство постоянно дёргает.
+  answers: {duration: "месяц", frequency: "почти каждый день", impact: "нет, терпимо"}
+  self_harm: none
+  manifestations: [MuscleTension_]
+  optional: [BodyPain_, Workload_, WorkplaceConflict_, LowWorkControl_]
+  stressors: [WorkStressor_]
+  duration_weeks: 4
+  frequency: 2
+  impact: 0
+  level: L1
+
+- id: a21
+  story: Раньше обожал рисовать и гитару, а сейчас ничего не хочется, беру инструмент и откладываю, не цепляет.
+  answers: {duration: "недели три", frequency: "почти каждый день", impact: "немного"}
+  self_harm: none
+  manifestations: [LossOfInterest_]
+  optional: [LowMood_]
+  stressors: []
+  duration_weeks: 3
+  frequency: 2
+  impact: 1
+  level: L1
+
+- id: a22
+  story: С мужем постоянно цапаемся из-за быта, я на взводе, любая его фраза выводит из себя.
+  answers: {duration: "полтора месяца", frequency: "несколько раз в неделю", impact: "немного"}
+  self_harm: none
+  manifestations: [Irritability_]
+  optional: [AngerOutbursts_, Anxiety_, InterpersonalDifficulties_, RelationshipStressor_, FamilyConflict_]
+  stressors: [PartnerConflict_]
+  duration_weeks: 6
+  frequency: 1
+  impact: 1
+  level: L1
+
+# --- L2: рекомендуется обратиться к специалисту -----------------------------
+
+- id: a23
+  story: Уже пару месяцев ничего не радует, настроение на нуле, хожу как в тумане, друзья зовут, а мне ничего не интересно.
+  answers: {duration: "два месяца", frequency: "большинство дней", impact: "заметно мешает, на работе стала делать ошибки"}
+  self_harm: none
+  manifestations: [LowMood_, LossOfInterest_]
+  optional: [SocialWithdrawal_, ThinkingDifficulties_]
+  stressors: []
+  duration_weeks: 8
+  frequency: 2
+  impact: 2
+  level: L2
+
+- id: a24
+  story: На работе сокращения, и меня теперь не отпускает тревога, всё время думаю что будет, не могу выключить голову.
+  answers: {duration: "больше месяца", frequency: "постоянно", impact: "заметно мешает"}
+  self_harm: none
+  manifestations: [ExcessiveWorry_]
+  optional: [Anxiety_, Rumination_, WorkStressor_]
+  stressors: [JobInsecurity_]
+  duration_weeks: 5
+  frequency: 3
+  impact: 2
+  level: L2
+
+- id: a25
+  story: Тревожно мне как-то всё время, без особой причины, и из-за этого ещё и засыпаю только под утро.
+  answers: {duration: "недели три", frequency: "почти каждый день", impact: "немного"}
+  self_harm: none
+  manifestations: [Anxiety_, Insomnia_]
+  optional: [ExcessiveWorry_, SleepDisturbance_]
+  stressors: []
+  duration_weeks: 3
+  frequency: 2
+  impact: 1
+  level: L2
+
+- id: a26
+  story: После аварии постоянно вижу тот момент перед глазами, как удар, и за рулём дёргаюсь от каждой машины рядом.
+  answers: {duration: "полтора месяца", frequency: "почти каждый день", impact: "сильно мешает, езжу только на автобусе"}
+  self_harm: none
+  manifestations: [ReexperiencingEvent_, ThreatVigilance_]
+  optional: [Anxiety_, Avoidance_, IntrusiveThoughts_, SpecificFear_, TraumaticStressor_]
+  stressors: [AccidentOrDisaster_]
+  duration_weeks: 6
+  frequency: 2
+  impact: 2
+  level: L2
+
+- id: a27
+  story: По двадцать раз проверяю плиту и замок, возвращаюсь с полпути, в голове крутится что случится пожар и это будет из-за меня.
+  answers: {duration: "месяца три", frequency: "постоянно", impact: "заметно мешает, опаздываю всюду"}
+  self_harm: none
+  manifestations: [CompulsiveActions_, ObsessiveThoughts_]
+  optional: [Anxiety_, IntrusiveThoughts_, ExcessiveWorry_, Rumination_]
+  stressors: []
+  duration_weeks: 12
+  frequency: 3
+  impact: 2
+  level: L2
+
+- id: a28
+  story: Как будто выключили эмоции. Ни радости, ни грусти, смотрю на своих детей и ничего не чувствую, просто пусто.
+  answers: {duration: "месяц", frequency: "большинство дней", impact: "заметно мешает"}
+  self_harm: none
+  manifestations: [EmotionalNumbness_]
+  optional: [LowMood_, LossOfInterest_, Dissociation_]
+  stressors: []
+  duration_weeks: 4
+  frequency: 2
+  impact: 2
+  level: L2
+
+- id: a29
+  story: Я ничтожество, ни на что не способна, что бы ни делала, всё плохо, другие намного лучше меня во всём.
+  answers: {duration: "месяца четыре", frequency: "большинство дней", impact: "заметно мешает, боюсь браться за новое"}
+  self_harm: none
+  manifestations: [LowSelfWorth_]
+  optional: [NegativeSelfView_, HarshSelfCriticism_, LowMood_]
+  stressors: []
+  duration_weeks: 16
+  frequency: 2
+  impact: 2
+  level: L2
+
+- id: a30
+  story: Подсел на ставки на спорт, проигрываю почти всю зарплату, обещаю себе бросить и опять захожу в приложение.
+  answers: {duration: "месяца три", frequency: "несколько раз в неделю", impact: "немного"}
+  self_harm: none
+  manifestations: [Gambling_]
+  optional: [AddictiveBehaviours_, ImpulsiveOrRiskyBehaviour_, FinancialHardship_, FinancialAndLegalStressor_]
+  stressors: []
+  duration_weeks: 12
+  frequency: 1
+  impact: 1
+  level: L2
+
+- id: a31
+  story: Заедаю всё подряд, потом мне противно, вызываю рвоту и обещаю что больше никогда, и через пару дней снова.
+  answers: {duration: "два месяца", frequency: "несколько раз в неделю", impact: "немного"}
+  self_harm: none
+  manifestations: [DisorderedEating_]
+  optional: [BodyImageWorry_, Shame_, AppetiteChange_]
+  stressors: []
+  duration_weeks: 8
+  frequency: 1
+  impact: 1
+  level: L2
+
+- id: a32
+  story: В последнее время совсем нет настроения, всё серое, тяжело утром начинать день.
+  answers: {duration: "две недели", frequency: "несколько раз в неделю", impact: "немного"}
+  self_harm: passive
+  manifestations: [LowMood_]
+  optional: [Fatigue_]
+  stressors: []
+  duration_weeks: 2
+  frequency: 1
+  impact: 1
+  level: L2
+
+- id: a33
+  story: Муж, когда выпьет, бьёт меня, вчера опять. Я боюсь идти домой и всё время жду что будет дальше.
+  answers: {duration: "два месяца", frequency: "несколько раз в неделю", impact: "немного"}
+  self_harm: none
+  manifestations: [Anxiety_]
+  optional: [ThreatVigilance_, ExcessiveWorry_, PartnerConflict_, RelationshipStressor_, FamilyConflict_, TraumaticStressor_, Assault_]
+  stressors: [OngoingDomesticViolence_]
+  duration_weeks: 8
+  frequency: 1
+  impact: 1
+  level: L2
+
+- id: a34
+  story: Не вижу выхода, ничего уже не изменится, что ни пробуй, всё бесполезно, и дальше будет только хуже.
+  answers: {duration: "недели три", frequency: "большинство дней", impact: "немного"}
+  self_harm: none
+  manifestations: [Hopelessness_]
+  optional: [LowMood_, LackOfPurpose_]
+  stressors: []
+  duration_weeks: 3
+  frequency: 2
+  impact: 1
+  level: L2
+
+# --- L3: необходимо срочно обратиться за помощью ----------------------------
+
+- id: a35
+  story: Лежу целыми днями, встать с кровати нет сил, не моюсь, не ем толком, с работы уже звонили и я не беру трубку.
+  answers: {duration: "полтора месяца", frequency: "постоянно", impact: "вообще не справляюсь с обычными делами"}
+  self_harm: none
+  manifestations: [Fatigue_, SelfNeglect_]
+  optional: [LowMood_, SocialWithdrawal_, AppetiteChange_, LossOfInterest_]
+  stressors: []
+  duration_weeks: 6
+  frequency: 3
+  impact: 3
+  level: L3
+
+- id: a36
+  story: Тяжело мне очень, настроение плохое, ни с кем не хочется разговаривать.
+  answers: {duration: "месяц", frequency: "большинство дней", impact: "заметно мешает"}
+  self_harm: active
+  manifestations: [LowMood_]
+  optional: [SocialWithdrawal_]
+  stressors: []
+  duration_weeks: 4
+  frequency: 2
+  impact: 2
+  level: L3
+
+- id: a37
+  story: Больше не могу. Хочу покончить с собой, я уже решила как и когда это сделаю.
+  answers: {duration: "месяц", frequency: "постоянно", impact: "заметно мешает"}
+  self_harm: plan
+  manifestations: [ActiveSelfHarmThoughts_]
+  optional: [SelfHarmThoughts_, Hopelessness_]
+  stressors: []
+  duration_weeks: 4
+  frequency: 3
+  impact: 2
+  level: L3
+
+- id: a38
+  story: Когда становится совсем плохо, я режу себе руки, тогда хоть ненадолго отпускает.
+  answers: {duration: "месяца два", frequency: "несколько раз в неделю", impact: "заметно мешает"}
+  self_harm: active
+  manifestations: [SelfHarmBehaviour_]
+  optional: [SelfHarmThoughts_, ActiveSelfHarmThoughts_, EmotionalOverwhelm_]
+  stressors: []
+  duration_weeks: 8
+  frequency: 1
+  impact: 2
+  level: L3
+
+- id: a39
+  story: Я слышу голоса, которые комментируют всё что я делаю. Никого рядом нет, а они говорят, и мне страшно.
+  answers: {duration: "недели две", frequency: "большинство дней", impact: "заметно мешает"}
+  self_harm: none
+  manifestations: [PsychoticSign_]
+  optional: [Anxiety_]
+  stressors: []
+  duration_weeks: 2
+  frequency: 2
+  impact: 2
+  level: L3
+
+- id: a40
+  story: Этот начальник меня довёл. Я реально хочу его убить, уже думал как это сделать, и мне всё равно что будет потом.
+  answers: {duration: "месяц", frequency: "несколько раз в неделю", impact: "заметно мешает"}
+  self_harm: none
+  manifestations: [ViolenceThreat_]
+  optional: [AngerOutbursts_, Irritability_, WorkplaceConflict_, WorkStressor_]
+  stressors: []
+  duration_weeks: 4
+  frequency: 1
+  impact: 2
+  level: L3

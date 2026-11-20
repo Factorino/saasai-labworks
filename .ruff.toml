@@ -32,6 +32,7 @@ exclude = [
     "*.egg-info",
     "venv",
     ".venv",
+    "benchmarks",  # Standalone notebooks; not part of the service.
 ]
 
 # Without this, exclude is ignored for paths passed explicitly on the command

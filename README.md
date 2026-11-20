@@ -15,6 +15,34 @@ just sync     # зависимости
 just hooks    # git-хуки
 ```
 
+Для кризисного классификатора нужен энкодер rubert-tiny2 в `models/`.
+Команда экспорта приведена в [export_encoder.py](benchmarks/export_encoder.py).
+Для запуска сервиса с одним словарём задайте `APP__KNOWLEDGE__CRISIS_CLASSIFIER=false`.
+
+## Бенчмарки
+
+| Ноутбук | Что проверяем |
+|---|---|
+| [Извлечение и срочность](benchmarks/01_extraction_and_urgency.ipynb) | Как меняется уровень L0–L3, когда правила получают сведения из диалога или из разметки 40 обращений. |
+| [Кризисный детектор](benchmarks/02_crisis_detector.ipynb) | Сколько кризисных реплик обнаруживают словарь и установленный классификатор на 98 контрольных примерах. |
+| [Обучение классификатора](benchmarks/03_train_crisis_classifier.ipynb) | Как выбрать регуляризацию и порог по обучающим репликам с ограничением в 3 % ложных тревог. |
+
+Запускайте из корня проекта. Для первого ноутбука нужны Java для Pellet и доступный
+Ollama с моделью из настроек сервиса (по умолчанию `qwen3.5:9b`). Для всех трёх
+при стандартных настройках нужен экспортированный энкодер.
+
+```sh
+uv run --with nbconvert --with ipykernel --with pandas --with scikit-learn \
+  python -m nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=1800 \
+  benchmarks/02_crisis_detector.ipynb
+```
+
+Для другого эксперимента подставьте его имя файла. Обучение записывает новые веса
+в `resources/ru/crisis_classifier.yaml`. Чтобы сохранить их отдельно, задайте
+`APP__KNOWLEDGE__RESOURCES_DIR` перед запуском третьего ноутбука. Для проверки
+новых весов во втором ноутбуке в этом каталоге также нужны файлы `ru/language.yaml`
+и `ru/crisis.yaml`.
+
 ## Проверка
 
 ```sh
