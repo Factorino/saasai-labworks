@@ -106,10 +106,6 @@
     padding: 0;
 }
 
-.composer__skip {
-    justify-self: start;
-}
-
 @media (prefers-reduced-motion: no-preference) {
     .button,
     .icon-button,

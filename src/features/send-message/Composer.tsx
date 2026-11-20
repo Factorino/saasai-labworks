@@ -20,8 +20,8 @@ export function Composer({ question, disabled, sending, questionLabelId, onSend 
     const textarea = useRef<HTMLTextAreaElement>(null);
     const form = useRef<HTMLFormElement>(null);
     const canWrite = !question || question.free_text;
-    const options = question?.options.filter((option) => option.code !== REFUSE_CODE) ?? [];
-    const refusal = question?.options.find((option) => option.code === REFUSE_CODE);
+    const options = question?.options ?? [];
+    const hasAnswerOptions = options.some((option) => option.code !== REFUSE_CODE);
     const multiple = question?.multiple ?? false;
     const text = canWrite ? draft.trim() : "";
     const valid = selected.length > 0 || Boolean(text);
@@ -35,13 +35,15 @@ export function Composer({ question, disabled, sending, questionLabelId, onSend 
     }, [canWrite, draft, selected.length, sending]);
 
     function toggle(code: string) {
-        setSelected((current) =>
-            current.includes(code)
-                ? current.filter((item) => item !== code)
-                : multiple
-                  ? [...current, code]
-                  : [code],
-        );
+        setSelected((current) => {
+            if (current.includes(code)) {
+                return current.filter((item) => item !== code);
+            }
+            if (!multiple || code === REFUSE_CODE) {
+                return [code];
+            }
+            return [...current.filter((item) => item !== REFUSE_CODE), code];
+        });
     }
 
     async function send(body: MessageBody, label: string) {
@@ -84,7 +86,7 @@ export function Composer({ question, disabled, sending, questionLabelId, onSend 
             {options.length > 0 && (
                 <fieldset className="composer__fieldset" disabled={disabled}>
                     <legend>
-                        {multiple ? "Можно выбрать несколько вариантов" : "Выберите вариант"}
+                        {multiple ? "Можно выбрать несколько вариантов" : "Варианты ответа"}
                     </legend>
                     <div className="composer__options">
                         {options.map((option) => {
@@ -116,7 +118,9 @@ export function Composer({ question, disabled, sending, questionLabelId, onSend 
                         rows={1}
                         aria-label="Ваше сообщение"
                         placeholder={
-                            options.length ? "Или ответьте своими словами…" : "Напишите сообщение…"
+                            hasAnswerOptions
+                                ? "Или ответьте своими словами…"
+                                : "Напишите сообщение…"
                         }
                         value={sending || selected.length ? "" : draft}
                         readOnly={disabled}
@@ -140,16 +144,6 @@ export function Composer({ question, disabled, sending, questionLabelId, onSend 
                     <span className={canWrite ? "visually-hidden" : undefined}>Отправить</span>
                 </button>
             </div>
-            {refusal && (
-                <button
-                    className="text-button composer__skip"
-                    type="button"
-                    disabled={disabled}
-                    onClick={() => void send({ option_codes: [refusal.code] }, refusal.label)}
-                >
-                    {refusal.label}
-                </button>
-            )}
         </form>
     );
 }
