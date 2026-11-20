@@ -26,6 +26,8 @@ allow_origins = ["*"]
 languages = ["ru"]
 locales_dir = "locales"
 resources_dir = "resources"
+# Encoders of the crisis classifier, one directory per encoder; not in git.
+models_dir = "models"
 ontology_path = "ontology/anamnesis.owl"
 # Membership functions of the fuzzy normalization; language independent.
 linguistic_variables_path = "knowledge/linguistic_variables.yaml"
@@ -33,6 +35,10 @@ linguistic_variables_path = "knowledge/linguistic_variables.yaml"
 instructions_dir = "knowledge/instructions"
 # How many practices the summary shows at each urgency level.
 practice_selection_path = "knowledge/practice_selection.yaml"
+# The classifier complements the crisis lexicon. When enabled, a language with
+# resources/<language>/crisis_classifier.yaml needs its encoder in models_dir;
+# disable it explicitly to run on the lexicon alone.
+crisis_classifier = true
 # Pellet inferences running at once; each one is a separate Java process.
 reasoner_concurrency = 2
 # Clarifying questions per dialogue; the self-harm question may exceed it.

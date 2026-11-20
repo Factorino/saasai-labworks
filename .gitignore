@@ -252,3 +252,6 @@ __marimo__/
 
 # Working documents for the lab reports; they never reach the repository
 /_docs/
+
+# Model weights: large binaries obtained separately (origin in models/*/source.json)
+/models/

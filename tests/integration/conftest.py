@@ -24,7 +24,7 @@ def model(scripted_model: ScriptedModel) -> ScriptedModel:
 
 @pytest.fixture(scope="session")
 async def container(scripted_model: ScriptedModel) -> AsyncIterator[AsyncContainer]:
-    config: Config = Config.model_construct(knowledge=KnowledgeConfig())
+    config: Config = Config.model_construct(knowledge=KnowledgeConfig(crisis_classifier=False))
     async with create_container(config, model_provider(scripted_model)) as app:
         await prepare(app)
         yield app

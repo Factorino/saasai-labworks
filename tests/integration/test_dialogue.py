@@ -44,7 +44,9 @@ async def test_refused_screening_is_repeated_once_when_rules_request_help(
 
 @pytest.mark.parametrize("answer", ["active", "plan"])
 async def test_screening_survives_zero_question_limit(answer: str, model: ScriptedModel) -> None:
-    config: Config = Config.model_construct(knowledge=KnowledgeConfig(question_limit=0))
+    config: Config = Config.model_construct(
+        knowledge=KnowledgeConfig(question_limit=0, crisis_classifier=False),
+    )
     async with create_container(config, model_provider(model)) as container:
         service: Service = Service(container)
         chat: ChatId = await service.start()
@@ -77,7 +79,9 @@ async def test_early_summary_distinguishes_answered_and_missing_facts(service: S
 
 
 async def test_only_screening_can_exceed_the_question_limit(model: ScriptedModel) -> None:
-    config: Config = Config.model_construct(knowledge=KnowledgeConfig(question_limit=1))
+    config: Config = Config.model_construct(
+        knowledge=KnowledgeConfig(question_limit=1, crisis_classifier=False)
+    )
     async with create_container(config, model_provider(model)) as container:
         service: Service = Service(container)
         chat: ChatId = await service.start()
